@@ -43,17 +43,17 @@ const applyVelocity = ( directionVector, magnitude, targetObject, t, trail ) => 
             targetObject.position.y,
             targetObject.position.z,
         ),
+        timeElapsed : t,
         timeElapsedInSecs : t ? t / (t%60) : "Please provide arg:t in this function",
-        directionVector,
-        // displacement : s 
+        directionVector
     }
 
     return result
 }
 
-const applyAcceleration = ( directionVector, magnitude, targetObject ) => {
+const applyAcceleration = ( directionVector, magnitude, targetObject, t ) => {
 
-    applyVelocity( directionVector, magnitude , targetObject ) 
+    // applyVelocity( directionVector, magnitude , targetObject )  
 }
 
-export { applyVelocity }
+export { applyVelocity, applyAcceleration }
