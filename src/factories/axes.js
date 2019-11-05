@@ -1,11 +1,13 @@
 
 
-export default (THREE, scene, maxRange, incDec) => {
+import * as THREE from 'three'
+
+export default ( scene, maxRange, incDec, colorsXYZ ) => {
 
     let c = 0,
-        xColor = "#2e2e2e",
-        yColor = "#2e2e2e",
-        zColor = "#2e2e2e",
+        xColor = colorsXYZ.x,
+        yColor = colorsXYZ.y,
+        zColor = colorsXYZ.z,
         reverseC = 0
         // maxRange = 12,
         // incDec = 2.5
@@ -93,6 +95,4 @@ export default (THREE, scene, maxRange, incDec) => {
         c+=incDec
         reverseC-=incDec
     } 
-
-    console.log(incDec, maxRange)
 }

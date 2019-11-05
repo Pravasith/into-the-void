@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { TweenMax } from 'gsap'
 import * as THREE from 'three'
 
-// import importModuleDynamically from '../lib/moduleImports'
+import { addMass, removeMass } from '../factories/massObjects'
+import { applyVelocity } from '../factories/physics'
+
 import createAxes from '../factories/axes'
 
 import "../assets/solar_system.scss"
@@ -18,18 +21,19 @@ const SolarSystem = () => {
             // BASIC SETTINGS /////////////////////////////////////////
 
             // renderer
-            renderer = new THREE.WebGLRenderer()
-            renderer.setSize( window.innerWidth, window.innerHeight )
-            renderer.setClearColor( "#1f1f1f") // Background color
+            const container = document.getElementsByClassName("display-screen")[0]
 
-            const container = document.body
+            
+            renderer = new THREE.WebGLRenderer()
+            renderer.setSize( container.clientWidth, container.clientHeight )
+            renderer.setClearColor( "#1f1f1f") // Background color
             container.appendChild( renderer.domElement )
 
             // scene
             scene = new THREE.Scene()
 
             // camera
-            camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 200 )
+            camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 1, 200 )
             camera.position.set( 50, 50, 50 )
 
             // controls
@@ -52,28 +56,72 @@ const SolarSystem = () => {
             scene.add(light1)
             scene.add(light2)
 
-            // createAxes(THREE, scene, maxRange, incDecStepSize)
-            createAxes(THREE, scene, 5, 2.5) 
+            // createAxes( scene, maxRange, incDecStepSize )
+            createAxes(
+                scene, 
+                15, 
+                5, 
+                {
+                    x : "#333333",
+                    y : "#333333",
+                    z : "#333333",
+                }
+            ) 
 
-            // material and geometry
-            let geometry = new THREE.SphereGeometry( 0.5, 6, 5, 0, 6.3, 0, 3.1 )
-            let material = new THREE.MeshToonMaterial({
-                color: "#29abe2"
-            })
-            let sphere = new THREE.Mesh( geometry, material )
             
+
+            var a = new THREE.Vector3( 5, 2, 6 )
+            var b = new THREE.Vector3( -15, -15, -15 )
+
+            let sphere1 = addMass(scene, a, 0.5, "#29abe2")
+            let sphere2 = addMass(scene, b, 1.5, "#ff6652")
+
+            // removeMass(scene, sphere1)
 
             // parent
             parent = new THREE.Object3D()
             scene.add( parent )
-            scene.add( sphere )
 
+            // a - b is the distance vector (like r in GMm/r^2 = g), 
+            // negating to revese direction
+            let aMinusB = new THREE.Vector3( 0, 0, 0 ).subVectors(a, b).negate(),
+                bMinusA = new THREE.Vector3( 0, 0, 0 ).subVectors(b, a).negate()
+
+            // TweenMax.to(sphere1.position, 0.1, {y: -15})
+            // TweenMax.to(sphere2.position, 30, {y: 15})
+
+            let t = 0, t_s = 0, v1, v2
             function animate() {
                 requestAnimationFrame( animate )
-                // sphere.rotation.z += 0.05
+                // sphere2.position.x += 0.01
+                
+
+                // add velocity (directionVector, magnitude in m/s, targetObject, t (optional), trailObject (optional))
+                v1 = applyVelocity( 
+                    aMinusB, 0.01, sphere1, t, 
+                    {
+                        // color: "#fff",
+                        scene
+                    }
+                )
+                v2 = applyVelocity( 
+                    bMinusA, 0.01, sphere2, t, 
+                    {
+                        // color: "#fff",
+                        scene
+                    } 
+                )
+
+                t++
+
                 controls.update()
                 renderer.render( scene, camera )
-            }
+
+            }        
+            
+           
+            
+            console.log()
 
             animate()
             
@@ -88,7 +136,16 @@ const SolarSystem = () => {
         .catch(e => console.log(e))
     }
 
-    return <div></div>
+    return (
+        <div 
+            className = "parent-class"
+            >
+            <div className="tools-holster">
+
+            </div>
+            <div className="display-screen"></div>
+        </div>
+    )
 }
 
 export default SolarSystem
