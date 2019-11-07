@@ -1,6 +1,8 @@
 import React from 'react'
 import Head from 'next/head'
 import T from '../src/components/px'
+import H from '../src/components/hx'
+import { HContextProvider } from '../src/utils/contexts/hContext'
 
 const Home = ({name}) => {
   return (
@@ -9,10 +11,12 @@ const Home = ({name}) => {
         <title>Home</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-  
-      <T />
-  
-  
+
+      <HContextProvider>
+        <T />
+        <H />
+      </HContextProvider>
+
       <div className='hero'>
         <h1 className='title'>Welcome to Next.js!</h1>
         <p className='description'>
