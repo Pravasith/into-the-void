@@ -1,8 +1,6 @@
-  // flex-row -centre mixin:
-  @import "./vars";
-  @import url('https://fonts.googleapis.com/css?family=Athiti|Open+Sans|Prata');
-// @import url('https://s3.ap-south-1.amazonaws.com/rolling-logs/app-data/fonts/Quotus-Thin.png');
-// @import url('../fonts/Quotus-Thin.ttf');
+// flex-row -centre mixin:
+@import "./vars";
+@import url('https://fonts.googleapis.com/css?family=Athiti|Open+Sans|Prata');
 
 
 // FLEX MIXINS
@@ -47,8 +45,16 @@
 }
 
 
-@mixin gradientAnimation {
-    @-moz-keyframes Gradient {
+@mixin gradient_bg($startColor, $endColor) {
+	background: $startColor;
+	background: -moz-linear-gradient(left,  $startColor 0%, $endColor 80%,$endColor 100%);
+	background: -webkit-linear-gradient(left,  $startColor 0%, $endColor 80%,$endColor 100%);
+	background: linear-gradient(to right,  $startColor 0%, $endColor 80%,$endColor 100%);
+}
+
+
+@mixin gradient_animation {
+    @-moz-keyframes Gradient_Animation {
         0% {
             background-position: 0% 50%
         }
@@ -60,7 +66,7 @@
         }
     }
 
-    @keyframes Gradient {
+    @keyframes Gradient_Animation {
         0% {
             background-position: 0% 50%
         }
@@ -73,12 +79,88 @@
     }
 }
 
+@mixin tilt_animation {
+    @-moz-keyframes Tilt {
+        0% {
+            transform: rotateZ(0deg);
+        }
+        50% {
+            transform: rotateZ(10deg);
+        }
+        100% {
+            transform: rotateZ(0deg);
+        }
+    }
+
+    @keyframes Tilt {
+        0% {
+            transform: rotateZ(0deg);
+        }
+        50% {
+            transform: rotateZ(10deg);
+        }
+        100% {
+            transform: rotateZ(0deg);
+        }
+    }
+}
+
+@mixin translate_right {
+    @-moz-keyframes Translate_Right {
+        0% {
+            opacity: 0;
+            transform: translateX(-1em);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes Translate_Right {
+        0% {
+            opacity: 0;
+            transform: translateX(-1em);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+}
+
+
+@mixin zoom_out {
+    @-moz-keyframes Zoom_Out {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes Zoom_Out {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}
+
+
+
 
 
 @mixin ignoreDefaultStyles{
     body{
     margin: 0;
-    // background: $veryVeryLightGrey;
     // background: linear-gradient(0deg, $white, $lightGrey);
     // background: $white;
     }
@@ -91,7 +173,7 @@
 @mixin includeCommonStyles {
 
     ::selection{
-        background: $highLightBlue;
+        background: $highLightRed;
         color: $white;
     }
 
@@ -182,7 +264,7 @@
 }
 
 @mixin box_shadow_glow{
-  box-shadow: 2px 2px 13px 2px rgba(0, 225, 255, 0.18);
+  box-shadow: 2px 2px 13px 2px rgba(146, 242, 255, 0.18);
 }
 
 @mixin boxShadow{

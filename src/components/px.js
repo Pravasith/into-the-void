@@ -6,7 +6,6 @@ import { HContext } from '../utils/contexts/hContext'
 
 const T = () => {
     const { inc } = useContext(HContext)
-    // console.log(inc)
     return <h1>This is count from {inc.compType}, it's value is {inc.count}</h1>
 }
 

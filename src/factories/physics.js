@@ -30,32 +30,91 @@ const displace = (target_Obj, displacement_Mag, direction_V) => {
 }
 
 const applyVelocity = (
-    target_Obj, 
-    velocity_Mag, // In pravas/s
-    direction_V
+        target_Obj, 
+        velocity_Mag, // In pravas/s
+        direction_V,
+        dispatch
     ) => {
-        let displaceFunc = displace,
-            timeElapsed = 0,
-            currentPos_V
 
-        const animate = () => {
-            requestAnimationFrame(animate)
-            currentPos_V = displaceFunc(target_Obj, velocity_Mag / 60, direction_V).finalPos_V
-            timeElapsed += 1/60
+        let timeElapsed,
+            currentPos_V,
+            time = 0,
+            velocity = velocity_Mag
 
-            return {
-                currentPos_V: currentPos_V,
-                magnitude: displaceFunc.velocity_Mag,
-                timeElapsed
-            }
-        }
+        setInterval(() => {
+            currentPos_V = displace(target_Obj, velocity, direction_V).finalPos_V
+            timeElapsed = time / 1000,
+            time += 10
 
-        // animate()
+            dispatch({
+                type : "ADD_VELOCITY",
+                stats : {
+                    currentPos_V: currentPos_V,
+                    magnitude: velocity,
+                    timeElapsed: timeElapsed.toFixed(2)
+                }
+            })
+        }, 10)
 
-    return animate()
-
-        
 }
+
+const applyAcceleration = (
+    target_Obj, 
+    acceleration_Mag, // In pravas/(s^2)
+    direction_V,
+    dispatch,
+    initialVelocity_Mag,
+    initialVelocitydirection_V,
+    trail
+) => {
+
+    let timeElapsed,
+        currentPos_V,
+        time = 0,
+        currentVelocity = 0.0000001
+
+    setInterval(() => {
+
+        // initial velocity displacement
+        displace(target_Obj, initialVelocity_Mag, initialVelocitydirection_V)
+        // console.log(currentVelocity)
+        displace(target_Obj, currentVelocity, direction_V)
+        timeElapsed = time / 1000,
+        time += 10
+        currentVelocity += acceleration_Mag
+
+        // TRAIL // // TRAIL // // TRAIL // // TRAIL // // TRAIL // 
+        // TRAIL // // TRAIL // // TRAIL // // TRAIL // // TRAIL // 
+        let dotGeometry = new THREE.Geometry()
+        dotGeometry.vertices.push(new THREE.Vector3(
+            target_Obj.position.x,
+            target_Obj.position.y,
+            target_Obj.position.z
+        ))
+        let dotMaterial = new THREE.PointsMaterial({ 
+            size: 1, 
+            sizeAttenuation: false,
+            color: target_Obj.material.color
+        })
+        let dot = new THREE.Points( dotGeometry, dotMaterial )
+        trail.scene.add( dot )
+        
+        // TRAIL // // TRAIL // // TRAIL // // TRAIL // // TRAIL // 
+        // TRAIL // // TRAIL // // TRAIL // // TRAIL // // TRAIL //
+
+        dispatch({
+            type : "ADD_VELOCITY",
+            stats : {
+                currentPos_V: "s",
+                magnitude: "s",
+                timeElapsed: timeElapsed.toFixed(2)
+            }
+        })
+    }, 10)
+
+}
+
+
 
 
 
@@ -112,4 +171,4 @@ const applyVelocity = (
 
 
 
-export { displace, applyVelocity }
+export { displace, applyVelocity, applyAcceleration }

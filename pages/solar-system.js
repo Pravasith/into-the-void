@@ -1,6 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import SolarSystem from '../src/components/solarSystem'
+import { PhysicsContextProvider } from '../src/utils/contexts/physicsContexts'
 
 const SolarSystemComp = () => {
     return (
@@ -10,7 +11,9 @@ const SolarSystemComp = () => {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
-            <SolarSystem />
+            <PhysicsContextProvider>
+                <SolarSystem />
+            </PhysicsContextProvider>
         </div>
     )
 }

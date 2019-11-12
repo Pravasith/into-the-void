@@ -1,15 +1,15 @@
-export const incReducer = (state, action) => {
+export const velocityReducer = (state, action) => {
     switch (action.type){
-        case "INC_1":
+        case "ADD_VELOCITY":
             return {
                 ...state,
-                count: state.count + action.num
+                stats : action.stats
             }
 
-        case "INC_2X":
+        case "ADD_1":
             return {
                 ...state,
-                count: state.count * 2
+                x : action.x
             }
 
         default :
