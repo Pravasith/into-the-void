@@ -41,7 +41,13 @@ const applyVelocity = (
             time = 0,
             velocity = velocity_Mag
 
-        setInterval(() => {
+        // setInterval(() => {
+            
+        // }, 10)
+
+        function animate( time ) {
+            requestAnimationFrame( animate )
+
             currentPos_V = displace(target_Obj, velocity, direction_V).finalPos_V
             timeElapsed = time / 1000,
             time += 10
@@ -54,7 +60,9 @@ const applyVelocity = (
                     timeElapsed: timeElapsed.toFixed(2)
                 }
             })
-        }, 10)
+        }
+
+        requestAnimationFrame( animate )
 
 }
 

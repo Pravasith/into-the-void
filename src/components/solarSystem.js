@@ -9,16 +9,18 @@ import createAxes from '../factories/axes'
 import "../assets/scss/solar_system.scss"
 import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
-import { SideBarButton, colors } from './UIComponents'
+import { SideBarButton, colors, textureImages } from './UIComponents'
 import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
+import { BackSide } from 'three'
 
 
 const SolarSystem = () => {
 
     const [ velocity, setVelocity ] = useState(0)
-    const { addVelocityStats, dispatch } = useContext(PhysicsContext)
-    const [ addObj, setAddObj ] = useState([])
+    const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
+
+    const { addVelocityStats, dispatch } = useContext(PhysicsContext)
 
     useEffect(() => {
 
@@ -46,19 +48,41 @@ const SolarSystem = () => {
             setScene(scene)
 
             // camera
-            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 1, 200)
-            camera.position.set(50, 50, 50)
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 2, 20000)
+            camera.position.set(-250, 500, -250)
 
             // controls
             // Trackball controls imported dynamically because it can only be imported in useEffect
             controls = new module.TrackballControls(camera, container)
-            controls.minDistance = 5
-            controls.maxDistance = 100
-            // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+            controls.minDistance = 1
+            controls.maxDistance = 1000
+            controls.enableDamping = false; // an animation loop is required when either damping or auto-rotation are enabled
             // controls.dampingFactor = 0.05;
 
             // axes
             scene.add(new THREE.AxesHelper(20))
+
+            // TEXTURE SKYBOX - FOR WORLD ENV
+            const loader = new THREE.TextureLoader()
+            let materials = []
+
+            textureImages.map((item, i) => {
+                loader.load(
+                    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-2U.png",
+                     (texture) => {
+                    materials.push(
+                        new THREE.MeshBasicMaterial({
+                            map: texture,
+                            side: BackSide,
+                            // alphaMap: texture
+                            alphaTest: 0.5
+                        })
+                    )
+                    // Add skybox to scene
+                    
+                    addSkyBox(materials, scene)
+                })
+            })
 
             // Lights
             const light1 = new THREE.AmbientLight(0xFFFFFF, 0.5),
@@ -70,16 +94,16 @@ const SolarSystem = () => {
             scene.add(light2)
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
-            createAxes(
-                scene, 
-                15, 
-                5, 
-                {
-                    x : "#333333",
-                    y : "#333333",
-                    z : "#333333",
-                }
-            )
+            // createAxes(
+            //     scene, 
+            //     15, 
+            //     5, 
+            //     {
+            //         x : "#333333",
+            //         y : "#333333",
+            //         z : "#333333",
+            //     }
+            // )
 
             let a = new THREE.Vector3( 15, 15, -15 )
             let b = new THREE.Vector3( 15, -15, 15 )
@@ -120,14 +144,14 @@ const SolarSystem = () => {
     }
     ,[])
 
-    useEffect(() => {
-        if(addObj.length !== 0){
-            
-        }
-    }
-    ,[addObj])
+    const addSkyBox = (materials, scene) => {
+        const skyBoxGeo = new THREE.BoxGeometry(1800, 1800, 1800)
+        const skybox = new THREE.Mesh(skyBoxGeo, materials)
 
-    let dynamicallyImportPackage = async () => {
+        scene.add(skybox)
+    }
+
+    const dynamicallyImportPackage = async () => {
         // Importing trackball controls
         return await import('three/examples/jsm/controls/TrackballControls')
         .then(module => module)
@@ -180,25 +204,25 @@ const SolarSystem = () => {
                                 className="sub-option"
                                 onClick={() => {
 
-                                    let sphereObj = {},
-                                        c = addObj.length + 1,
+                                    let sphereObj,
+                                        c = newObj.length + 1,
                                         rando = totesRandoInt(0, colors.length - 1),
                                         color = colors[ rando ]
                                     
-                                        console.log(color, colors.indexOf(color), rando)
+                                        // console.log(color, colors.indexOf(color), rando)
 
-                                    sphereObj["massObj_" + c] = addMass(
+                                    sphereObj = addMass(
                                         scene,
                                         new THREE.Vector3(
                                             totesRando( -15, 15 ),
                                             totesRando( -15, 15 ),
                                             totesRando( -15, 15 )
                                         ),
-                                        totesRando(0.1, 1.5),
+                                        totesRando(0.1, 0.5),
                                         color
                                     )
 
-                                        setAddObj(addObj.concat(sphereObj))
+                                        setNewObj(newObj.concat(sphereObj))
                                 }} 
                                 >
                                 <AddObjIcon />
@@ -207,25 +231,11 @@ const SolarSystem = () => {
                             <div 
                                 className="sub-option"
                                 onClick= {() => {
-                                    const [ m1, m2 ] = addObj
-
-                                    // console.log(massObj1, massObj2)
-
-                                    applyAcceleration(
-                                        m1.massObj_1,
-                                        0.001,
-                                        new THREE.Vector3(1, 2, 3),
-                                        dispatch,
-                                        0.002,
-                                        new THREE.Vector3(-1, -2, -3),
-                                        {
-                                            scene
-                                        }
-
-                                    )
+                                    
                                 }}
                                 >
                                 <RemoveObjIcon />
+                                {/* <img src="https://xi-upload.s3.amazonaws.com/3dprinted.jpg" alt=""/> */}
                             </div>
                         </div>
                     </div>
