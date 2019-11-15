@@ -17,13 +17,24 @@ export const colors = [
     "#ff3d5a"
 ]
 
-export const textureImages = [
-    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-2.png",
-    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-4.png",
-    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-2U.png",
-    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-2D.png",
-    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-3.png",
-    "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-1.png"
+
+export const skyboxGradients = [
+    {
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/space-background-pravasith-2U.png",
+        name : "spaceBgd"
+    },
+    {
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-2D.png",
+        name : "gradBgd_Down"
+    },
+    {
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-1.png",
+        name : "gradBgd"
+    },
+    {
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-2U.png",
+        name : "gradBgd_Up"
+    }
 ]
 
 export const SideBarButton = (props) => (
