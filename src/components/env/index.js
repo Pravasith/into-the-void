@@ -18,7 +18,8 @@ export const addSkyBoxes = (scene) => {
                 map: texture,
                 side: THREE.BackSide,
                 // alphaMap: texture,
-                alphaTest: 0.5
+                alphaTest: 0.5,
+                fog: false
             }
 
             if(item.name === "spaceBgd")

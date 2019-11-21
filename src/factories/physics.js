@@ -33,7 +33,9 @@ const applyVelocity = (
         target_Obj, 
         velocity_Mag, // In pravas/s
         direction_V,
-        dispatch
+        dispatch,
+        raycaster,
+        terrain
     ) => {
 
         let timeElapsed,
@@ -51,6 +53,22 @@ const applyVelocity = (
             currentPos_V = displace(target_Obj, velocity, direction_V).finalPos_V
             timeElapsed = time / 1000,
             time += 10
+
+            /////////////////////////////////////////////////////////////
+            // sphere.position.y -= 0.2
+            raycaster.set(
+                currentPos_V, 
+                new THREE.Vector3(0, -1, 0)
+            )
+
+            if(terrain){
+                let intersects = raycaster.intersectObject(terrain, true)
+                if(intersects.length > 0){
+                    if(intersects[0].distance <= 0.5 )
+                    console.log(intersects[0].distance)
+                }
+            }
+            ///////////////////////////////////////////////////////////////
 
             dispatch({
                 type : "ADD_VELOCITY",
