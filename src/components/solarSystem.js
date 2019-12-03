@@ -65,27 +65,37 @@ const SolarSystem = () => {
             // TEXTURE SKYBOX - FOR WORLD ENV
             addSkyBoxes(scene)
 
-
             // Lights
-            const light1 = new THREE.AmbientLight("#ffffff", 0.5),
-                light2 = new THREE.DirectionalLight("#ffffff")
+            const lightDistance = 15
+            const ambientLight = new THREE.AmbientLight("#ffffff", 0.5),
+                dirLight1 = new THREE.DirectionalLight("#ffffff", 0.4),
+                dirLight2 = new THREE.DirectionalLight("#ffffff", 0.4),
+                dirLight3 = new THREE.DirectionalLight("#ffffff", 0.4),
+                dirLight4 = new THREE.DirectionalLight("#ffffff", 0.4)
 
-            light2.position.set(1, 1, 1)
+            dirLight1.position.set(lightDistance, lightDistance, lightDistance)
+            dirLight2.position.set(lightDistance, lightDistance, -lightDistance)
+            dirLight3.position.set(-lightDistance, lightDistance, lightDistance)
+            dirLight4.position.set(-lightDistance, lightDistance, -lightDistance)
 
-            scene.add(light1)
-            scene.add(light2)
+            scene.add(ambientLight)
+            scene.add(dirLight1)
+            scene.add(dirLight2)
+            scene.add(dirLight3)
+            scene.add(dirLight4)
+
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
-            createAxes(
-                scene, 
-                15, 
-                5, 
-                {
-                    x : "purple",
-                    y : "purple",
-                    z : "purple",
-                }
-            )
+            // createAxes(
+            //     scene, 
+            //     15, 
+            //     5, 
+            //     {
+            //         x : "purple",
+            //         y : "purple",
+            //         z : "purple",
+            //     }
+            // )
 
 
             // parent
@@ -148,19 +158,26 @@ const SolarSystem = () => {
             // sphere.position.y = intersects[0].point.y + 1.5
 
             const gltfLoader = new module.GLTFLoader()
-            const url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/girl-paint.glb'
+            const url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/move-x.gltf'
+
+            // Optional: Provide a DRACOLoader instance to decode compressed mesh data
+            let dracoLoader = new module.DRACOLoader()
+            dracoLoader.setDecoderPath( 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/draco/' )
+            gltfLoader.setDRACOLoader( dracoLoader )
 
             gltfLoader.load(url, (gltf) => {
                 const root = gltf.scene
                 console.log(gltf)
                 const scale = 1
                 scene.add(root)
+                console.log(root)
                 root.scale.set(
                     scale, 
                     scale, 
                     scale
                 )
                 root.rotation.y = 90
+                // root.position.z = 10
 
                 const color = "#FFF"  // white
                 const near = 10
@@ -215,8 +232,8 @@ const SolarSystem = () => {
         // Importing trackball controls and GLTFLoader
         await Promise.all([
             import('three/examples/jsm/controls/TrackballControls'),
-            import('three/examples/jsm/loaders/GLTFLoader.js')
-            // import('three/examples/jsm/loaders/GLTFLoader.js')
+            import('three/examples/jsm/loaders/GLTFLoader.js'),
+            import('three/examples/jsm/loaders/DRACOLoader.js')
         ])
         .then(modules => {
             modules.map((item, i) => {
