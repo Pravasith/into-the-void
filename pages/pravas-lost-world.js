@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import SolarSystem from '../src/components/solarSystem'
+import WorldBuild from '../src/components/worldBuild'
 import { PhysicsContextProvider } from '../src/utils/contexts/physicsContexts'
 
 const SolarSystemComp = () => {
@@ -12,7 +12,7 @@ const SolarSystemComp = () => {
             </Head>
 
             <PhysicsContextProvider>
-                <SolarSystem />
+                <WorldBuild />
             </PhysicsContextProvider>
         </div>
     )

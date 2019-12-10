@@ -6,33 +6,47 @@ import { applyVelocity, displace, applyAcceleration } from '../factories/physics
 
 import createAxes from '../factories/axes'
 
-import "../assets/scss/solar_system.scss"
+import "../assets/scss/world.scss"
 import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
 import { colors } from './UIComponents'
 import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
-import { addSkyBoxes } from './env'
+import { addSkyBoxes } from './env/sky'
 
-import { noise } from '../factories/geoPhysics.js'
+import { noise } from '../factories/waterNoise'
+import { loadModels } from '../factories/loadModels'
 
 
-const SolarSystem = () => {
+const WorldBuild = () => {
 
     const [ terrain, setTerrain ] = useState(null)
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
+    
 
     const { addVelocityStats, dispatch } = useContext(PhysicsContext)
 
     useEffect(() => {
+        init()
+    }
+    ,[])
 
-        let parent, renderer, scene, camera, controls
+    const init = () => {
+        let renderer, 
+            scene, 
+            camera, 
+            controls, 
+            mixer,
+            clock = new THREE.Clock(),
+            peak = 0
 
         // Dynamic module importer
         dynamicallyImportPackage()
-        .then(async (module) => {
+        .then(async module => {
             // BASIC SETTINGS /////////////////////////////////////////
             
+            
+
             // renderer
             const container = document.getElementsByClassName("display-screen")[0]
             renderer = new THREE.WebGLRenderer({
@@ -59,11 +73,46 @@ const SolarSystem = () => {
             controls.maxDistance = 1000
             controls.enableDamping = false; // an animation loop is required when either damping or auto-rotation are enabled
 
-            // axes
-            // scene.add(new THREE.AxesHelper(20))
-
             // TEXTURE SKYBOX - FOR WORLD ENV
             addSkyBoxes(scene)
+
+            // Load models [terrain, sky, yada yada]
+            // await loadModels(module, scene, mixer)
+            // .then(() => {
+
+            // })
+
+            await loadModels(module, scene, mixer)
+            .then((models) => {
+                models.map((gltf, i) => {
+                    const { modelData } = gltf
+                    const model = modelData.scene
+                    const scale = 1
+                    scene.add(model)
+                    model.scale.set(
+                        scale, 
+                        scale, 
+                        scale
+                    )
+
+                    // if(modelData.animations)
+                    if(modelData.animations.length > 0){
+                        mixer = new THREE.AnimationMixer(model)
+                        mixer.clipAction(modelData.animations[1]).play()
+                        // mixer.clipAction(gltf.animations[0]).play()
+                    }
+                })
+                
+            })
+            .catch(e => console.error(e))
+
+            const near = 10
+            const far = 500
+            scene.fog = new THREE.Fog("#ffffff", near, far)
+
+
+            console.log(2)
+
 
             // Lights
             const lightDistance = 15
@@ -80,69 +129,45 @@ const SolarSystem = () => {
 
             scene.add(ambientLight)
             scene.add(dirLight1)
-            scene.add(dirLight2)
-            scene.add(dirLight3)
-            scene.add(dirLight4)
+            // scene.add(dirLight2)
+            // scene.add(dirLight3)
+            // scene.add(dirLight4)
 
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
-            // createAxes(
-            //     scene, 
-            //     15, 
-            //     5, 
-            //     {
-            //         x : "purple",
-            //         y : "purple",
-            //         z : "purple",
-            //     }
-            // )
+            createAxes(
+                scene, 
+                15, 
+                5, 
+                {
+                    x : "purple",
+                    y : "purple",
+                    z : "purple",
+                }
+            )
 
 
-            // parent
-            parent = new THREE.Object3D()
-            scene.add( parent )
+            // Add terrain and water - START
+            
+            // Add terrain and water - END
 
 
+            let geometry = new THREE.PlaneGeometry(260, 260, 100, 100)
 
-
-            // Add plane geometry
-            let geometry = new THREE.PlaneGeometry(100, 100, 200, 200)
-            let mapImage = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/planet-x-map.jpg"
-
-            let material = new THREE.MeshPhongMaterial({ 
+            let material = new THREE.MeshBasicMaterial({ 
                 color: "#29abe2", 
-                specular: "#FFFFFF", 
-                side: THREE.DoubleSide,  
-                shading: THREE.FlatShading, 
-                shininess: 3
+                transparent: true,
+                opacity: 0.65
             })
 
             let terrainX = new THREE.Mesh( geometry, material )
             terrainX.rotation.x = -Math.PI / 2
-            terrainX.position.y = -50
+            terrainX.position.x = 50
+            terrainX.position.y = -2
             // terrain.position.z = -2
 
             terrainX.updateMatrixWorld(true)
-            // scene.add( terrainX )
-
-            let peak = 20,
-                vertices = terrainX.geometry.vertices,
-                c = 0,
-                smoothing = 50
-
-            while(c < vertices.length){
-                let point = vertices[c]
-                point.z = peak * noise.perlin3(
-                    point.x / smoothing,
-                    point.y / smoothing,
-                    point.z / smoothing
-                )
-                c++
-            }
-
-            terrainX.geometry.verticesNeedUpdate = true
-            terrainX.geometry.normalsNeedUpdate = true
-            
+            scene.add( terrainX )            
 
             let sphere_geometry = new THREE.SphereGeometry(0.5, 32, 32)
             let sphere_material = new THREE.MeshPhongMaterial({color: new THREE.Color(0.9, 0.55, 0.8)})
@@ -157,37 +182,7 @@ const SolarSystem = () => {
             // console.log(intersects)
             // sphere.position.y = intersects[0].point.y + 1.5
 
-            const gltfLoader = new module.GLTFLoader()
-            const url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/move-x.gltf'
-
-            // Optional: Provide a DRACOLoader instance to decode compressed mesh data
-            let dracoLoader = new module.DRACOLoader()
-            dracoLoader.setDecoderPath( 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/draco/' )
-            gltfLoader.setDRACOLoader( dracoLoader )
-
-            gltfLoader.load(url, (gltf) => {
-                const root = gltf.scene
-                console.log(gltf)
-                const scale = 1
-                scene.add(root)
-                console.log(root)
-                root.scale.set(
-                    scale, 
-                    scale, 
-                    scale
-                )
-                root.rotation.y = 90
-                // root.position.z = 10
-
-                const color = "#FFF"  // white
-                const near = 10
-                const far = 500
-                scene.fog = new THREE.Fog(color, near, far)
-
-                setTerrain(root)
-                applyVelocity(sphere, 0.3, new THREE.Vector3(0, -1, 0), dispatch, raycaster, root)
-            })
-
+            
             // let wireframe = new THREE.WireframeGeometry(geometry)
             // let line = new THREE.LineSegments(wireframe)
             // line.rotation.x = -Math.PI / 2
@@ -205,6 +200,8 @@ const SolarSystem = () => {
                 //     new THREE.Vector3(0, -1, 0)
                 // )
 
+                // peak +=1
+
                 // // console.log(terrain)
 
                 // if(terrain){
@@ -215,6 +212,35 @@ const SolarSystem = () => {
                 
                 // sphere.position.y = intersects[0].point.y + 3 //radius of sphere
 
+                // Character animation update - START
+                let delta = clock.getDelta()
+                if (mixer != null) {
+                    mixer.update(delta)
+                }
+                // Character animation update - END
+
+
+                // Water animation update - START
+                // waterUpdate(vertices)
+                let vertices = terrainX.geometry.vertices,
+                smoothing = 10
+
+                vertices.map((point, i) => {
+                    point.z = Math.sin(peak) * 2 * noise.perlin3(
+                        point.x / smoothing,
+                        point.y / smoothing,
+                        point.z / smoothing
+                    )
+                })
+
+                peak +=0.05
+
+                if(peak >= 2 * Math.PI) peak = 0
+
+                terrainX.geometry.verticesNeedUpdate = true
+                terrainX.geometry.normalsNeedUpdate = true
+                // Water animation update - END
+
                 controls.update()
                 renderer.render( scene, camera )
                 requestAnimationFrame( animate )
@@ -224,7 +250,8 @@ const SolarSystem = () => {
             
         })
     }
-    ,[])
+
+
 
     const dynamicallyImportPackage = async () => {
         let allMods = {}
@@ -343,4 +370,4 @@ const SolarSystem = () => {
     )
 }
 
-export default SolarSystem
+export default WorldBuild
