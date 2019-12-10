@@ -13,8 +13,9 @@ import { colors } from './UIComponents'
 import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
 
-import { noise } from '../factories/waterNoise'
+// import { noise } from '../factories/waterNoise'
 import { loadModels } from '../factories/loadModels'
+import { getWater } from './env/water'
 
 
 const WorldBuild = () => {
@@ -44,8 +45,6 @@ const WorldBuild = () => {
         dynamicallyImportPackage()
         .then(async module => {
             // BASIC SETTINGS /////////////////////////////////////////
-            
-            
 
             // renderer
             const container = document.getElementsByClassName("display-screen")[0]
@@ -57,6 +56,7 @@ const WorldBuild = () => {
             renderer.setSize(container.clientWidth, container.clientHeight)
             renderer.setClearColor(0x000000, 0) // Background color
             container.appendChild(renderer.domElement)
+
 
             // scene
             scene = new THREE.Scene()
@@ -76,19 +76,17 @@ const WorldBuild = () => {
             // TEXTURE SKYBOX - FOR WORLD ENV
             addSkyBoxes(scene)
 
-            // Load models [terrain, sky, yada yada]
-            // await loadModels(module, scene, mixer)
-            // .then(() => {
-
-            // })
-
-            await loadModels(module, scene, mixer)
+            // Load models like terrain, character, yada yada
+            await loadModels(module)
             .then((models) => {
                 models.map((gltf, i) => {
                     const { modelData } = gltf
                     const model = modelData.scene
                     const scale = 1
+
+                    // Adds terrain, charater
                     scene.add(model)
+
                     model.scale.set(
                         scale, 
                         scale, 
@@ -102,16 +100,15 @@ const WorldBuild = () => {
                         // mixer.clipAction(gltf.animations[0]).play()
                     }
                 })
-                
             })
             .catch(e => console.error(e))
 
-            const near = 10
-            const far = 500
-            scene.fog = new THREE.Fog("#ffffff", near, far)
-
-
-            console.log(2)
+            // Add fog
+            scene.fog = new THREE.Fog(
+                "#ffffff",
+                10, // near value
+                500 // far value
+            )
 
 
             // Lights
@@ -135,39 +132,24 @@ const WorldBuild = () => {
 
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
-            createAxes(
-                scene, 
-                15, 
-                5, 
-                {
-                    x : "purple",
-                    y : "purple",
-                    z : "purple",
-                }
-            )
+            // createAxes(
+            //     scene,
+            //     15,
+            //     5,
+            //     {
+            //         x : "purple",
+            //         y : "purple",
+            //         z : "purple",
+            //     }
+            // )
 
 
-            // Add terrain and water - START
-            
-            // Add terrain and water - END
+            // Add water 
+            let water = getWater()
+            scene.add(water)
 
+            // Animate character
 
-            let geometry = new THREE.PlaneGeometry(260, 260, 100, 100)
-
-            let material = new THREE.MeshBasicMaterial({ 
-                color: "#29abe2", 
-                transparent: true,
-                opacity: 0.65
-            })
-
-            let terrainX = new THREE.Mesh( geometry, material )
-            terrainX.rotation.x = -Math.PI / 2
-            terrainX.position.x = 50
-            terrainX.position.y = -2
-            // terrain.position.z = -2
-
-            terrainX.updateMatrixWorld(true)
-            scene.add( terrainX )            
 
             let sphere_geometry = new THREE.SphereGeometry(0.5, 32, 32)
             let sphere_material = new THREE.MeshPhongMaterial({color: new THREE.Color(0.9, 0.55, 0.8)})
@@ -212,34 +194,12 @@ const WorldBuild = () => {
                 
                 // sphere.position.y = intersects[0].point.y + 3 //radius of sphere
 
-                // Character animation update - START
+                // Animation mixer update - START
                 let delta = clock.getDelta()
                 if (mixer != null) {
                     mixer.update(delta)
                 }
-                // Character animation update - END
-
-
-                // Water animation update - START
-                // waterUpdate(vertices)
-                let vertices = terrainX.geometry.vertices,
-                smoothing = 10
-
-                vertices.map((point, i) => {
-                    point.z = Math.sin(peak) * 2 * noise.perlin3(
-                        point.x / smoothing,
-                        point.y / smoothing,
-                        point.z / smoothing
-                    )
-                })
-
-                peak +=0.05
-
-                if(peak >= 2 * Math.PI) peak = 0
-
-                terrainX.geometry.verticesNeedUpdate = true
-                terrainX.geometry.normalsNeedUpdate = true
-                // Water animation update - END
+                // Animation mixer update - END
 
                 controls.update()
                 renderer.render( scene, camera )
@@ -247,7 +207,7 @@ const WorldBuild = () => {
             }
 
             requestAnimationFrame( animate )
-            
+
         })
     }
 
@@ -279,7 +239,13 @@ const WorldBuild = () => {
         <div
             className = "parent-class"
             >
-            <div className="tools-holster">
+            <div 
+                className="tools-holster"
+                tabIndex="0"
+                onKeyDown={(e) => {
+                    console.log("e.key")
+                }}
+                >
                 {/* <p>{addVelocityStats.stats.timeElapsed}</p> */}
                 <div className="icon-wrap">
 
@@ -302,8 +268,6 @@ const WorldBuild = () => {
                 </div>
 
                 <div className="icon-wrap">
-                    
-
                     <div className="icon-wrap-abs">
                         {/* Background dummy div */}
                             <div className="icon-wrap-gradient">
@@ -359,7 +323,7 @@ const WorldBuild = () => {
                 </div>
 
             </div>
-            <div 
+            <div
                 className="display-screen"
                 onMouseMove={(e) => {
                     // console.log(e.screenX, e.screenY)
