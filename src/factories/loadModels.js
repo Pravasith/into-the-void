@@ -3,8 +3,8 @@ export const loadModels = (module) => {
     const gltfLoader = new module.GLTFLoader()
     const s3Url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
     const urls = [
-        "terrain-x.gltf",
-        "xtc-x.gltf"
+        "terrain-x",
+        "xtc-x"
     ]
 
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data
@@ -16,7 +16,7 @@ export const loadModels = (module) => {
         let models = []
         urls.map((url, i) => {
             gltfLoader.load(
-                s3Url + url, 
+                s3Url + url + '.gltf', 
                 (gltf) => {
                     models.push({
                         modelName: url,

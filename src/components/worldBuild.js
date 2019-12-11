@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import * as THREE from 'three'
 
 import { addMass, removeMass } from '../factories/massObjects'
@@ -16,13 +16,15 @@ import { addSkyBoxes } from './env/sky'
 // import { noise } from '../factories/waterNoise'
 import { loadModels } from '../factories/loadModels'
 import { getWater } from './env/water'
+import { animateModels } from '../factories/animateModels'
 
 
 const WorldBuild = () => {
 
-    const [ terrain, setTerrain ] = useState(null)
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
+
+    const canvasWrapper = useRef(null)
     
 
     const { addVelocityStats, dispatch } = useContext(PhysicsContext)
@@ -38,6 +40,7 @@ const WorldBuild = () => {
             camera, 
             controls, 
             mixer,
+            models,
             clock = new THREE.Clock(),
             peak = 0
 
@@ -47,7 +50,8 @@ const WorldBuild = () => {
             // BASIC SETTINGS /////////////////////////////////////////
 
             // renderer
-            const container = document.getElementsByClassName("display-screen")[0]
+            const container = canvasWrapper.current
+
             renderer = new THREE.WebGLRenderer({
                 antialias: true,
                 alpha:true
@@ -58,28 +62,27 @@ const WorldBuild = () => {
             container.appendChild(renderer.domElement)
 
 
+
             // scene
             scene = new THREE.Scene()
             setScene(scene)
 
-            // camera
-            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 2, 2500)
-            camera.position.set(0, 0, 100)
 
             // controls
             // Trackball controls imported dynamically because it can only be imported in useEffect
-            controls = new module.TrackballControls(camera, container)
-            controls.minDistance = 1
-            controls.maxDistance = 1000
-            controls.enableDamping = false; // an animation loop is required when either damping or auto-rotation are enabled
+            // controls = new module.TrackballControls(camera, container)
+            // controls.minDistance = 1
+            // controls.maxDistance = 1000
+            // controls.enableDamping = false; // an animation loop is required when either damping or auto-rotation are enabled
 
             // TEXTURE SKYBOX - FOR WORLD ENV
             addSkyBoxes(scene)
 
             // Load models like terrain, character, yada yada
             await loadModels(module)
-            .then((models) => {
-                models.map((gltf, i) => {
+            .then((gltfs) => {
+                models = gltfs
+                gltfs.map((gltf, i) => {
                     const { modelData } = gltf
                     const model = modelData.scene
                     const scale = 1
@@ -151,11 +154,11 @@ const WorldBuild = () => {
             // Animate character
 
 
-            let sphere_geometry = new THREE.SphereGeometry(0.5, 32, 32)
+            let sphere_geometry = new THREE.SphereGeometry(5, 32, 32)
             let sphere_material = new THREE.MeshPhongMaterial({color: new THREE.Color(0.9, 0.55, 0.8)})
             let sphere = new THREE.Mesh(sphere_geometry, sphere_material)
             scene.add(sphere)
-            sphere.position.y = 100
+            // sphere.position.y = 100
 
             let raycaster = new THREE.Raycaster()
             // raycaster.set(sphere.position, new THREE.Vector3(0, -1, 0))
@@ -171,6 +174,22 @@ const WorldBuild = () => {
             // line.position.y = -0
             // line.material.color.setHex(0x000000)
             // scene.add(line)
+
+            // camera
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 2, 2500)
+            camera.position.set(0, 0, 100)
+            camera.rotation.x = -Math.PI / 8
+
+            // Animate models
+            animateModels(
+                models.filter(model => model.modelName === 'xtc-x')[0], 
+                document,
+                camera
+            )
+
+           
+
+            
 
 
 
@@ -201,7 +220,7 @@ const WorldBuild = () => {
                 }
                 // Animation mixer update - END
 
-                controls.update()
+                // controls.update()
                 renderer.render( scene, camera )
                 requestAnimationFrame( animate )
             }
@@ -210,7 +229,6 @@ const WorldBuild = () => {
 
         })
     }
-
 
 
     const dynamicallyImportPackage = async () => {
@@ -237,9 +255,9 @@ const WorldBuild = () => {
 
     return (
         <div
-            className = "parent-class"
+            className = "parent-class"            
             >
-            <div 
+            <div
                 className="tools-holster"
                 tabIndex="0"
                 onKeyDown={(e) => {
@@ -324,12 +342,14 @@ const WorldBuild = () => {
 
             </div>
             <div
+                ref = {canvasWrapper}
                 className="display-screen"
                 onMouseMove={(e) => {
                     // console.log(e.screenX, e.screenY)
                 }}
                 >
             </div>
+            
         </div>
     )
 }

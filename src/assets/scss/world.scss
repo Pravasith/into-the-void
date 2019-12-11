@@ -26,27 +26,33 @@ p{
 
 
 .parent-class{
-    @include flexCentreRow;
-    align-items: flex-start;
+    position: relative;
+    // @include flexCentreRow;
+    // align-items: flex-start;
     background: $darkestGrey;
 
     .hide{
         display: none;
     }
 
+    .key-bind-capturer{
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+    }
+
     .tools-holster{
-        @include flexCentreCol;
+        // @include flexCentreCol;
+        position: absolute;
 
         padding-top: 1.5em;
-        justify-content: start;
-        width: 5%;
+        // justify-content: start;
+        // width: 5%;
         min-width: 3em;
         // height: 96.5vh;
         background-color: $darkestGrey;
         z-index: 1;
 
-        
-        
         .icon-wrap{
             @include flexCentreCol;
             min-width: 4em;
@@ -94,11 +100,9 @@ p{
                     top:    -moz-calc(50% - 1.25em);
                     top:         calc(50% - 1.25em);
 
-                   
                 }
 
                 .icon-wrap-gradient-abs{
-                    
                     position: absolute;
                     left: -webkit-calc(50% - 1em);
                     left:    -moz-calc(50% - 1em);
@@ -107,7 +111,7 @@ p{
                     top: -webkit-calc(50% - 1em);
                     top:    -moz-calc(50% - 1em);
                     top:         calc(50% - 1em);
-                   
+
                 }
             }
 
@@ -156,5 +160,6 @@ p{
         // background-image: url("https://xi-upload.s3.amazonaws.com/app-pics/space-background-stars-galaxy-illustration-by-pravasith.png");
         background-repeat: no-repeat;
         background-size: 100% 100%;
+
     }
 }
