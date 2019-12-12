@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
+    "express": "^4.17.1",
     "gsap": "^3.0.2",
     "next": "9.1.2",
     "next-sass": "^1.0.3",

@@ -99,7 +99,7 @@ const WorldBuild = () => {
                     // if(modelData.animations)
                     if(modelData.animations.length > 0){
                         mixer = new THREE.AnimationMixer(model)
-                        mixer.clipAction(modelData.animations[1]).play()
+                        mixer.clipAction(modelData.animations[0]).play()
                         // mixer.clipAction(gltf.animations[0]).play()
                     }
                 })
@@ -110,7 +110,7 @@ const WorldBuild = () => {
             scene.fog = new THREE.Fog(
                 "#ffffff",
                 10, // near value
-                500 // far value
+                270 // far value
             )
 
 
@@ -178,7 +178,7 @@ const WorldBuild = () => {
             // camera
             camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 2, 2500)
             camera.position.set(0, 0, 100)
-            camera.rotation.x = -Math.PI / 8
+            camera.rotation.x = -Math.PI / 20
 
             // Animate models
             animateModels(
@@ -186,6 +186,10 @@ const WorldBuild = () => {
                 document,
                 camera
             )
+
+            // Set terrain 
+            let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
+            // terrain.modelData.scene.position.y = 1
 
            
 

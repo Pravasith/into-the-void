@@ -5,9 +5,7 @@ import { Vector3 } from 'three'
 export const animateModels = (character, document, camera) => {
 
     let model = character.modelData.scene
-    
-
-   
+    model.scale.set(0.25, 0.25, 0.25)
 
 
     // Key bindings / keybindings / keybinder
@@ -29,7 +27,7 @@ export const animateModels = (character, document, camera) => {
         let pi = Math.PI
         // let tl = new TimelineLite()
         let timestep = 0.1 // Time step between animations
-        let positionStep = 0.075
+        let positionStep = 0.1
 
 
         if(key === "w"){
@@ -103,8 +101,8 @@ const updateCameraPosition = (camera, obj) => {
 
     camera.position.set(
         obj.position.x,
-        obj.position.y + 20,
-        obj.position.z + 15
+        obj.position.y + 2.5,
+        obj.position.z + 5
     )
 }
 
