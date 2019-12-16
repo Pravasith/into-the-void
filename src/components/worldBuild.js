@@ -16,13 +16,18 @@ import { addSkyBoxes } from './env/sky'
 // import { noise } from '../factories/waterNoise'
 import { loadModels } from '../factories/loadModels'
 import { getWater } from './env/water'
-import { animateModels } from '../factories/animateModels'
+import { animateModels, handleMouse } from '../factories/animateModels'
 
 
 const WorldBuild = () => {
 
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
+    const [ girl, setGirl ] = useState(null)
+    const [ camera, setCamera ] = useState(null)
+    const [ leftOrRight, setLeftOrRight ] = useState(new Array(10).fill(null))
+    const [ upOrDown, setUpOrDown ] = useState(new Array(10).fill(null))
+    const [ counter, setCounter ] = useState(0)
 
     const canvasWrapper = useRef(null)
     
@@ -35,10 +40,10 @@ const WorldBuild = () => {
     ,[])
 
     const init = () => {
-        let renderer, 
-            scene, 
-            camera, 
-            controls, 
+        let renderer,
+            scene,
+            theCamera,
+            controls,
             mixer,
             models,
             clock = new THREE.Clock(),
@@ -96,6 +101,8 @@ const WorldBuild = () => {
                         scale
                     )
 
+                    // Store animations
+
                     // if(modelData.animations)
                     if(modelData.animations.length > 0){
                         mixer = new THREE.AnimationMixer(model)
@@ -109,8 +116,8 @@ const WorldBuild = () => {
             // Add fog
             scene.fog = new THREE.Fog(
                 "#ffffff",
-                10, // near value
-                270 // far value
+                30, // near value
+                900 // far value
             )
 
 
@@ -176,15 +183,25 @@ const WorldBuild = () => {
             // scene.add(line)
 
             // camera
-            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 2, 2500)
-            camera.position.set(0, 0, 100)
-            camera.rotation.x = -Math.PI / 20
+            theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 2500)
+            theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
+            theCamera.rotation.x = -Math.PI / 20
+
+            // sets camera to the state
+            setCamera(theCamera)
+
+            let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
+            theGirl.modelData.scene.add(theCamera) // Parents camera to girl
+
+            // sets girl to the state
+            setGirl(theGirl)
 
             // Animate models
             animateModels(
-                models.filter(model => model.modelName === 'xtc-x')[0], 
+                theGirl, 
                 document,
-                camera
+                theCamera,
+                mixer
             )
 
             // Set terrain 
@@ -225,7 +242,7 @@ const WorldBuild = () => {
                 // Animation mixer update - END
 
                 // controls.update()
-                renderer.render( scene, camera )
+                renderer.render( scene, theCamera )
                 requestAnimationFrame( animate )
             }
 
@@ -264,9 +281,7 @@ const WorldBuild = () => {
             <div
                 className="tools-holster"
                 tabIndex="0"
-                onKeyDown={(e) => {
-                    console.log("e.key")
-                }}
+
                 >
                 {/* <p>{addVelocityStats.stats.timeElapsed}</p> */}
                 <div className="icon-wrap">
@@ -350,6 +365,19 @@ const WorldBuild = () => {
                 className="display-screen"
                 onMouseMove={(e) => {
                     // console.log(e.screenX, e.screenY)
+                    const stateVars = {
+                        leftOrRight,
+                        upOrDown,
+                        setLeftOrRight,
+                        setUpOrDown,
+                        counter,
+                        setCounter
+                    }
+
+                    // Handle mouse movements and world rotation
+                    if(girl && camera)
+                    handleMouse(e, canvasWrapper, stateVars, girl, camera)
+
                 }}
                 >
             </div>
