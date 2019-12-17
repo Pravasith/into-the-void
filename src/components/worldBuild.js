@@ -25,9 +25,9 @@ const WorldBuild = () => {
     const [ scene, setScene ] = useState(null)
     const [ girl, setGirl ] = useState(null)
     const [ camera, setCamera ] = useState(null)
-    const [ leftOrRight, setLeftOrRight ] = useState(new Array(10).fill(null))
-    const [ upOrDown, setUpOrDown ] = useState(new Array(10).fill(null))
-    const [ counter, setCounter ] = useState(0)
+    // const [ leftOrRight, setLeftOrRight ] = useState(new Array(3).fill(null))
+    // const [ upOrDown, setUpOrDown ] = useState(new Array(3).fill(null))
+    // const [ counter, setCounter ] = useState(0)
 
     const canvasWrapper = useRef(null)
     
@@ -57,6 +57,8 @@ const WorldBuild = () => {
             // renderer
             const container = canvasWrapper.current
 
+           
+
             renderer = new THREE.WebGLRenderer({
                 antialias: true,
                 alpha:true
@@ -65,8 +67,6 @@ const WorldBuild = () => {
             renderer.setSize(container.clientWidth, container.clientHeight)
             renderer.setClearColor(0x000000, 0) // Background color
             container.appendChild(renderer.domElement)
-
-
 
             // scene
             scene = new THREE.Scene()
@@ -117,7 +117,7 @@ const WorldBuild = () => {
             scene.fog = new THREE.Fog(
                 "#ffffff",
                 30, // near value
-                900 // far value
+                1500 // far value
             )
 
 
@@ -158,14 +158,49 @@ const WorldBuild = () => {
             let water = getWater()
             scene.add(water)
 
-            // Animate character
+            // Anchor for 3D orbit movements (mouse)
+            let anchor = new THREE.Object3D()
+            anchor.scale.set(0.125, 0.125, 0.125)
+            scene.add(anchor)
+
+            // camera
+            theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
+            theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
+            theCamera.rotation.x = -Math.PI / 20
+
+            // sets camera to the state
+            setCamera(theCamera)
+            anchor.add(theCamera) // Parents camera to Anchor
+
+            let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
+            // theGirl.modelData.scene
+
+            // sets girl to the state
+            setGirl(theGirl)
 
 
-            let sphere_geometry = new THREE.SphereGeometry(5, 32, 32)
-            let sphere_material = new THREE.MeshPhongMaterial({color: new THREE.Color(0.9, 0.55, 0.8)})
-            let sphere = new THREE.Mesh(sphere_geometry, sphere_material)
-            scene.add(sphere)
-            // sphere.position.y = 100
+            // Pointer lock controls
+            controls = new module.PointerLockControls( anchor, container )
+            scene.add( controls.getObject() )
+
+            const animationPresets = {
+                girl : theGirl,
+                anchor,
+                document,
+                camera : theCamera,
+                mixer
+            }
+
+            // Animate models
+            animateModels(
+                animationPresets
+            )
+
+            // Set terrain 
+            let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
+            // terrain.modelData.scene.position.y = 1
+
+           
 
             let raycaster = new THREE.Raycaster()
             // raycaster.set(sphere.position, new THREE.Vector3(0, -1, 0))
@@ -182,40 +217,10 @@ const WorldBuild = () => {
             // line.material.color.setHex(0x000000)
             // scene.add(line)
 
-            // camera
-            theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 2500)
-            theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
-            theCamera.rotation.x = -Math.PI / 20
-
-            // sets camera to the state
-            setCamera(theCamera)
-
-            let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
-            theGirl.modelData.scene.add(theCamera) // Parents camera to girl
-
-            // sets girl to the state
-            setGirl(theGirl)
-
-            // Animate models
-            animateModels(
-                theGirl, 
-                document,
-                theCamera,
-                mixer
-            )
-
-            // Set terrain 
-            let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
-            // terrain.modelData.scene.position.y = 1
-
-           
-
-            
-
 
 
             function animate( time ) {
-                
+
                 // // sphere.position.y -= 0.2
                 // raycaster.set(
                 //     sphere.position, 
@@ -259,7 +264,8 @@ const WorldBuild = () => {
         await Promise.all([
             import('three/examples/jsm/controls/TrackballControls'),
             import('three/examples/jsm/loaders/GLTFLoader.js'),
-            import('three/examples/jsm/loaders/DRACOLoader.js')
+            import('three/examples/jsm/loaders/DRACOLoader.js'),
+            import('three/examples/jsm/controls/PointerLockControls.js')
         ])
         .then(modules => {
             modules.map((item, i) => {
@@ -272,6 +278,17 @@ const WorldBuild = () => {
         .catch(e => console.log(e))
 
         return allMods
+    }
+
+    function lockChangeAlert() {
+        if (document.pointerLockElement === canvas ||
+            document.mozPointerLockElement === canvas) {
+            console.log('The pointer lock status is now locked');
+            document.addEventListener("mousemove", updatePosition, false);
+        } else {
+            console.log('The pointer lock status is now unlocked');
+            document.removeEventListener("mousemove", updatePosition, false);
+        }
     }
 
     return (
@@ -363,20 +380,20 @@ const WorldBuild = () => {
             <div
                 ref = {canvasWrapper}
                 className="display-screen"
+                onClick = {() => canvasWrapper.current.requestPointerLock()}
                 onMouseMove={(e) => {
-                    // console.log(e.screenX, e.screenY)
-                    const stateVars = {
-                        leftOrRight,
-                        upOrDown,
-                        setLeftOrRight,
-                        setUpOrDown,
-                        counter,
-                        setCounter
-                    }
+                    // const stateVars = {
+                    //     leftOrRight,
+                    //     upOrDown,
+                    //     setLeftOrRight,
+                    //     setUpOrDown,
+                    //     counter,
+                    //     setCounter
+                    // }
 
-                    // Handle mouse movements and world rotation
-                    if(girl && camera)
-                    handleMouse(e, canvasWrapper, stateVars, girl, camera)
+                    // // Handle mouse movements and world rotation
+                    // if(girl && camera)
+                    // handleMouse(e, canvasWrapper, stateVars, girl, camera)
 
                 }}
                 >
