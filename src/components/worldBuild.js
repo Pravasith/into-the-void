@@ -159,9 +159,21 @@ const WorldBuild = () => {
             scene.add(water)
 
             // Anchor for 3D orbit movements (mouse)
-            let anchor = new THREE.Object3D()
+            // let anchor = new THREE.Object3D()
+            // anchor.scale.set(0.125, 0.125, 0.125)
+            // scene.add(anchor)
+            var geometry = new THREE.SphereGeometry( 1, 32, 32 );
+            var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+            var anchor = new THREE.Mesh( geometry, material );
             anchor.scale.set(0.125, 0.125, 0.125)
-            scene.add(anchor)
+            scene.add( anchor );
+
+            var geometry2 = new THREE.SphereGeometry( 1, 32, 32 );
+            var material2 = new THREE.MeshBasicMaterial( {color: "#fff"} );
+            var anchor2 = new THREE.Mesh( geometry2, material2 );
+            anchor2.position.set(1, 0, 0)
+            anchor2.scale.set(0.125, 0.125, 0.125)
+            scene.add( anchor2 );
 
             // camera
             theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
@@ -390,6 +402,8 @@ const WorldBuild = () => {
                     //     counter,
                     //     setCounter
                     // }
+
+                    
 
                     // // Handle mouse movements and world rotation
                     // if(girl && camera)

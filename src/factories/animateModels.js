@@ -14,6 +14,10 @@ export const animateModels = (presets) => {
         mixer
     } = presets
 
+    
+
+    const pi = Math.PI
+
     let model = girl.modelData.scene
     model.scale.set(0.125, 0.125, 0.125)
 
@@ -39,56 +43,80 @@ export const animateModels = (presets) => {
 
     document.onkeyup = function (e) {
         delete keys[e.keyCode]
-        // console.log(prevCurrKey)
     }
+
+    
 
     
     const characterAction = () => {
 
-        let pi = Math.PI
         let timestep = 0.2 // Time step between animations
         let positionStep = 0.25
 
         let directionVector = camera.getWorldDirection( new Vector3() )
-        let axis = new Vector3(0, 1, 0)
+        let axis = new Vector3(0, 1, 0)       
+
+
 
 
         if(keys[87]){ // W
-            displace(anchor, positionStep, new Vector3(
+
+            // Anchor movements
+            // displace(anchor, positionStep, new Vector3(
+            //     directionVector.x,
+            //     0,
+            //     directionVector.z
+            // ).applyAxisAngle(axis, 0))
+
+            console.log(new Vector3(
                 directionVector.x,
-                0, 
+                0,
                 directionVector.z
-            ).applyAxisAngle(axis, 0))
+            ).angleTo(new Vector3(1, 0, 0)))
+
+            // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : 0
+                y : anchor.rotation.y
             })
         }
 
         if(keys[65]){ // A
+
+
+            // Anchor movements
             displace(anchor, positionStep, new Vector3(
                 directionVector.x,
                 0, 
                 directionVector.z
             ).applyAxisAngle(axis, pi / 2))
-            // model.position.x -= positionStep
+
+            // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : pi / 2
+                y : anchor.rotation.y + pi / 2
             })
         }
 
         if(keys[83]){ // S
+
+
+            // Anchor movements
             displace(anchor, positionStep, new Vector3(
                 directionVector.x,
                 0, 
                 directionVector.z
             ).applyAxisAngle(axis, pi))
-            // model.position.z += positionStep
+
+            // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : pi
+                y : anchor.rotation.y + pi
             })
         }
 
         if(keys[68]){ // D
+
+
+
+            // Anchor movements
             displace(anchor, positionStep, new Vector3(
                 directionVector.x,
                 0, 
@@ -102,20 +130,30 @@ export const animateModels = (presets) => {
                 :
                 -pi / 2
             ))
-            // model.position.x += positionStep
-            TweenMax.to(model.rotation, timestep, {
-                y 
-                : 
-                (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
-                // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
-                ?
-                3 * pi / 2
-                :
-                -pi / 2
-            })
+
+            // Girl movements
+            // TweenMax.to(model.rotation, timestep, {
+            //     y 
+            //     : 
+            //     (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
+            //     // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
+            //     ?
+            //     3 * pi / 2
+            //     :
+            //     -pi / 2
+            // })
         }
 
-        
+        // Links girl's position to anchor's position
+        model.position.set(
+            anchor.position.x,
+            anchor.position.y,
+            anchor.position.z
+        )
+
+        // model.rotation.y = anchor.rotation.y
+        // console.log(anchor.rotation.y)
+
     }
 
     const updateLooper = () => {
