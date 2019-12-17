@@ -162,10 +162,11 @@ const WorldBuild = () => {
             // let anchor = new THREE.Object3D()
             // anchor.scale.set(0.125, 0.125, 0.125)
             // scene.add(anchor)
-            var geometry = new THREE.SphereGeometry( 1, 32, 32 );
+            var geometry = new THREE.CylinderGeometry( 0.5, 0.5, 5, 32 );
             var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
             var anchor = new THREE.Mesh( geometry, material );
             anchor.scale.set(0.125, 0.125, 0.125)
+            // anchor.rotation.x = Math.PI / 2
             scene.add( anchor );
 
             var geometry2 = new THREE.SphereGeometry( 1, 32, 32 );
@@ -177,6 +178,7 @@ const WorldBuild = () => {
 
             // camera
             theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
+            // theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
             theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
             theCamera.rotation.x = -Math.PI / 20
 

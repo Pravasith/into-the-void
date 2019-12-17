@@ -1,6 +1,6 @@
 
 import { TweenMax } from 'gsap'
-import { Vector3 } from 'three'
+import * as THREE from 'three'
 import { displace } from './physics'
 import React, { useState } from 'react'
 
@@ -14,16 +14,17 @@ export const animateModels = (presets) => {
         mixer
     } = presets
 
-    
 
     const pi = Math.PI
+    let dirRot = "c_wise" 
 
     let model = girl.modelData.scene
     model.scale.set(0.125, 0.125, 0.125)
 
     // store the current pressed keys in an array
     let keys = [],
-        prevCurrKey = new Array(2).fill(null) // prev, new
+        prevCurrKey = new Array(2).fill(null), // prev, new
+        prevCurrAngle = new Array(2).fill(null)
 
 
     // if the pressed key is 87 (w) then keys[87] will be true
@@ -38,7 +39,6 @@ export const animateModels = (presets) => {
             prevCurrKey[0] = prevCurrKey[1]
             prevCurrKey[1] = e.keyCode
         }
-        
     }
 
     document.onkeyup = function (e) {
@@ -53,30 +53,59 @@ export const animateModels = (presets) => {
         let timestep = 0.2 // Time step between animations
         let positionStep = 0.25
 
-        let directionVector = camera.getWorldDirection( new Vector3() )
-        let axis = new Vector3(0, 1, 0)       
+        let directionVector = camera.getWorldDirection( new THREE.Vector3() )
+        let axis = new THREE.Vector3(0, 1, 0)      
+        
+
+        // let rotationAngle = new THREE.Vector3(
+        //     directionVector.x,
+        //     0,
+        //     directionVector.z
+        // ).angleTo(new THREE.Vector3(0, 0, -1))
+
+        let projectionV_OnXZPlane = directionVector.projectOnPlane(new THREE.Vector3(0, 1, 0))
+        let x = projectionV_OnXZPlane.x,
+            z = projectionV_OnXZPlane.z
+        
+        let angleRad = Math.atan(z / x)
+        let angleDeg = angleRad * 180 / Math.PI
+
+        if(prevCurrAngle[1] !== angleRad){
+            prevCurrAngle[0] = prevCurrAngle[1]
+            prevCurrAngle[1] = angleRad
+        }
 
 
+        if((prevCurrAngle[0] > 0 && prevCurrAngle[1] < 0) || (prevCurrAngle[1] > 0 && prevCurrAngle[0] < 0)){
+            if(Math.abs(prevCurrAngle[0]) < pi / 2.2){
+                // Signs flipped
+                dirRot = dirRot === "c_wise" ? "ac_wise" : "c_wise"
+                console.log(dirRot)
+            }
+        }
 
 
         if(keys[87]){ // W
 
             // Anchor movements
-            // displace(anchor, positionStep, new Vector3(
-            //     directionVector.x,
-            //     0,
-            //     directionVector.z
-            // ).applyAxisAngle(axis, 0))
-
-            console.log(new Vector3(
+            displace(anchor, positionStep, new THREE.Vector3(
                 directionVector.x,
                 0,
                 directionVector.z
-            ).angleTo(new Vector3(1, 0, 0)))
+            ).applyAxisAngle(axis, 0))
+
+            
+            // console.log(angleDeg)
+            
+
+            // if(prevCurrAngle[1] > 0 && prevCurrAngle[0] < 0){
+            //     console.log("signs flipped")
+            // }
 
             // Girl movements
+            // console.log(angleRad)
             TweenMax.to(model.rotation, timestep, {
-                y : anchor.rotation.y
+                y : dirRot === "c_wise" ? anchor.rotation.y : -anchor.rotation.y - pi
             })
         }
 
@@ -84,7 +113,7 @@ export const animateModels = (presets) => {
 
 
             // Anchor movements
-            displace(anchor, positionStep, new Vector3(
+            displace(anchor, positionStep, new THREE.Vector3(
                 directionVector.x,
                 0, 
                 directionVector.z
@@ -100,7 +129,7 @@ export const animateModels = (presets) => {
 
 
             // Anchor movements
-            displace(anchor, positionStep, new Vector3(
+            displace(anchor, positionStep, new THREE.Vector3(
                 directionVector.x,
                 0, 
                 directionVector.z
@@ -117,7 +146,7 @@ export const animateModels = (presets) => {
 
 
             // Anchor movements
-            displace(anchor, positionStep, new Vector3(
+            displace(anchor, positionStep, new THREE.Vector3(
                 directionVector.x,
                 0, 
                 directionVector.z
