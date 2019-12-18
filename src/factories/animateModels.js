@@ -11,10 +11,12 @@ export const animateModels = (presets) => {
         anchor,
         document,
         camera,
-        mixer
+        mixer,
+        terrain
     } = presets
 
 
+    // anchor.position.y = 2
     const pi = Math.PI
     let dirRot = "c_wise" 
 
@@ -25,6 +27,8 @@ export const animateModels = (presets) => {
     let keys = [],
         prevCurrKey = new Array(2).fill(null), // prev, new
         prevCurrAngle = new Array(2).fill(null)
+
+    let raycaster = new THREE.Raycaster()
 
 
     // if the pressed key is 87 (w) then keys[87] will be true
@@ -45,17 +49,16 @@ export const animateModels = (presets) => {
         delete keys[e.keyCode]
     }
 
-    
 
     
     const characterAction = () => {
 
-        let timestep = 0.2 // Time step between animations
+        let timestep = 0 // Time step between animations
         let positionStep = 0.25
 
         let directionVector = camera.getWorldDirection( new THREE.Vector3() )
-        let axis = new THREE.Vector3(0, 1, 0)      
-        
+        let axis = new THREE.Vector3(0, 1, 0)   
+
 
         // let rotationAngle = new THREE.Vector3(
         //     directionVector.x,
@@ -70,6 +73,15 @@ export const animateModels = (presets) => {
         let angleRad = Math.atan(z / x)
         let angleDeg = angleRad * 180 / Math.PI
 
+        // prevCurrAngle = prevCurrAngle.reduce((all, item, i) => {
+        //     if(i < prevCurrAngle.length - 1) all[i] = prevCurrAngle[i + 1]
+        //     else all[i] = angleRad
+
+        //     return all
+        // }, [])
+
+
+
         if(prevCurrAngle[1] !== angleRad){
             prevCurrAngle[0] = prevCurrAngle[1]
             prevCurrAngle[1] = angleRad
@@ -80,7 +92,6 @@ export const animateModels = (presets) => {
             if(Math.abs(prevCurrAngle[0]) < pi / 2.2){
                 // Signs flipped
                 dirRot = dirRot === "c_wise" ? "ac_wise" : "c_wise"
-                console.log(dirRot)
             }
         }
 
@@ -95,7 +106,7 @@ export const animateModels = (presets) => {
             ).applyAxisAngle(axis, 0))
 
             
-            // console.log(angleDeg)
+            // console.log( model.rotation.y)
             
 
             // if(prevCurrAngle[1] > 0 && prevCurrAngle[0] < 0){
@@ -103,14 +114,16 @@ export const animateModels = (presets) => {
             // }
 
             // Girl movements
-            // console.log(angleRad)
             TweenMax.to(model.rotation, timestep, {
-                y : dirRot === "c_wise" ? anchor.rotation.y : -anchor.rotation.y - pi
+                y : dirRot === "c_wise" 
+                ? 
+                anchor.rotation.y 
+                : 
+                -anchor.rotation.y - pi                
             })
         }
 
         if(keys[65]){ // A
-
 
             // Anchor movements
             displace(anchor, positionStep, new THREE.Vector3(
@@ -121,7 +134,11 @@ export const animateModels = (presets) => {
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : anchor.rotation.y + pi / 2
+                y : dirRot === "c_wise" 
+                ?
+                anchor.rotation.y + pi / 2
+                :
+                -anchor.rotation.y - pi / 2 
             })
         }
 
@@ -144,7 +161,6 @@ export const animateModels = (presets) => {
         if(keys[68]){ // D
 
 
-
             // Anchor movements
             displace(anchor, positionStep, new THREE.Vector3(
                 directionVector.x,
@@ -161,27 +177,43 @@ export const animateModels = (presets) => {
             ))
 
             // Girl movements
-            // TweenMax.to(model.rotation, timestep, {
-            //     y 
-            //     : 
-            //     (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
-            //     // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
-            //     ?
-            //     3 * pi / 2
-            //     :
-            //     -pi / 2
-            // })
+            TweenMax.to(model.rotation, timestep, {
+                y 
+                : 
+                (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
+                // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
+                ?
+                3 * pi / 2
+                :
+                -pi / 2
+            })
         }
+
+
+        // Terrain
+        let terrainModel = terrain.modelData.scene.children[0]
+        raycaster.set(anchor.position, new THREE.Vector3(
+            0,
+            -1,
+            0
+        ))
+
+
+
+        let intersects = raycaster.intersectObject(terrainModel)
+
+        if(intersects[0]){
+            anchor.position.y = intersects[0].point.y  + 1.5
+        }
+        // if(intersects[0]){}
+        
 
         // Links girl's position to anchor's position
         model.position.set(
             anchor.position.x,
-            anchor.position.y,
+            anchor.position.y - 1.5,
             anchor.position.z
         )
-
-        // model.rotation.y = anchor.rotation.y
-        // console.log(anchor.rotation.y)
 
     }
 
@@ -193,7 +225,6 @@ export const animateModels = (presets) => {
         }
     
         requestAnimationFrame( animate )
-
         characterAction()
     }
 

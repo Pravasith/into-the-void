@@ -25,6 +25,7 @@ const WorldBuild = () => {
     const [ scene, setScene ] = useState(null)
     const [ girl, setGirl ] = useState(null)
     const [ camera, setCamera ] = useState(null)
+    const [ controls, setControls ] = useState(null)
     // const [ leftOrRight, setLeftOrRight ] = useState(new Array(3).fill(null))
     // const [ upOrDown, setUpOrDown ] = useState(new Array(3).fill(null))
     // const [ counter, setCounter ] = useState(0)
@@ -43,7 +44,7 @@ const WorldBuild = () => {
         let renderer,
             scene,
             theCamera,
-            controls,
+            // controls,
             mixer,
             models,
             clock = new THREE.Clock(),
@@ -162,11 +163,11 @@ const WorldBuild = () => {
             // let anchor = new THREE.Object3D()
             // anchor.scale.set(0.125, 0.125, 0.125)
             // scene.add(anchor)
-            var geometry = new THREE.CylinderGeometry( 0.5, 0.5, 5, 32 );
+            var geometry = new THREE.CylinderGeometry( 0, 0, 5, 32 );
             var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
             var anchor = new THREE.Mesh( geometry, material );
             anchor.scale.set(0.125, 0.125, 0.125)
-            // anchor.rotation.x = Math.PI / 2
+            anchor.position.y = 10
             scene.add( anchor );
 
             var geometry2 = new THREE.SphereGeometry( 1, 32, 32 );
@@ -176,10 +177,17 @@ const WorldBuild = () => {
             anchor2.scale.set(0.125, 0.125, 0.125)
             scene.add( anchor2 );
 
+            var geometry3 = new THREE.PlaneGeometry( 1000, 1000, 32 );
+            var material3 = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+            var plane = new THREE.Mesh( geometry3, material3 );
+            plane.rotation.x = Math.PI / 2
+            plane.position.y = -50
+            scene.add( plane );
+
             // camera
             theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
             // theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
-            theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
+            theCamera.position.set(0, (2.5/2 * 5.5) - 7, 2.5 * 10)
             theCamera.rotation.x = -Math.PI / 20
 
             // sets camera to the state
@@ -187,22 +195,25 @@ const WorldBuild = () => {
             anchor.add(theCamera) // Parents camera to Anchor
 
             let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
-            // theGirl.modelData.scene
+            let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
 
             // sets girl to the state
             setGirl(theGirl)
 
 
+            let ctrls = new module.PointerLockControls( anchor, container )
             // Pointer lock controls
-            controls = new module.PointerLockControls( anchor, container )
-            scene.add( controls.getObject() )
+            setControls(ctrls)
+            scene.add( ctrls.getObject() )
 
             const animationPresets = {
                 girl : theGirl,
                 anchor,
                 document,
                 camera : theCamera,
-                mixer
+                mixer,
+                terrain,
+                plane
             }
 
             // Animate models
@@ -210,13 +221,12 @@ const WorldBuild = () => {
                 animationPresets
             )
 
-            // Set terrain 
-            let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
+            
             // terrain.modelData.scene.position.y = 1
 
            
 
-            let raycaster = new THREE.Raycaster()
+            
             // raycaster.set(sphere.position, new THREE.Vector3(0, -1, 0))
 
             // var intersects = raycaster.intersectObject(terrain)
@@ -294,17 +304,7 @@ const WorldBuild = () => {
         return allMods
     }
 
-    function lockChangeAlert() {
-        if (document.pointerLockElement === canvas ||
-            document.mozPointerLockElement === canvas) {
-            console.log('The pointer lock status is now locked');
-            document.addEventListener("mousemove", updatePosition, false);
-        } else {
-            console.log('The pointer lock status is now unlocked');
-            document.removeEventListener("mousemove", updatePosition, false);
-        }
-    }
-
+  
     return (
         <div
             className = "parent-class"            
@@ -394,7 +394,7 @@ const WorldBuild = () => {
             <div
                 ref = {canvasWrapper}
                 className="display-screen"
-                onClick = {() => canvasWrapper.current.requestPointerLock()}
+                onClick = {() => {if(controls) controls.lock()}}
                 onMouseMove={(e) => {
                     // const stateVars = {
                     //     leftOrRight,
