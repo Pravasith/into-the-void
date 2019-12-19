@@ -156,9 +156,9 @@ export const animateModels = (presets) => {
                 (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
                 // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
                 ?
-                anchor.rotation.y + 3 * pi / 2
+                3 * pi / 2
                 :
-                anchor.rotation.y + -pi / 2
+                -pi / 2
             ))
 
             // Girl movements
