@@ -28,7 +28,7 @@ const WorldBuild = () => {
     const [ controls, setControls ] = useState(null)
     // const [ leftOrRight, setLeftOrRight ] = useState(new Array(3).fill(null))
     // const [ upOrDown, setUpOrDown ] = useState(new Array(3).fill(null))
-    // const [ counter, setCounter ] = useState(0)
+    const [ counter, setCounter ] = useState(0)
 
     const canvasWrapper = useRef(null)
     
@@ -177,13 +177,6 @@ const WorldBuild = () => {
             anchor2.scale.set(0.125, 0.125, 0.125)
             scene.add( anchor2 );
 
-            var geometry3 = new THREE.PlaneGeometry( 1000, 1000, 32 );
-            var material3 = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-            var plane = new THREE.Mesh( geometry3, material3 );
-            plane.rotation.x = Math.PI / 2
-            plane.position.y = -50
-            scene.add( plane );
-
             // camera
             theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
             // theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
@@ -213,7 +206,7 @@ const WorldBuild = () => {
                 camera : theCamera,
                 mixer,
                 terrain,
-                plane
+                scene
             }
 
             // Animate models
@@ -404,6 +397,11 @@ const WorldBuild = () => {
                     //     counter,
                     //     setCounter
                     // }
+
+                    let x = e.movementX
+                    setCounter(counter + x)
+
+                    // console.log(counter)
 
                     
 

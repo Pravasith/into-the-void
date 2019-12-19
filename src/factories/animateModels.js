@@ -12,8 +12,12 @@ export const animateModels = (presets) => {
         document,
         camera,
         mixer,
-        terrain
+        terrain,
+        scene
     } = presets
+
+
+    
 
 
     // anchor.position.y = 2
@@ -22,6 +26,8 @@ export const animateModels = (presets) => {
 
     let model = girl.modelData.scene
     model.scale.set(0.125, 0.125, 0.125)
+
+    console.log(model)
 
     // store the current pressed keys in an array
     let keys = [],
@@ -57,43 +63,29 @@ export const animateModels = (presets) => {
         let positionStep = 0.25
 
         let directionVector = camera.getWorldDirection( new THREE.Vector3() )
-        let axis = new THREE.Vector3(0, 1, 0)   
-
-
-        // let rotationAngle = new THREE.Vector3(
-        //     directionVector.x,
-        //     0,
-        //     directionVector.z
-        // ).angleTo(new THREE.Vector3(0, 0, -1))
-
-        let projectionV_OnXZPlane = directionVector.projectOnPlane(new THREE.Vector3(0, 1, 0))
-        let x = projectionV_OnXZPlane.x,
-            z = projectionV_OnXZPlane.z
-        
-        let angleRad = Math.atan(z / x)
-        let angleDeg = angleRad * 180 / Math.PI
-
-        // prevCurrAngle = prevCurrAngle.reduce((all, item, i) => {
-        //     if(i < prevCurrAngle.length - 1) all[i] = prevCurrAngle[i + 1]
-        //     else all[i] = angleRad
-
-        //     return all
-        // }, [])
+        let axis = new THREE.Vector3(0, 1, 0) 
 
 
 
-        if(prevCurrAngle[1] !== angleRad){
-            prevCurrAngle[0] = prevCurrAngle[1]
-            prevCurrAngle[1] = angleRad
-        }
+        // let modelPos = new THREE.Vector3(
+        //     model.position.x,
+        //     model.position.y,
+        //     model.position.z
+        // )
+
+        // let camPos = new THREE.Vector3(
+        //     camera.position.x,
+        //     camera.position.y,
+        //     camera.position.z
+        // )
 
 
-        if((prevCurrAngle[0] > 0 && prevCurrAngle[1] < 0) || (prevCurrAngle[1] > 0 && prevCurrAngle[0] < 0)){
-            if(Math.abs(prevCurrAngle[0]) < pi / 2.2){
-                // Signs flipped
-                dirRot = dirRot === "c_wise" ? "ac_wise" : "c_wise"
-            }
-        }
+        // let dV = new Vector3(0, 0, 0).subVectors(camPos, modelPos)
+
+
+
+        anchor.rotation.order = "YXZ"
+
 
 
         if(keys[87]){ // W
@@ -104,9 +96,6 @@ export const animateModels = (presets) => {
                 0,
                 directionVector.z
             ).applyAxisAngle(axis, 0))
-
-            
-            // console.log( model.rotation.y)
             
 
             // if(prevCurrAngle[1] > 0 && prevCurrAngle[0] < 0){
@@ -115,12 +104,9 @@ export const animateModels = (presets) => {
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : dirRot === "c_wise" 
-                ? 
-                anchor.rotation.y 
-                : 
-                -anchor.rotation.y - pi                
+                y : anchor.rotation.y             
             })
+            
         }
 
         if(keys[65]){ // A
@@ -134,11 +120,7 @@ export const animateModels = (presets) => {
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : dirRot === "c_wise" 
-                ?
-                anchor.rotation.y + pi / 2
-                :
-                -anchor.rotation.y - pi / 2 
+                y : pi / 2
             })
         }
 
@@ -154,7 +136,7 @@ export const animateModels = (presets) => {
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : anchor.rotation.y + pi
+                y : pi
             })
         }
 
