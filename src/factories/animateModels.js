@@ -27,7 +27,7 @@ export const animateModels = (presets) => {
     let model = girl.modelData.scene
     model.scale.set(0.125, 0.125, 0.125)
 
-    console.log(model)
+    console.log(terrain.modelData.scene)
 
     // store the current pressed keys in an array
     let keys = [],
@@ -59,18 +59,19 @@ export const animateModels = (presets) => {
     
     const characterAction = () => {
 
-        let timestep = 0 // Time step between animations
+        let timestep = 0.12 // Time step between animations
         let positionStep = 0.25
 
         let directionVector = camera.getWorldDirection( new THREE.Vector3() )
         let axis = new THREE.Vector3(0, 1, 0) 
 
+        let anchorRotY = anchor.rotation.y
 
 
         // let modelPos = new THREE.Vector3(
-        //     model.position.x,
-        //     model.position.y,
-        //     model.position.z
+        //     anchor.position.x,
+        //     anchor.position.y,
+        //     anchor.position.z
         // )
 
         // let camPos = new THREE.Vector3(
@@ -80,7 +81,7 @@ export const animateModels = (presets) => {
         // )
 
 
-        // let dV = new Vector3(0, 0, 0).subVectors(camPos, modelPos)
+        // let dV = new THREE.Vector3(0, 0, 0).subVectors(camPos, modelPos)
 
 
 
@@ -95,16 +96,16 @@ export const animateModels = (presets) => {
                 directionVector.x,
                 0,
                 directionVector.z
-            ).applyAxisAngle(axis, 0))
-            
-
-            // if(prevCurrAngle[1] > 0 && prevCurrAngle[0] < 0){
-            //     console.log("signs flipped")
-            // }
+            )
+            .applyAxisAngle(
+                axis, 
+                0
+            )
+            )
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : anchor.rotation.y             
+                y : anchor.rotation.y
             })
             
         }
@@ -120,7 +121,7 @@ export const animateModels = (presets) => {
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : pi / 2
+                y : anchor.rotation.y + pi / 2
             })
         }
 
@@ -132,11 +133,13 @@ export const animateModels = (presets) => {
                 directionVector.x,
                 0, 
                 directionVector.z
-            ).applyAxisAngle(axis, pi))
+            )
+            .applyAxisAngle(axis, pi)
+            )
 
             // Girl movements
             TweenMax.to(model.rotation, timestep, {
-                y : pi
+                y : anchor.rotation.y + pi
             })
         }
 
@@ -153,9 +156,9 @@ export const animateModels = (presets) => {
                 (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
                 // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
                 ?
-                3 * pi / 2
+                anchor.rotation.y + 3 * pi / 2
                 :
-                -pi / 2
+                anchor.rotation.y + -pi / 2
             ))
 
             // Girl movements
@@ -165,9 +168,9 @@ export const animateModels = (presets) => {
                 (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
                 // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
                 ?
-                3 * pi / 2
+                anchor.rotation.y + 3 * pi / 2
                 :
-                -pi / 2
+                anchor.rotation.y + -pi / 2
             })
         }
 

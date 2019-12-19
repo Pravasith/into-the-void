@@ -189,6 +189,7 @@ const WorldBuild = () => {
 
             let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
             let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
+            terrain.modelData.scene.children[0].material.side = THREE.FrontSide
 
             // sets girl to the state
             setGirl(theGirl)
