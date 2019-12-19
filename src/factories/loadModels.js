@@ -13,18 +13,20 @@ export const loadModels = (module) => {
     gltfLoader.setDRACOLoader( dracoLoader )
 
     return new Promise((resolve, reject) => {
-        let models = []
+        let models = {}
         urls.map((url, i) => {
             gltfLoader.load(
                 s3Url + url + '.gltf', 
                 (gltf) => {
-                    models.push({
-                        modelName: url,
-                        modelData: gltf
-                    })
-                    // applyVelocity(sphere, 0.3, new THREE.Vector3(0, -1, 0), dispatch, raycaster, root)
+                    models[url] = gltf
+                    // models.push({
+                    //     modelName: url,
+                    //     modelData: gltf
+                    // })
 
-                    if(models.length === urls.length){
+                    
+
+                    if(Object.keys(models).length === urls.length){
                         resolve(models)
                     }
                 },

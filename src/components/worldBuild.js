@@ -23,15 +23,10 @@ const WorldBuild = () => {
 
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
-    const [ girl, setGirl ] = useState(null)
-    const [ camera, setCamera ] = useState(null)
     const [ controls, setControls ] = useState(null)
-    // const [ leftOrRight, setLeftOrRight ] = useState(new Array(3).fill(null))
-    // const [ upOrDown, setUpOrDown ] = useState(new Array(3).fill(null))
-    const [ counter, setCounter ] = useState(0)
 
     const canvasWrapper = useRef(null)
-    
+
 
     const { addVelocityStats, dispatch } = useContext(PhysicsContext)
 
@@ -43,7 +38,7 @@ const WorldBuild = () => {
     const init = () => {
         let renderer,
             scene,
-            theCamera,
+            camera,
             // controls,
             mixer,
             models,
@@ -88,8 +83,10 @@ const WorldBuild = () => {
             await loadModels(module)
             .then((gltfs) => {
                 models = gltfs
-                gltfs.map((gltf, i) => {
-                    const { modelData } = gltf
+
+                Object.keys(models).forEach((gltf) => {
+
+                    const modelData = models[gltf]
                     const model = modelData.scene
                     const scale = 1
 
@@ -98,7 +95,7 @@ const WorldBuild = () => {
 
                     model.scale.set(
                         scale, 
-                        scale, 
+                        scale,
                         scale
                     )
 
@@ -107,7 +104,7 @@ const WorldBuild = () => {
                     // if(modelData.animations)
                     if(modelData.animations.length > 0){
                         mixer = new THREE.AnimationMixer(model)
-                        mixer.clipAction(modelData.animations[0]).play()
+                        mixer.clipAction(modelData.animations[1]).play()
                         // mixer.clipAction(gltf.animations[0]).play()
                     }
                 })
@@ -160,15 +157,11 @@ const WorldBuild = () => {
             scene.add(water)
 
             // Anchor for 3D orbit movements (mouse)
-            // let anchor = new THREE.Object3D()
-            // anchor.scale.set(0.125, 0.125, 0.125)
-            // scene.add(anchor)
-            var geometry = new THREE.CylinderGeometry( 0, 0, 5, 32 );
-            var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-            var anchor = new THREE.Mesh( geometry, material );
-            anchor.scale.set(0.125, 0.125, 0.125)
+            let anchor = new THREE.Object3D()
             anchor.position.y = 10
-            scene.add( anchor );
+            anchor.scale.set(0.125, 0.125, 0.125)
+            scene.add(anchor)
+            
 
             var geometry2 = new THREE.SphereGeometry( 1, 32, 32 );
             var material2 = new THREE.MeshBasicMaterial( {color: "#fff"} );
@@ -178,21 +171,23 @@ const WorldBuild = () => {
             scene.add( anchor2 );
 
             // camera
-            theCamera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
-            // theCamera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
-            theCamera.position.set(0, (2.5/2 * 5.5) - 7, 2.5 * 10)
-            theCamera.rotation.x = -Math.PI / 20
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
+            // camera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
+            camera.position.set(0, (2.5/2 * 5.5) - 7, 2.5 * 10)
+            camera.rotation.x = -Math.PI / 20
 
             // sets camera to the state
-            setCamera(theCamera)
-            anchor.add(theCamera) // Parents camera to Anchor
+            anchor.add(camera) // Parents camera to Anchor
 
-            let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
-            let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
-            terrain.modelData.scene.children[0].material.side = THREE.FrontSide
+            // let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
+            // let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
+            // terrain.modelData.scene.children[0].material.side = THREE.FrontSide
 
-            // sets girl to the state
-            setGirl(theGirl)
+
+            // let allModels = [].reduce((all, model, i) => {
+            //     all[]
+            //     return all
+            // }, {})
 
 
             let ctrls = new module.PointerLockControls( anchor, container )
@@ -201,12 +196,11 @@ const WorldBuild = () => {
             scene.add( ctrls.getObject() )
 
             const animationPresets = {
-                girl : theGirl,
+                models,
                 anchor,
                 document,
-                camera : theCamera,
+                camera,
                 mixer,
-                terrain,
                 scene
             }
 
@@ -265,7 +259,7 @@ const WorldBuild = () => {
                 // Animation mixer update - END
 
                 // controls.update()
-                renderer.render( scene, theCamera )
+                renderer.render( scene, camera )
                 requestAnimationFrame( animate )
             }
 
@@ -390,26 +384,6 @@ const WorldBuild = () => {
                 className="display-screen"
                 onClick = {() => {if(controls) controls.lock()}}
                 onMouseMove={(e) => {
-                    // const stateVars = {
-                    //     leftOrRight,
-                    //     upOrDown,
-                    //     setLeftOrRight,
-                    //     setUpOrDown,
-                    //     counter,
-                    //     setCounter
-                    // }
-
-                    let x = e.movementX
-                    setCounter(counter + x)
-
-                    // console.log(counter)
-
-                    
-
-                    // // Handle mouse movements and world rotation
-                    // if(girl && camera)
-                    // handleMouse(e, canvasWrapper, stateVars, girl, camera)
-
                 }}
                 >
             </div>
