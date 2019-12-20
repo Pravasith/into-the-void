@@ -16,17 +16,22 @@ import { addSkyBoxes } from './env/sky'
 // import { noise } from '../factories/waterNoise'
 import { loadModels } from '../factories/loadModels'
 import { getWater } from './env/water'
-import { animateModels, handleMouse } from '../factories/animateModels'
+import { girlMovement } from '../factories/girlMovement'
+import { girlAnimations } from '../factories/animations'
 
 
 const WorldBuild = () => {
 
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
+    const [ camera, setCamera ] = useState(null)
+    const [ mixer, setMixer ] = useState(null)
+    const [ clock, setClock ] = useState(null)
+    const [ renderer, setRenderer ] = useState(null)
     const [ controls, setControls ] = useState(null)
 
-    const canvasWrapper = useRef(null)
 
+    const canvasWrapper = useRef(null)
 
     const { addVelocityStats, dispatch } = useContext(PhysicsContext)
 
@@ -44,6 +49,8 @@ const WorldBuild = () => {
             models,
             clock = new THREE.Clock(),
             peak = 0
+
+        setClock(clock)
 
         // Dynamic module importer
         dynamicallyImportPackage()
@@ -63,6 +70,8 @@ const WorldBuild = () => {
             renderer.setSize(container.clientWidth, container.clientHeight)
             renderer.setClearColor(0x000000, 0) // Background color
             container.appendChild(renderer.domElement)
+
+            setRenderer(renderer)
 
             // scene
             scene = new THREE.Scene()
@@ -111,6 +120,8 @@ const WorldBuild = () => {
             })
             .catch(e => console.error(e))
 
+            setMixer(mixer)
+
             // Add fog
             scene.fog = new THREE.Fog(
                 "#ffffff",
@@ -140,16 +151,16 @@ const WorldBuild = () => {
 
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
-            // createAxes(
-            //     scene,
-            //     15,
-            //     5,
-            //     {
-            //         x : "purple",
-            //         y : "purple",
-            //         z : "purple",
-            //     }
-            // )
+            createAxes(
+                scene,
+                15,
+                5,
+                {
+                    x : "purple",
+                    y : "purple",
+                    z : "purple",
+                }
+            )
 
 
             // Add water 
@@ -161,37 +172,21 @@ const WorldBuild = () => {
             anchor.position.y = 10
             anchor.scale.set(0.125, 0.125, 0.125)
             scene.add(anchor)
-            
 
-            var geometry2 = new THREE.SphereGeometry( 1, 32, 32 );
-            var material2 = new THREE.MeshBasicMaterial( {color: "#fff"} );
-            var anchor2 = new THREE.Mesh( geometry2, material2 );
-            anchor2.position.set(1, 0, 0)
-            anchor2.scale.set(0.125, 0.125, 0.125)
-            scene.add( anchor2 );
 
             // camera
             camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
-            // camera.position.set(0, 2.5/2 * 7.5, 2.5 * 7.5)
             camera.position.set(0, (2.5/2 * 5.5) - 7, 2.5 * 10)
             camera.rotation.x = -Math.PI / 20
 
             // sets camera to the state
+            setCamera(camera)
             anchor.add(camera) // Parents camera to Anchor
 
-            // let theGirl = models.filter(model => model.modelName === 'xtc-x')[0]
-            // let terrain = models.filter(model => model.modelName === 'terrain-x')[0]
-            // terrain.modelData.scene.children[0].material.side = THREE.FrontSide
 
 
-            // let allModels = [].reduce((all, model, i) => {
-            //     all[]
-            //     return all
-            // }, {})
-
-
-            let ctrls = new module.PointerLockControls( anchor, container )
             // Pointer lock controls
+            let ctrls = new module.PointerLockControls( anchor, container )
             setControls(ctrls)
             scene.add( ctrls.getObject() )
 
@@ -200,26 +195,23 @@ const WorldBuild = () => {
                 anchor,
                 document,
                 camera,
-                mixer,
                 scene
             }
 
-            // Animate models
-            animateModels(
-                animationPresets
+            
+
+            // Girl animations
+            girlAnimations(
+                models["xtc-x"],
+                models["xtc-x"].animations,
+                document
             )
 
+            // Move girl
+            girlMovement(
+                animationPresets
+            )
             
-            // terrain.modelData.scene.position.y = 1
-
-           
-
-            
-            // raycaster.set(sphere.position, new THREE.Vector3(0, -1, 0))
-
-            // var intersects = raycaster.intersectObject(terrain)
-            // console.log(intersects)
-            // sphere.position.y = intersects[0].point.y + 1.5
 
             
             // let wireframe = new THREE.WireframeGeometry(geometry)
@@ -229,44 +221,32 @@ const WorldBuild = () => {
             // line.material.color.setHex(0x000000)
             // scene.add(line)
 
-
-
             function animate( time ) {
-
-                // // sphere.position.y -= 0.2
-                // raycaster.set(
-                //     sphere.position, 
-                //     new THREE.Vector3(0, -1, 0)
-                // )
-
-                // peak +=1
-
-                // // console.log(terrain)
-
-                // if(terrain){
-                //     console.log(terrain)
-                //     let intersects = raycaster.intersectObject(terrain)
-                //     console.log(intersects[0])
-                // }
-                
-                // sphere.position.y = intersects[0].point.y + 3 //radius of sphere
 
                 // Animation mixer update - START
                 let delta = clock.getDelta()
+
                 if (mixer != null) {
                     mixer.update(delta)
                 }
                 // Animation mixer update - END
-
+        
                 // controls.update()
                 renderer.render( scene, camera )
                 requestAnimationFrame( animate )
+                
+                
             }
 
-            requestAnimationFrame( animate )
+            animate()
+
 
         })
     }
+
+    
+
+    
 
 
     const dynamicallyImportPackage = async () => {
@@ -292,15 +272,21 @@ const WorldBuild = () => {
         return allMods
     }
 
+    
+
   
     return (
         <div
-            className = "parent-class"            
+            className = "parent-class"  
+            onClick = {() => {
+                if(controls) controls.lock()
+
+            }}
+            tabIndex = "1"
             >
             <div
                 className="tools-holster"
                 tabIndex="0"
-
                 >
                 {/* <p>{addVelocityStats.stats.timeElapsed}</p> */}
                 <div className="icon-wrap">
@@ -359,7 +345,7 @@ const WorldBuild = () => {
                                         color
                                     )
 
-                                        setNewObj(newObj.concat(sphereObj))
+                                    setNewObj(newObj.concat(sphereObj))
                                 }} 
                                 >
                                 <AddObjIcon />
@@ -377,14 +363,11 @@ const WorldBuild = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
+
             <div
                 ref = {canvasWrapper}
                 className="display-screen"
-                onClick = {() => {if(controls) controls.lock()}}
-                onMouseMove={(e) => {
-                }}
                 >
             </div>
             
