@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export const girlAnimations = (girl, animations, document) => {
+export const girlAnimations = (girl, animations, dispatch) => {
 
     let clock,
         mixer = new THREE.AnimationMixer(girl),
@@ -65,30 +65,31 @@ export const girlAnimations = (girl, animations, document) => {
     // keys [87] will remain true untill the key is released (below)
     // the same is true for any other key, we can now detect multiple
     // keypresses
-    document.onkeydown = function (e) {
-        keys[e.keyCode] = true
-    }
+    // document.onkeydown = function (e) {
+    //     keys[e.keyCode] = true
+    // }
 
-    document.onkeyup = function (e) {
-        delete keys[e.keyCode]
-    }
+    // document.onkeyup = function (e) {
+    //     delete keys[e.keyCode]
+    // }
 
 
     const playRelevantAnimation = () => {
         
-        if(keys[87]){ // W 
-            console.log("X") 
-        }
+        // if(keys[87]){ // W 
+        //     console.log("X") 
+        // }
 
-        if(keys[65]){ // A
-        }
+        // if(keys[65]){ // A
+        // }
 
-        if(keys[83]){ // S
-        }
+        // if(keys[83]){ // S
+        // }
 
-        if(keys[68]){ // D
-        }
+        // if(keys[68]){ // D
+        // }
     }
+
 
 
     function animate(time) {

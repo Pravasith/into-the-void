@@ -16,8 +16,9 @@ import { addSkyBoxes } from './env/sky'
 // import { noise } from '../factories/waterNoise'
 import { loadModels } from '../factories/loadModels'
 import { getWater } from './env/water'
-import { girlMovement } from '../factories/girlMovement'
+import { movements } from '../factories/girlMovement'
 import { girlAnimations } from '../factories/animations'
+import { WorldContext } from '../utils/contexts/worldContext'
 
 
 const WorldBuild = () => {
@@ -29,16 +30,33 @@ const WorldBuild = () => {
     const [ clock, setClock ] = useState(null)
     const [ renderer, setRenderer ] = useState(null)
     const [ controls, setControls ] = useState(null)
+    const [ initComplete, setInitComplete ] = useState(false)
+    const [ animationPresets, setAnimationPresets ] = useState(null)
+    
 
+    let keys = {},
+        prevCurrKey = []
 
     const canvasWrapper = useRef(null)
 
-    const { addVelocityStats, dispatch } = useContext(PhysicsContext)
+    // const { addVelocityStats, dispatch } = useContext(PhysicsContext)
+    // const { keys, dispatch } = useContext(WorldContext)
 
     useEffect(() => {
         init()
+    },[])
+
+    useEffect(() => {
+        // If init() is finished executing
+        if(animationPresets){
+
+            // movements initiation -  see girlMovement.js file
+            movements.init(animationPresets)
+            animate()
+        }
     }
-    ,[])
+    ,[initComplete]
+    )
 
     const init = () => {
         let renderer,
@@ -190,7 +208,7 @@ const WorldBuild = () => {
             setControls(ctrls)
             scene.add( ctrls.getObject() )
 
-            const animationPresets = {
+            const animPresets = {
                 models,
                 anchor,
                 document,
@@ -198,19 +216,22 @@ const WorldBuild = () => {
                 scene
             }
 
-            
+            setAnimationPresets(animPresets)
+
 
             // Girl animations
             girlAnimations(
                 models["xtc-x"],
                 models["xtc-x"].animations,
-                document
+                // keys,
+                // dispatch
             )
 
             // Move girl
-            girlMovement(
-                animationPresets
-            )
+            // girlMovement(
+            //     animationPresets
+            //     // dispatch
+            // )
             
 
             
@@ -221,29 +242,34 @@ const WorldBuild = () => {
             // line.material.color.setHex(0x000000)
             // scene.add(line)
 
-            function animate( time ) {
-
-                // Animation mixer update - START
-                let delta = clock.getDelta()
-
-                if (mixer != null) {
-                    mixer.update(delta)
-                }
-                // Animation mixer update - END
-        
-                // controls.update()
-                renderer.render( scene, camera )
-                requestAnimationFrame( animate )
-                
-                
-            }
-
-            animate()
-
+            
+            setInitComplete(true)
 
         })
     }
 
+
+    function animate( time ) {
+
+        // Animation mixer update - START
+        let delta
+        if(clock && mixer){
+            delta = clock.getDelta()
+            mixer.update(delta)
+        }
+        // Animation mixer update - END
+
+        // controls.update()
+        if(scene && camera){
+            renderer.render( scene, camera )
+            requestAnimationFrame( animate )
+
+            // Animates movements (check girlMovement.js file)
+            movements.animateMovements(keys, prevCurrKey)
+            // console.log(keys)
+            
+        }
+    }
     
 
     
@@ -280,9 +306,33 @@ const WorldBuild = () => {
             className = "parent-class"  
             onClick = {() => {
                 if(controls) controls.lock()
-
             }}
             tabIndex = "1"
+            onKeyDown = {(e) => {
+                // let keyPress = keys
+                // keyPress[e.keyCode] = true
+
+                // setKeys({
+                //     ...keys,
+                //     ...keyPress
+                // })
+
+                keys[e.keyCode] = true
+
+                // Stores the prev key in [0] and current key in [1]
+                if(prevCurrKey[1] !== e.keyCode){
+                    prevCurrKey[0] = prevCurrKey[1]
+                    prevCurrKey[1] = e.keyCode
+                }
+            }}
+            onKeyUp = {(e) => {
+                // let keyPress = keys
+                // delete keyPress[e.keyCode]
+
+                // setKeys(keyPress)
+
+                delete keys[e.keyCode]
+            }}
             >
             <div
                 className="tools-holster"
@@ -358,6 +408,7 @@ const WorldBuild = () => {
                                 }}
                                 >
                                 <RemoveObjIcon />
+
                                 {/* <img src="https://xi-upload.s3.amazonaws.com/3dprinted.jpg" alt=""/> */}
                             </div>
                         </div>
@@ -370,7 +421,6 @@ const WorldBuild = () => {
                 className="display-screen"
                 >
             </div>
-            
         </div>
     )
 }
