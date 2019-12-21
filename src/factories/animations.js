@@ -1,58 +1,81 @@
 import * as THREE from 'three'
 
+
+export const sceneAnimations = {
+    init : null, // this function initiates a few steps before staring animations the girl's movements
+    globalVars : null, // this just stores some values from init function to pass them on to animateMovements
+    animationControllers : null, // this is the function which does the moving stuff - should be looped in a reqAnimFrame()
+    init_ES6 : function() { // a dummy function to access global 'this'
+
+        // 'this' keyword below is local to init_ES6 function
+        // console.log(this) // returns init_ES6 function
+
+        this.init = (girl, animations) => {
+            let clock,
+            mixer = new THREE.AnimationMixer(girl),
+            actions = {},
+            activeAction,
+            previousAction,
+            keys = []
+    
+            let animationStates = [
+                // Continuous actions
+                'Idle',
+                'Walking',
+                'Running',
+                'Dance',
+        
+                // One time actions
+                'Death',
+                'Sitting',
+                'Standing'
+            ],
+            
+            emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'] // One time actions
+        
+            animations.map((clip, i) => {
+        
+                let action = mixer.clipAction(clip)
+                actions[clip.name] = action
+        
+                if ( emotes.indexOf(clip.name) >= 0 || animationStates.indexOf(clip.name) >= 4 ) {
+                    // One time actions
+                    action.clampWhenFinished = true
+                    action.loop = THREE.LoopOnce
+                }
+            })
+        
+        
+            // Example - if 'W' pressed, fadeToAction('Walking', 0.2)
+            function fadeToAction( name, duration ) {
+                previousAction = activeAction
+                activeAction = actions[name]
+        
+                if (previousAction !== activeAction) {
+                    previousAction.fadeOut(duration)
+                }
+        
+                activeAction
+                .reset()
+                .setEffectiveTimeScale(1)
+                .setEffectiveWeight(1)
+                .fadeIn(duration)
+                .play()
+            }
+        }
+
+        this.animationControllers = (keys) => {
+
+        }
+    }
+}
+
+
+
+
 export const girlAnimations = (girl, animations, dispatch) => {
 
-    let clock,
-        mixer = new THREE.AnimationMixer(girl),
-        actions = {},
-        activeAction,
-        previousAction,
-        keys = []
-
-    let animationStates = [
-        // Continuous actions
-        'Idle',
-        'Walking',
-        'Running',
-        'Dance',
-
-        // One time actions
-        'Death',
-        'Sitting',
-        'Standing'
-    ],
-    
-    emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'] // One time actions
-
-    animations.map((clip, i) => {
-
-        let action = mixer.clipAction(clip)
-        actions[clip.name] = action
-
-        if ( emotes.indexOf(clip.name) >= 0 || animationStates.indexOf(clip.name) >= 4 ) {
-            // One time actions
-            action.clampWhenFinished = true
-            action.loop = THREE.LoopOnce
-        }
-    })
-
-
-    // Example - if 'W' pressed, fadeToAction('Walking', 0.2)
-    function fadeToAction( name, duration ) {
-        previousAction = activeAction
-        activeAction = actions[name]
-
-        if (previousAction !== activeAction) {
-            previousAction.fadeOut(duration)
-        }
-
-        activeAction
-        .reset()
-        .setEffectiveTimeScale(1)
-        .setEffectiveWeight(1)
-        .fadeIn(duration)
-        .play()
-    }
+   
 
     // Default action 
     // activeAction = actions['Idle']

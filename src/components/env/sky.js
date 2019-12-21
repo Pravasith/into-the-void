@@ -4,13 +4,13 @@ import { skyboxGradients } from '../UIComponents'
 export const addSkyBoxes = (scene) => {
 
     const loader = new THREE.TextureLoader()
-        let spaceMap, 
-            gradientMaps = new Array(6), 
-            c = 0,
-            gradientMapUp,
-            gradientMapDown,
-            skyOpacity = 0.5,
-            floorOpacity = 0.8
+    let spaceMap, 
+        gradientMaps = new Array(6), 
+        c = 0,
+        gradientMapUp,
+        gradientMapDown,
+        skyOpacity = 0.5,
+        floorOpacity = 0.8
 
     skyboxGradients.map((item, i) => {
         loader.load(item.image, (texture) => {

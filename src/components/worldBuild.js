@@ -19,6 +19,7 @@ import { getWater } from './env/water'
 import { movements } from '../factories/girlMovement'
 import { girlAnimations } from '../factories/animations'
 import { WorldContext } from '../utils/contexts/worldContext'
+import { getSimpleWater } from './env/water2'
 
 
 const WorldBuild = () => {
@@ -35,7 +36,8 @@ const WorldBuild = () => {
     
 
     let keys = {},
-        prevCurrKey = []
+        prevCurrKey = [],
+        typeOfControls = "pointerLock" // TrackBall or PointerLock
 
     const canvasWrapper = useRef(null)
 
@@ -62,7 +64,7 @@ const WorldBuild = () => {
         let renderer,
             scene,
             camera,
-            // controls,
+            controls,
             mixer,
             models,
             clock = new THREE.Clock(),
@@ -96,12 +98,7 @@ const WorldBuild = () => {
             setScene(scene)
 
 
-            // controls
-            // Trackball controls imported dynamically because it can only be imported in useEffect
-            // controls = new module.TrackballControls(camera, container)
-            // controls.minDistance = 1
-            // controls.maxDistance = 1000
-            // controls.enableDamping = false; // an animation loop is required when either damping or auto-rotation are enabled
+            
 
             // TEXTURE SKYBOX - FOR WORLD ENV
             addSkyBoxes(scene)
@@ -182,8 +179,10 @@ const WorldBuild = () => {
 
 
             // Add water 
-            let water = getWater()
-            scene.add(water)
+            const { Water } = module
+            getWater(scene, Water)
+            // getSimpleWater(scene)
+            // scene.add(water)
 
             // Anchor for 3D orbit movements (mouse)
             let anchor = new THREE.Object3D()
@@ -199,14 +198,32 @@ const WorldBuild = () => {
 
             // sets camera to the state
             setCamera(camera)
-            anchor.add(camera) // Parents camera to Anchor
+            
 
 
 
-            // Pointer lock controls
-            let ctrls = new module.PointerLockControls( anchor, container )
-            setControls(ctrls)
-            scene.add( ctrls.getObject() )
+            // controls
+            if(typeOfControls === "pointerLock"){
+                // Pointer lock controls imported dynamically because it can only be imported in useEffect
+                anchor.add(camera) // Parents camera to Anchor
+                controls = new module.PointerLockControls(anchor, container)
+                scene.add(
+                    controls.getObject()
+                )
+            }
+
+            else if(typeOfControls === "trackBall"){
+                // Trackball controls imported dynamically because it can only be imported in useEffect
+                controls = new module.TrackballControls(camera, container)
+                controls.minDistance = 1
+                controls.maxDistance = 1000
+                controls.enableDamping = false // an animation loop is required when either damping or auto-rotation are enabled
+            }
+
+            // Add controls to state
+            setControls(controls)
+
+            
 
             const animPresets = {
                 models,
@@ -259,15 +276,15 @@ const WorldBuild = () => {
         }
         // Animation mixer update - END
 
-        // controls.update()
-        if(scene && camera){
+        
+        if(scene && camera && controls){
+            if(typeOfControls === "trackBall") controls.update()
+
             renderer.render( scene, camera )
             requestAnimationFrame( animate )
 
             // Animates movements (check girlMovement.js file)
             movements.animateMovements(keys, prevCurrKey)
-            // console.log(keys)
-            
         }
     }
     
@@ -283,7 +300,8 @@ const WorldBuild = () => {
             import('three/examples/jsm/controls/TrackballControls'),
             import('three/examples/jsm/loaders/GLTFLoader.js'),
             import('three/examples/jsm/loaders/DRACOLoader.js'),
-            import('three/examples/jsm/controls/PointerLockControls.js')
+            import('three/examples/jsm/controls/PointerLockControls.js'),
+            import('three/examples/jsm/objects/Water2.js')
         ])
         .then(modules => {
             modules.map((item, i) => {
@@ -305,7 +323,7 @@ const WorldBuild = () => {
         <div
             className = "parent-class"  
             onClick = {() => {
-                if(controls) controls.lock()
+                if(controls && typeOfControls === "pointerLock") controls.lock()
             }}
             tabIndex = "1"
             onKeyDown = {(e) => {
