@@ -17,7 +17,7 @@ import { addSkyBoxes } from './env/sky'
 import { loadModels } from '../factories/loadModels'
 import { getWater } from './env/water'
 import { movements } from '../factories/girlMovement'
-import { girlAnimations } from '../factories/animations'
+import { girlAnimations, sceneAnimations } from '../factories/animations'
 import { WorldContext } from '../utils/contexts/worldContext'
 import { getSimpleWater } from './env/water2'
 
@@ -33,11 +33,14 @@ const WorldBuild = () => {
     const [ controls, setControls ] = useState(null)
     const [ initComplete, setInitComplete ] = useState(false)
     const [ animationPresets, setAnimationPresets ] = useState(null)
+
+    // const [ slowKey, setSlowKey ] = useState(null)
     
 
     let keys = {},
         prevCurrKey = [],
-        typeOfControls = "pointerLock" // TrackBall or PointerLock
+        typeOfControls = "pointerLock", // TrackBall or PointerLock,
+        slowKey 
 
     const canvasWrapper = useRef(null)
 
@@ -54,6 +57,11 @@ const WorldBuild = () => {
 
             // movements initiation -  see girlMovement.js file
             movements.init(animationPresets)
+
+            let girl = animationPresets.models["animations-clean-x"],
+                animations = animationPresets.models["animations-clean-x"].animations
+
+            sceneAnimations.init(girl, animations)
             animate()
         }
     }
@@ -126,11 +134,11 @@ const WorldBuild = () => {
                     // Store animations
 
                     // if(modelData.animations)
-                    if(modelData.animations.length > 0){
-                        mixer = new THREE.AnimationMixer(model)
-                        mixer.clipAction(modelData.animations[1]).play()
-                        // mixer.clipAction(gltf.animations[0]).play()
-                    }
+                    // if(modelData.animations.length > 0){
+                    //     mixer = new THREE.AnimationMixer(model)
+                    //     mixer.clipAction(modelData.animations[0]).play()
+                    //     // mixer.clipAction(gltf.animations[0]).play()
+                    // }
                 })
             })
             .catch(e => console.error(e))
@@ -237,12 +245,12 @@ const WorldBuild = () => {
 
 
             // Girl animations
-            girlAnimations(
-                models["xtc-x"],
-                models["xtc-x"].animations,
-                // keys,
-                // dispatch
-            )
+            // girlAnimations(
+            //     models["xtc-x"],
+            //     models["xtc-x"].animations,
+            //     // keys,
+            //     // dispatch
+            // )
 
             // Move girl
             // girlMovement(
@@ -270,10 +278,7 @@ const WorldBuild = () => {
 
         // Animation mixer update - START
         let delta
-        if(clock && mixer){
-            delta = clock.getDelta()
-            mixer.update(delta)
-        }
+        
         // Animation mixer update - END
 
         
@@ -285,6 +290,14 @@ const WorldBuild = () => {
 
             // Animates movements (check girlMovement.js file)
             movements.animateMovements(keys, prevCurrKey)
+
+            if(clock){
+                delta = clock.getDelta()
+
+                
+            }
+
+            
         }
     }
     
@@ -335,6 +348,9 @@ const WorldBuild = () => {
                 //     ...keyPress
                 // })
 
+                sceneAnimations.animationControllers(e.keyCode)
+
+
                 keys[e.keyCode] = true
 
                 // Stores the prev key in [0] and current key in [1]
@@ -344,6 +360,9 @@ const WorldBuild = () => {
                 }
             }}
             onKeyUp = {(e) => {
+
+                sceneAnimations.animationControllers(null)
+
                 // let keyPress = keys
                 // delete keyPress[e.keyCode]
 

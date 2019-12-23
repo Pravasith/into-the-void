@@ -4,7 +4,7 @@ export const loadModels = (module) => {
     const s3Url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
     const urls = [
         "terrain-x",
-        "xtc-x"
+        "animations-clean-x"
     ]
 
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data

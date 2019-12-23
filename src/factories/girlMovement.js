@@ -26,7 +26,7 @@ export const movements = {
                 scene
             } = presets
 
-            let girl = models['xtc-x'].scene,
+            let girl = models['animations-clean-x'].scene,
                 terrain = models['terrain-x'].scene
 
 

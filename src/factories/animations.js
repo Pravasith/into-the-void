@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 
+let prevKey, nowKey
+
 
 export const sceneAnimations = {
     init : null, // this function initiates a few steps before staring animations the girl's movements
@@ -11,24 +13,25 @@ export const sceneAnimations = {
         // console.log(this) // returns init_ES6 function
 
         this.init = (girl, animations) => {
-            let clock,
-            mixer = new THREE.AnimationMixer(girl),
-            actions = {},
-            activeAction,
-            previousAction,
-            keys = []
-    
+            let clock = new THREE.Clock(),
+                mixer = new THREE.AnimationMixer(girl.scene),
+                actions = {},
+                activeAction,
+                previousAction,
+                prevKey,
+                nowKey
+
             let animationStates = [
                 // Continuous actions
                 'Idle',
-                'Walking',
+                // 'Walking',
                 'Running',
-                'Dance',
+                // 'Dance',
         
                 // One time actions
-                'Death',
-                'Sitting',
-                'Standing'
+                // 'Death',
+                // 'Sitting',
+                // 'Standing'
             ],
             
             emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'] // One time actions
@@ -54,7 +57,7 @@ export const sceneAnimations = {
                 if (previousAction !== activeAction) {
                     previousAction.fadeOut(duration)
                 }
-        
+
                 activeAction
                 .reset()
                 .setEffectiveTimeScale(1)
@@ -62,14 +65,67 @@ export const sceneAnimations = {
                 .fadeIn(duration)
                 .play()
             }
+
+            this.globalVars = {
+                mixer,
+                fadeToAction,
+                prevKey,
+                nowKey
+            }
+
+            // Default action 
+            activeAction = actions['Idle']
+
+            activeAction.play()
+
+            function animate( time ) {
+
+                // Animation mixer update - START
+                let delta
+                delta = clock.getDelta()
+
+                
+                // Animation mixer update - END
+
+                mixer.update(delta)
+                requestAnimationFrame( animate )
+               
+            }
+
+            animate()
+
         }
 
-        this.animationControllers = (keys) => {
+        this.animationControllers = (slowKey) => {
 
+
+
+            const {
+                mixer,
+                fadeToAction
+            } =  this.globalVars
+
+            prevKey = nowKey,
+            nowKey = slowKey
+
+
+            if(slowKey){
+                if(prevKey !== nowKey){
+                    fadeToAction("Running", 0.2)
+                }
+            }
+
+            else{
+                if(prevKey !== nowKey){
+                    fadeToAction("Idle", 0.2)
+                }
+            }
         }
     }
 }
 
+
+sceneAnimations.init_ES6()
 
 
 
@@ -77,9 +133,7 @@ export const girlAnimations = (girl, animations, dispatch) => {
 
    
 
-    // Default action 
-    // activeAction = actions['Idle']
-	// activeAction.play()
+    
 
 
     // KEY BINDINGS
