@@ -154,12 +154,12 @@ const WorldBuild = () => {
 
 
             // Lights
-            const lightDistance = 15
+            const lightDistance = 1
             const ambientLight = new THREE.AmbientLight("#ffffff", 0.5),
-                dirLight1 = new THREE.DirectionalLight("#ffffff", 0.4),
-                dirLight2 = new THREE.DirectionalLight("#ffffff", 0.4),
-                dirLight3 = new THREE.DirectionalLight("#ffffff", 0.4),
-                dirLight4 = new THREE.DirectionalLight("#ffffff", 0.4)
+                dirLight1 = new THREE.DirectionalLight("#ffffff", 0.5),
+                dirLight2 = new THREE.DirectionalLight("#ffffff", 0.1),
+                dirLight3 = new THREE.DirectionalLight("#ffffff", 0.1),
+                dirLight4 = new THREE.DirectionalLight("#ffffff", 0.1)
 
             dirLight1.position.set(lightDistance, lightDistance, lightDistance)
             dirLight2.position.set(lightDistance, lightDistance, -lightDistance)
@@ -168,9 +168,9 @@ const WorldBuild = () => {
 
             scene.add(ambientLight)
             scene.add(dirLight1)
-            // scene.add(dirLight2)
-            // scene.add(dirLight3)
-            // scene.add(dirLight4)
+            scene.add(dirLight2)
+            scene.add(dirLight3)
+            scene.add(dirLight4)
 
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
