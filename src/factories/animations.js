@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 
-let prevKey, nowKey
+let prevKey, 
+    nowKey, 
+    noOfKeysPressed = 0,
+    isRunning = false
 
 
 export const sceneAnimations = {
@@ -96,30 +99,33 @@ export const sceneAnimations = {
 
         }
 
-        this.animationControllers = (slowKey) => {
+        this.animationControllers = (keyCode, keys) => {
 
+            const { fadeToAction } =  this.globalVars
 
-
-            const {
-                mixer,
-                fadeToAction
-            } =  this.globalVars
+            if(keys) noOfKeysPressed = Object.keys(keys).length
 
             prevKey = nowKey,
-            nowKey = slowKey
+            nowKey = keyCode
 
-
-            if(slowKey){
+            if(keyCode){
                 if(prevKey !== nowKey){
-                    fadeToAction("Running", 0.2)
+                    if(!isRunning) fadeToAction("Running", 0.1)
+                    isRunning = true
                 }
             }
 
-            else{
-                if(prevKey !== nowKey){
-                    fadeToAction("Idle", 0.2)
+            else {
+                // console.log(noOfKeysPressed)
+                if(noOfKeysPressed === 1){
+                    fadeToAction("Idle", 0.1)
+                    isRunning = false
+                    // console.log(prevKey, nowKey)
                 }
+
+                // console.log(noOfKeysPressed)
             }
+
         }
     }
 }

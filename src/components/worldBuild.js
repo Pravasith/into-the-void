@@ -348,7 +348,7 @@ const WorldBuild = () => {
                 //     ...keyPress
                 // })
 
-                sceneAnimations.animationControllers(e.keyCode)
+                sceneAnimations.animationControllers(keys)
 
 
                 keys[e.keyCode] = true
@@ -361,7 +361,8 @@ const WorldBuild = () => {
             }}
             onKeyUp = {(e) => {
 
-                sceneAnimations.animationControllers(null)
+                sceneAnimations.animationControllers(null, keys)
+
 
                 // let keyPress = keys
                 // delete keyPress[e.keyCode]
