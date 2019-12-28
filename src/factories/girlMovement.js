@@ -27,14 +27,32 @@ export const movements = {
             } = presets
 
             let girl = models['animations-clean-x'].scene,
-                terrain = models['terrain-x'].scene
+                terrain = models['tinker-4'].scene
+
+            let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.5)
+            dirLight1.castShadow = true;
+            dirLight1.position.set(100, 100, 100)
 
 
-            let terrainMesh = terrain.children[0]
+            dirLight1.position.copy(camera.position)
+
+
+            scene.add(dirLight1)
+            // shadows
+            girl.children.map(mesh => {
+                // mesh.castShadow = true
+                mesh.children.map(item => {
+                    if(item.type !== 'Bone') item.castShadow = true
+                })
+            })
+
+            let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
+            terrainMesh.receiveShadow = true
+
             let dummyAnchorToGirl = new THREE.Object3D() // Acts as a parent to anything which follows the girl
 
 
-            anchor.position.set(-100, 0, 0)
+            // anchor.position.set(-0, 0, 0)
             anchor.rotation.order = "YXZ"
 
             dummyAnchorToGirl.position.set(0, 10, 0)
@@ -42,7 +60,10 @@ export const movements = {
 
             girl.scale.set(0.125, 0.125, 0.125)
 
-            terrainMesh.material.side = THREE.FrontSide
+            // console.log(terrain, terrainMesh)
+
+            terrainMesh.children.map(mesh => mesh.material.side = THREE.FrontSide)
+            
 
 
             this.globalVars = {
@@ -50,7 +71,8 @@ export const movements = {
                 anchor,
                 girl,
                 dummyAnchorToGirl,
-                terrainMesh
+                terrainMesh,
+                dirLight1
             }
         }
 
@@ -60,6 +82,7 @@ export const movements = {
                 positionStep = 0.25,
                 axis = new THREE.Vector3(0, 1, 0),
                 directionVector,
+                intersectingMesh,
                 anchorTerrainIntersection
 
             let girlRaycaster = new THREE.Raycaster(),
@@ -72,7 +95,8 @@ export const movements = {
                 anchor,
                 girl,
                 dummyAnchorToGirl,
-                terrainMesh
+                terrainMesh,
+                dirLight1
             } =  this.globalVars
 
 
@@ -103,7 +127,7 @@ export const movements = {
                 // Run main character animations (girl)
                 
             }
-        
+
             if(keys[65]){ // A
         
                 // Anchor movements
@@ -118,7 +142,7 @@ export const movements = {
                     y : anchor.rotation.y + pi / 2
                 })
             }
-        
+
             if(keys[83]){ // S
         
                 // Anchor movements
@@ -135,7 +159,7 @@ export const movements = {
                     y : anchor.rotation.y + pi
                 })
             }
-        
+
             if(keys[68]){ // D
         
                 // Anchor movements
@@ -166,32 +190,54 @@ export const movements = {
                     anchor.rotation.y + -pi / 2
                 })
             }
-        
-        
+
+
+
             // Terrain raycasting
             girlRaycaster.set(anchor.position, rayDirection)
+
+
+            // intersectingMesh = terrainMesh.children.map(mesh => {
+            //     if(girlRaycaster.intersectObject(mesh)[0] !== undefined){
+            //         return mesh
+            //     }
+            // })[0]
+
+            // if(intersectingMesh !== undefined){
+            //     anchorTerrainIntersection = girlRaycaster.intersectObject(intersectingMesh)
+
+            //     console.log(anchorTerrainIntersection)
+    
+            //     if(anchorTerrainIntersection[0]){
+            //         // Sets anchor's y position relative to Terrain topology (height)
+            //         anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+            //     }
+            // }
+
             anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
-            
-        
+
+            // console.log(anchorTerrainIntersection)
+
             if(anchorTerrainIntersection[0]){
                 // Sets anchor's y position relative to Terrain topology (height)
                 anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
             }
-            
-        
-        
+
             // Links girl's position to anchor's position
             girl.position.set(
                 anchor.position.x,
                 anchor.position.y - 1.5,
                 anchor.position.z
             )
-        
+
+
             dummyAnchorToGirl.position.set(
                 anchor.position.x,
                 anchor.position.y + 5,
                 anchor.position.z
             )
+
+           
         
         }
     }

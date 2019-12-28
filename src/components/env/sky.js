@@ -9,8 +9,8 @@ export const addSkyBoxes = (scene) => {
         c = 0,
         gradientMapUp,
         gradientMapDown,
-        skyOpacity = 0.5,
-        floorOpacity = 0.8
+        skyOpacity = 1,
+        floorOpacity = 1
 
     skyboxGradients.map((item, i) => {
         loader.load(item.image, (texture) => {
@@ -18,7 +18,7 @@ export const addSkyBoxes = (scene) => {
                 map: texture,
                 side: THREE.BackSide,
                 // alphaMap: texture,
-                alphaTest: 0.5,
+                // alphaTest: 0.5,
                 fog: false
             }
 

@@ -24,15 +24,15 @@ export const skyboxGradients = [
         name : "spaceBgd"
     },
     {
-        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-2D.png",
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-2DN.png",
         name : "gradBgd_Down"
     },
     {
-        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-1.png",
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith.png",
         name : "gradBgd"
     },
     {
-        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-2U.png",
+        image : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/gradient-background-pravasith-2UP.png",
         name : "gradBgd_Up"
     }
 ]

@@ -3,7 +3,7 @@ export const loadModels = (module) => {
     const gltfLoader = new module.GLTFLoader()
     const s3Url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
     const urls = [
-        "terrain-x",
+        "tinker-4",
         "animations-clean-x"
     ]
 
@@ -23,6 +23,8 @@ export const loadModels = (module) => {
                     //     modelName: url,
                     //     modelData: gltf
                     // })
+
+                    console.log(url)
 
                     
 

@@ -20,6 +20,7 @@ import { movements } from '../factories/girlMovement'
 import { girlAnimations, sceneAnimations } from '../factories/animations'
 import { WorldContext } from '../utils/contexts/worldContext'
 import { getSimpleWater } from './env/water2'
+import { attachTextures } from '../factories/textures'
 
 
 const WorldBuild = () => {
@@ -27,19 +28,20 @@ const WorldBuild = () => {
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
     const [ camera, setCamera ] = useState(null)
-    const [ mixer, setMixer ] = useState(null)
+    const [ models, setModels ] = useState(null)
     const [ clock, setClock ] = useState(null)
     const [ renderer, setRenderer ] = useState(null)
     const [ controls, setControls ] = useState(null)
     const [ initComplete, setInitComplete ] = useState(false)
     const [ animationPresets, setAnimationPresets ] = useState(null)
+    const [ gui, setGui ] = useState(null)
 
     // const [ slowKey, setSlowKey ] = useState(null)
     
 
     let keys = {},
         prevCurrKey = [],
-        typeOfControls = "pointerLock", // TrackBall or PointerLock,
+        typeOfControls = "pointerLock", // trackBall or pointerLock,
         slowKey 
 
     const canvasWrapper = useRef(null)
@@ -60,6 +62,8 @@ const WorldBuild = () => {
 
             let girl = animationPresets.models["animations-clean-x"],
                 animations = animationPresets.models["animations-clean-x"].animations
+            
+            attachTextures(scene, models, gui)
 
             sceneAnimations.init(girl, animations)
             animate()
@@ -97,6 +101,10 @@ const WorldBuild = () => {
             // renderer.setPixelRatio( window.devicePixelRatio )
             renderer.setSize(container.clientWidth, container.clientHeight)
             renderer.setClearColor(0x000000, 0) // Background color
+
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
             container.appendChild(renderer.domElement)
 
             setRenderer(renderer)
@@ -104,7 +112,6 @@ const WorldBuild = () => {
             // scene
             scene = new THREE.Scene()
             setScene(scene)
-
 
             
 
@@ -143,7 +150,12 @@ const WorldBuild = () => {
             })
             .catch(e => console.error(e))
 
-            setMixer(mixer)
+            // setMixer(mixer)
+            setModels(models)
+
+            // GUI
+            let gui = new module.GUI()
+            setGui(gui)
 
             // Add fog
             scene.fog = new THREE.Fog(
@@ -156,34 +168,33 @@ const WorldBuild = () => {
             // Lights
             const lightDistance = 1
             const ambientLight = new THREE.AmbientLight("#ffffff", 0.5),
-                dirLight1 = new THREE.DirectionalLight("#ffffff", 0.5),
-                dirLight2 = new THREE.DirectionalLight("#ffffff", 0.1),
-                dirLight3 = new THREE.DirectionalLight("#ffffff", 0.1),
+                dirLight2 = new THREE.DirectionalLight("#ffffff", 0.2),
+                dirLight3 = new THREE.DirectionalLight("#ffffff", 0.2),
                 dirLight4 = new THREE.DirectionalLight("#ffffff", 0.1)
 
-            dirLight1.position.set(lightDistance, lightDistance, lightDistance)
             dirLight2.position.set(lightDistance, lightDistance, -lightDistance)
             dirLight3.position.set(-lightDistance, lightDistance, lightDistance)
             dirLight4.position.set(-lightDistance, lightDistance, -lightDistance)
 
             scene.add(ambientLight)
-            scene.add(dirLight1)
+
             scene.add(dirLight2)
             scene.add(dirLight3)
             scene.add(dirLight4)
 
 
+
             // createAxes( scene, maxRange, incDecStepSize, colors )
-            createAxes(
-                scene,
-                15,
-                5,
-                {
-                    x : "purple",
-                    y : "purple",
-                    z : "purple",
-                }
-            )
+            // createAxes(
+            //     scene,
+            //     15,
+            //     5,
+            //     {
+            //         x : "purple",
+            //         y : "purple",
+            //         z : "purple",
+            //     }
+            // )
 
 
             // Add water 
@@ -206,9 +217,18 @@ const WorldBuild = () => {
 
             // sets camera to the state
             setCamera(camera)
+
+            var material = new THREE.MeshBasicMaterial( {color: "#fff", side: THREE.DoubleSide} );
+
+            let sphereG = new THREE.SphereGeometry(1, 10, 10)
+            let sphere = new THREE.Mesh(sphereG, material)
+            scene.add( sphere );
+
+            sphere.position.set(0, 0, -20)
+
+            sphere.castShadow = true
+            // plane.receiveShadow = true
             
-
-
 
             // controls
             if(typeOfControls === "pointerLock"){
@@ -293,8 +313,6 @@ const WorldBuild = () => {
 
             if(clock){
                 delta = clock.getDelta()
-
-                
             }
 
             
@@ -314,7 +332,8 @@ const WorldBuild = () => {
             import('three/examples/jsm/loaders/GLTFLoader.js'),
             import('three/examples/jsm/loaders/DRACOLoader.js'),
             import('three/examples/jsm/controls/PointerLockControls.js'),
-            import('three/examples/jsm/objects/Water2.js')
+            import('three/examples/jsm/objects/Water2.js'),
+            import('three/examples/jsm/libs/dat.gui.module.js')
         ])
         .then(modules => {
             modules.map((item, i) => {

@@ -15,7 +15,7 @@ export const getWater = (scene, Water) => {
 
 
     // water
-    let waterGeometry = new THREE.PlaneGeometry(260, 260, 100, 100);
+    let waterGeometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
 
     // let flowMap = textureLoader.load('https://threejs.org/examples/textures/water/Water_1_M_Flow.jpg');
 	let water = new Water(waterGeometry, {
@@ -31,12 +31,12 @@ export const getWater = (scene, Water) => {
 
 
     water.rotation.x = -Math.PI / 2
-    water.position.x = 50
+    // water.position.x = 50
     water.position.y = -2
     scene.add( water );
     water.updateMatrixWorld(true)
 
-    animateWater(water)
+    // animateWater(water)
 
 
 
