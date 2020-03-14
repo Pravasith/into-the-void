@@ -27,7 +27,7 @@ export const movements = {
             } = presets
 
             let girl = models['animations-clean-x'].scene,
-                terrain = models['tinker-4'].scene
+                terrain = models['tinker-75'].scene
 
             let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.5)
             dirLight1.castShadow = true;
@@ -52,19 +52,24 @@ export const movements = {
             let dummyAnchorToGirl = new THREE.Object3D() // Acts as a parent to anything which follows the girl
 
 
-            // anchor.position.set(-0, 0, 0)
+            anchor.position.set(0, 1000, 0)
             anchor.rotation.order = "YXZ"
 
             dummyAnchorToGirl.position.set(0, 10, 0)
             scene.add(dummyAnchorToGirl)
 
+            // Initital position and rotation of anchor
+            // anchor.position.set(-1.7433705819587333, 1.4001339569573819, -0.4527981524080006)
+            // anchor.rotation.set(0.10999999999999673, -0.4940000000000117, 6.282978218408773e-17)
+
             girl.scale.set(0.125, 0.125, 0.125)
 
-            // console.log(terrain, terrainMesh)
 
-            terrainMesh.children.map(mesh => mesh.material.side = THREE.FrontSide)
-            
+            // if(terrainMesh.children.length !== 0) terrainMesh.children.map(mesh => mesh.material.side = THREE.FrontSide)
+            // else terrainMesh.material.side = THREE.FrontSide
 
+
+            console.log(terrain, terrainMesh)
 
             this.globalVars = {
                 camera,
@@ -191,54 +196,50 @@ export const movements = {
                 })
             }
 
-
-
             // Terrain raycasting
             girlRaycaster.set(anchor.position, rayDirection)
 
+            if(terrainMesh.children.length > 0){
+                intersectingMesh = terrainMesh.children.map(mesh => {
+                    if(girlRaycaster.intersectObject(mesh)[0] !== undefined){
+                        return mesh
+                    }
+                })[0]
 
-            // intersectingMesh = terrainMesh.children.map(mesh => {
-            //     if(girlRaycaster.intersectObject(mesh)[0] !== undefined){
-            //         return mesh
-            //     }
-            // })[0]
-
-            // if(intersectingMesh !== undefined){
-            //     anchorTerrainIntersection = girlRaycaster.intersectObject(intersectingMesh)
-
-            //     console.log(anchorTerrainIntersection)
-    
-            //     if(anchorTerrainIntersection[0]){
-            //         // Sets anchor's y position relative to Terrain topology (height)
-            //         anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
-            //     }
-            // }
-
-            anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
-
-            // console.log(anchorTerrainIntersection)
-
-            if(anchorTerrainIntersection[0]){
-                // Sets anchor's y position relative to Terrain topology (height)
-                anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+                if(intersectingMesh !== undefined){
+                    anchorTerrainIntersection = girlRaycaster.intersectObject(intersectingMesh)
+        
+                    if(anchorTerrainIntersection[0]){
+                        // Sets anchor's y position relative to Terrain topology (height)
+                        anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+                    }
+                }
             }
+
+            else{
+                anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
+
+                // console.log(anchorTerrainIntersection)
+    
+                if(anchorTerrainIntersection[0]){
+                    // Sets anchor's y position relative to Terrain topology (height)
+                    anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+                }
+            }
+            
 
             // Links girl's position to anchor's position
             girl.position.set(
                 anchor.position.x,
-                anchor.position.y - 1.5,
+                anchor.position.y - 1.51,
                 anchor.position.z
             )
-
 
             dummyAnchorToGirl.position.set(
                 anchor.position.x,
                 anchor.position.y + 5,
                 anchor.position.z
             )
-
-           
-        
         }
     }
 }
