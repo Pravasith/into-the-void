@@ -7,7 +7,7 @@ export const getWater = (scene, Water) => {
     let textureLoader = new THREE.TextureLoader()
 
     var params = {
-        color: '#ccfaff',
+        color: '#45edff',
         scale: 1,
         flowX: 0,
         flowY: 0

@@ -63,7 +63,7 @@ const WorldBuild = () => {
             let girl = animationPresets.models["animations-clean-x"],
                 animations = animationPresets.models["animations-clean-x"].animations
             
-            attachTextures(scene, models, gui)
+            // attachTextures(scene, models, gui)
 
             sceneAnimations.init(girl, animations)
             animate()
@@ -211,7 +211,7 @@ const WorldBuild = () => {
 
 
             // camera
-            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 10000)
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 10, 10000)
             camera.position.set(0, (2.5/2 * 5.5) - 7, 2.5 * 10)
             camera.rotation.x = -Math.PI / 20
 

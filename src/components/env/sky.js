@@ -19,6 +19,7 @@ export const addSkyBoxes = (scene) => {
                 side: THREE.BackSide,
                 // alphaMap: texture,
                 // alphaTest: 0.5,
+                transparent : true,
                 fog: false
             }
 
@@ -55,14 +56,14 @@ export const addSkyBoxes = (scene) => {
                 gradientMaps[2] = gradientMapUp
                 gradientMaps[3] = gradientMapDown
 
-                const spaceSkyboxGeo = new THREE.BoxGeometry(1800, 1800, 1800)
+                const spaceSkyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000)
                 const spaceSkybox = new THREE.Mesh(spaceSkyboxGeo, spaceMap)
                 scene.add(spaceSkybox)
 
-                const gradSkyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000)
-                const gradSkybox = new THREE.Mesh(gradSkyboxGeo, gradientMaps)
-                gradSkybox.position.set(0, 420, 0)
-                scene.add(gradSkybox)
+                // const gradSkyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000)
+                // const gradSkybox = new THREE.Mesh(gradSkyboxGeo, gradientMaps)
+                // gradSkybox.position.set(0, 420, 0)
+                // scene.add(gradSkybox)
             }
         })
     })

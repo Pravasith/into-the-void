@@ -27,7 +27,7 @@ export const movements = {
             } = presets
 
             let girl = models['animations-clean-x'].scene,
-                terrain = models['tinker-75'].scene
+                terrain = models['coronaDraco'].scene
 
             let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.5)
             dirLight1.castShadow = true;
@@ -46,7 +46,12 @@ export const movements = {
                 })
             })
 
-            let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
+
+            // let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
+            let terrainMesh = terrain.children[0]
+
+            // let terrainMesh = terrain
+
             terrainMesh.receiveShadow = true
 
             let dummyAnchorToGirl = new THREE.Object3D() // Acts as a parent to anything which follows the girl
@@ -54,6 +59,7 @@ export const movements = {
 
             anchor.position.set(0, 1000, 0)
             anchor.rotation.order = "YXZ"
+
 
             dummyAnchorToGirl.position.set(0, 10, 0)
             scene.add(dummyAnchorToGirl)
@@ -69,7 +75,7 @@ export const movements = {
             // else terrainMesh.material.side = THREE.FrontSide
 
 
-            console.log(terrain, terrainMesh)
+            // console.log(terrain.position, terrainMesh)
 
             this.globalVars = {
                 camera,
@@ -200,11 +206,15 @@ export const movements = {
             girlRaycaster.set(anchor.position, rayDirection)
 
             if(terrainMesh.children.length > 0){
+
+                // console.log(terrainMesh)
+
                 intersectingMesh = terrainMesh.children.map(mesh => {
                     if(girlRaycaster.intersectObject(mesh)[0] !== undefined){
                         return mesh
                     }
                 })[0]
+
 
                 if(intersectingMesh !== undefined){
                     anchorTerrainIntersection = girlRaycaster.intersectObject(intersectingMesh)
@@ -217,6 +227,7 @@ export const movements = {
             }
 
             else{
+
                 anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
 
                 // console.log(anchorTerrainIntersection)

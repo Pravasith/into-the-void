@@ -4,7 +4,7 @@ export const attachTextures = (scene, models, gui) => {
     let loader = new THREE.TextureLoader()
 
     // Terrain
-    let terrain = models["tinker-75"].scene
+    let terrain = models["coronaDraco"].scene
     let welcomeMesh = terrain.children.filter(mesh => mesh.name === "holder")[0]
 
     let newMaterial = welcomeMesh.material.clone()

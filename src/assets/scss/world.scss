@@ -29,7 +29,8 @@ p{
     position: relative;
     // @include flexCentreRow;
     // align-items: flex-start;
-    background: $darkestGrey;
+    // background: $darkestGrey;
+    background: $black;
 
     .hide{
         display: none;
