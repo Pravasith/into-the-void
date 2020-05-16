@@ -9,7 +9,7 @@ import createAxes from '../factories/axes'
 import "../assets/scss/world.scss"
 import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
-import { colors } from './UIComponents'
+import { colors, skyboxGradients } from './UIComponents'
 import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
 
@@ -163,6 +163,135 @@ const WorldBuild = () => {
                 30, // near value
                 1500 // far value
             )
+
+            // Add floyd - static elements
+            const addFloydElements = (models) => {
+                Object.keys(models).forEach(model => {
+                    const modelData = models[model].scene
+
+                    if(model === "darkSideAlbumModel"){
+                        modelData.position.set(13, 0.5, 127)
+                        modelData.scale.set(10, 10, 10)
+                        modelData.rotation.y = 0.4
+
+
+                        modelData.children.map((item, i) => {
+                            if(item.name === "prism"){
+
+                                 // Refraction for prism
+                                 const urls = skyboxGradients.reduce((all, item, i) => {
+                                    // Reordering images for refraction maps
+                                    // Required Order - posX, negX, posY, negY, posZ, negZ
+                                    // Current order - refer sky.js in env and see how skyboxGradients are used from UIComponents folder
+                                    if(item.name === "spaceBgd"){
+                                        for(let j = 0; j < 6; j++){
+                                            all[j] = item.image
+                                        }
+                                    }
+                                    return all
+                                }, [])
+
+                                let textureCube = new THREE.CubeTextureLoader().load(urls, (textures) => {
+                                    textures.mapping = THREE.CubeRefractionMapping
+        
+                                    let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
+                                        color: 0xccddff, 
+                                        envMap: textures, 
+                                        refractionRatio: 0.98, 
+                                        reflectivity: 0.92,
+                                        transparent : true,
+                                        opacity : 0.92,
+                                        side: THREE.FrontSide
+                                    })
+        
+                                    let prismBackMaterial = new THREE.MeshPhysicalMaterial({
+                                        map: null,
+                                        color: 0x888888,
+                                        metalness: 1,
+                                        roughness: 0,
+                                        opacity: 0.1,
+                                        side: THREE.FrontSide,
+                                        transparent: true,
+                                        envMapIntensity: 5,
+                                        premultipliedAlpha: true
+                                        // TODO: Add custom blend mode that modulates background color by this materials color.
+                                    })
+
+                                    item.material = prismFrontMaterial
+
+                                    let second = item.clone()
+                                    let s = 1.4
+    
+                                    second.position.set(13, 0.5, 127)
+                                    second.scale.set(s, s, s)
+                                    second.rotation.y = 0.4
+                                    second.material = prismBackMaterial
+                                    scene.add(second)
+                                })
+
+                               
+                                
+                              
+                            }
+
+                            else if(item.name === "rainbowRay"){
+
+                                let whiteMat = new THREE.MeshPhongMaterial({ 
+                                    color: "#fff",
+                                    transparent : true,
+                                    opacity : 0.8,
+                                    emissive : "#fff", 
+                                    shininess: 30, 
+                                    flatShading: false,
+                                    side: THREE.DoubleSide
+                                })
+				
+                                item.material = whiteMat
+                            }
+
+                            else {
+
+
+                                let color
+
+                                if(item.name === "violet"){
+                                    color = "#cc34eb"
+                                    console.log(item)
+                                }
+
+                                else if(item.name === "blue"){
+                                    color = "#29abe2"
+                                }
+
+                                else{
+                                    color = item.name
+                                }
+
+                                
+                                let colorMat = new THREE.MeshPhongMaterial({ 
+                                    color, 
+                                    // specular: "#fff",
+                                    transparent : true,
+                                    opacity : 0.8,
+                                    emissive : color, 
+                                    shininess: 30, 
+                                    flatShading: false,
+                                    side: THREE.DoubleSide
+                                })
+				
+                                item.material = colorMat
+                            }
+
+                        })
+
+                        
+                    }
+                })
+
+                
+            }
+
+            addFloydElements(models)
 
 
             // Lights

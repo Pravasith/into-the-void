@@ -47,11 +47,17 @@ export const movements = {
             })
 
 
-            // let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
-            let terrainMesh = terrain.children[0]
+            
+
+
+            terrain.position.set(0, -0.85, 0)
+
+            let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
+            // let terrainMesh = terrain.children[0]
 
             // let terrainMesh = terrain
 
+            
             terrainMesh.receiveShadow = true
 
             let dummyAnchorToGirl = new THREE.Object3D() // Acts as a parent to anything which follows the girl
@@ -61,7 +67,7 @@ export const movements = {
             anchor.rotation.order = "YXZ"
 
 
-            dummyAnchorToGirl.position.set(0, 10, 0)
+            dummyAnchorToGirl.position.set(0, 0, 0)
             scene.add(dummyAnchorToGirl)
 
             // Initital position and rotation of anchor
@@ -69,6 +75,13 @@ export const movements = {
             // anchor.rotation.set(0.10999999999999673, -0.4940000000000117, 6.282978218408773e-17)
 
             girl.scale.set(0.125, 0.125, 0.125)
+
+            // Initial positions
+            anchor.position.set(17, 1.6, 138)
+
+            // x: 10.065508009029148
+            // y: 1.6
+            // z: 130.59010396014648
 
 
             // if(terrainMesh.children.length !== 0) terrainMesh.children.map(mesh => mesh.material.side = THREE.FrontSide)
@@ -134,6 +147,8 @@ export const movements = {
                 TweenMax.to(girl.rotation, timestep, {
                     y : anchor.rotation.y
                 })
+
+                console.log(anchor.position)
         
                 // Run main character animations (girl)
                 

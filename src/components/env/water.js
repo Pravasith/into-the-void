@@ -32,8 +32,8 @@ export const getWater = (scene, Water) => {
 
     water.rotation.x = -Math.PI / 2
     // water.position.x = 50
-    water.position.y = -2
-    scene.add( water );
+    // water.position.y = -2
+    scene.add( water )
     water.updateMatrixWorld(true)
 
     // animateWater(water)

@@ -4,7 +4,8 @@ export const loadModels = (module) => {
     const s3Url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
     const urls = [
         "coronaDraco",
-        "animations-clean-x"
+        "animations-clean-x",
+        "darkSideAlbumModel"
     ]
 
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data
@@ -24,7 +25,7 @@ export const loadModels = (module) => {
                     //     modelData: gltf
                     // })
 
-                    console.log(url)
+                    // console.log(url)
 
                     
 
