@@ -5,7 +5,7 @@ export const loadModels = (module) => {
     const urls = [
         "coronaDraco",
         "animations-clean-x",
-        "darkSideAlbumModel"
+        "darkSideAlbumArt"
     ]
 
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data

@@ -29,7 +29,7 @@ export const movements = {
             let girl = models['animations-clean-x'].scene,
                 terrain = models['coronaDraco'].scene
 
-            let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.5)
+            let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.05)
             dirLight1.castShadow = true;
             dirLight1.position.set(100, 100, 100)
 

@@ -169,7 +169,7 @@ const WorldBuild = () => {
                 Object.keys(models).forEach(model => {
                     const modelData = models[model].scene
 
-                    if(model === "darkSideAlbumModel"){
+                    if(model === "darkSideAlbumArt"){
                         modelData.position.set(13, 0.5, 127)
                         modelData.scale.set(10, 10, 10)
                         modelData.rotation.y = 0.4
@@ -197,8 +197,8 @@ const WorldBuild = () => {
                                     let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
                                         color: 0xccddff, 
                                         envMap: textures, 
-                                        refractionRatio: 0.98, 
-                                        reflectivity: 0.92,
+                                        refractionRatio: 0.9, 
+                                        reflectivity: 1,
                                         transparent : true,
                                         opacity : 0.92,
                                         side: THREE.FrontSide
@@ -217,10 +217,12 @@ const WorldBuild = () => {
                                         // TODO: Add custom blend mode that modulates background color by this materials color.
                                     })
 
+                                    
+
                                     item.material = prismFrontMaterial
 
                                     let second = item.clone()
-                                    let s = 1.4
+                                    let s = 1.5
     
                                     second.position.set(13, 0.5, 127)
                                     second.scale.set(s, s, s)
@@ -228,10 +230,24 @@ const WorldBuild = () => {
                                     second.material = prismBackMaterial
                                     scene.add(second)
                                 })
+                            }
 
-                               
-                                
-                              
+                            else if(item.name === "prismInside"){
+
+                                let s = 1.1
+                                item.scale.set(s, s, s)
+
+                                let whiteMat = new THREE.MeshPhongMaterial({ 
+                                    color: "#fff",
+                                    transparent : true,
+                                    opacity : 0.8,
+                                    emissive : "#fff", 
+                                    shininess: 30, 
+                                    flatShading: false,
+                                    side: THREE.DoubleSide
+                                })
+				
+                                item.material = whiteMat
                             }
 
                             else if(item.name === "rainbowRay"){
@@ -249,23 +265,28 @@ const WorldBuild = () => {
                                 item.material = whiteMat
                             }
 
+                            else if(item.name === "midRays"){
+
+                                let whiteMat = new THREE.MeshPhongMaterial({ 
+                                    color: "#fff",
+                                    // emissive : "#fff", 
+                                    transparent: true,
+
+                                    shininess: 30, 
+                                    flatShading: false,
+                                    side: THREE.DoubleSide
+                                })
+				
+                                item.material = whiteMat
+                            }
+
                             else {
-
-
                                 let color
 
-                                if(item.name === "violet"){
-                                    color = "#cc34eb"
-                                    console.log(item)
-                                }
-
-                                else if(item.name === "blue"){
-                                    color = "#29abe2"
-                                }
-
-                                else{
-                                    color = item.name
-                                }
+                                if(item.name === "violet") color = "#cc34eb"
+                                else if(item.name === "blue") color = "#29abe2"
+                                else if(item.name === "orange") color = "#ff4a03"
+                                else color = item.name
 
                                 
                                 let colorMat = new THREE.MeshPhongMaterial({ 

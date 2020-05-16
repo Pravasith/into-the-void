@@ -1,44 +1,50 @@
 import * as THREE from 'three'
 
-export const attachTextures = (scene, models, gui) => {
+export const attachTextures = (model, gui, textureURL) => {
     let loader = new THREE.TextureLoader()
 
-    // Terrain
-    let terrain = models["coronaDraco"].scene
-    let welcomeMesh = terrain.children.filter(mesh => mesh.name === "holder")[0]
+    
+    let mesh = model
+    // let welcomeMesh = terrain.children.filter(mesh => mesh.name === "holder")[0]
 
-    let newMaterial = welcomeMesh.material.clone()
-    let texture = loader.load("https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/welcome.jpg")
-    texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
+    console.log(model)
 
-    var controls = new function() {
-        this.u = 0.876
-        this.v = 0.735
-    }
+    let newMaterial = mesh.material.clone()
+    let tex = loader.load(textureURL, (texture) => {
 
-    gui.add(controls, 'u', 0, 1)
-    gui.add(controls, 'v', 0, 1)
+        texture.wrapS = THREE.RepeatWrapping
+        texture.wrapT = THREE.RepeatWrapping
 
+        var controls = new function() {
+            this.u = 0.876
+            this.v = 0.735
+        }
 
-    texture.repeat.set( 4.5, 4.5 );
-
-    texture.flipY = false
-    texture.rotation = Math.PI / 2
-    // texture.offset.set(0.876, 0.735)
-    newMaterial.map = texture
-    welcomeMesh.material = newMaterial
+        gui.add(controls, 'u', 0, 1)
+        gui.add(controls, 'v', 0, 1)
 
 
-    // console.log(welcomeMesh)
+        texture.repeat.set( 4.5, 4.5 );
 
-    function animate(time) {
+        texture.flipY = false
+        texture.rotation = Math.PI / 2
+        // texture.offset.set(0.876, 0.735)
+        newMaterial.map = texture
+        mesh.material = newMaterial
 
-        let matUV = welcomeMesh.material.map
-        matUV.offset.set(controls.u, controls.v)
-        requestAnimationFrame(animate)
-    }
 
-    animate()
+        // console.log(welcomeMesh)
+
+        function animate(time) {
+
+            let matUV = mesh.material.map
+            matUV.offset.set(controls.u, controls.v)
+            requestAnimationFrame(animate)
+        }
+
+        animate()
+
+    })
+    
     
 }
