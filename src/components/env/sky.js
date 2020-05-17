@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { skyboxGradients } from '../UIComponents'
+import { skyboxGradients } from '../resources'
 
 export const addSkyBoxes = (scene) => {
 

@@ -27,7 +27,7 @@ export const movements = {
             } = presets
 
             let girl = models['animations-clean-x'].scene,
-                terrain = models['coronaDraco'].scene
+                terrain = models['darkSideTerr'].scene
 
             let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.05)
             dirLight1.castShadow = true;
@@ -77,7 +77,10 @@ export const movements = {
             girl.scale.set(0.125, 0.125, 0.125)
 
             // Initial positions
-            anchor.position.set(17, 1.6, 138)
+            anchor.position.set(38.5, 1.6, 63)
+            anchor.rotation.y = 0.73
+            anchor.rotation.x = 0.29
+            girl.position.y = -1
 
             // x: 10.065508009029148
             // y: 1.6
@@ -141,6 +144,8 @@ export const movements = {
                     axis, 
                     0
                 ))
+
+                
                 
         
                 // Girl movements
@@ -148,7 +153,7 @@ export const movements = {
                     y : anchor.rotation.y
                 })
 
-                console.log(anchor.position)
+                console.log(anchor.position, anchor.rotation)
         
                 // Run main character animations (girl)
                 

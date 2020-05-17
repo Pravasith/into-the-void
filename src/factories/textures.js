@@ -1,13 +1,12 @@
 import * as THREE from 'three'
 
-export const attachTextures = (model, gui, textureURL) => {
+export const attachTextures = (model, gui, textureURL, panOptions) => {
     let loader = new THREE.TextureLoader()
 
-    
+    const { showGui, u, v, zoom, flipY, textureRotation, animateU, animateV } = panOptions
     let mesh = model
     // let welcomeMesh = terrain.children.filter(mesh => mesh.name === "holder")[0]
 
-    console.log(model)
 
     let newMaterial = mesh.material.clone()
     let tex = loader.load(textureURL, (texture) => {
@@ -15,30 +14,47 @@ export const attachTextures = (model, gui, textureURL) => {
         texture.wrapS = THREE.RepeatWrapping
         texture.wrapT = THREE.RepeatWrapping
 
+
         var controls = new function() {
-            this.u = 0.876
-            this.v = 0.735
+            this.u = u
+            this.v = v
+            this.repeat = zoom
         }
 
-        gui.add(controls, 'u', 0, 1)
-        gui.add(controls, 'v', 0, 1)
+        if(showGui){
+            gui.add(controls, 'u', 0, 1)
+            gui.add(controls, 'v', 0, 1)
+            gui.add(controls, 'repeat', 0, 10)
+        }
 
+        
 
-        texture.repeat.set( 4.5, 4.5 );
+        texture.offset.set(u, v)
+        texture.repeat.set(zoom, zoom)
+        texture.flipY = flipY
+        texture.rotation = textureRotation
 
-        texture.flipY = false
-        texture.rotation = Math.PI / 2
-        // texture.offset.set(0.876, 0.735)
         newMaterial.map = texture
         mesh.material = newMaterial
 
+        let uCount = 0, vCount = 0
 
-        // console.log(welcomeMesh)
 
         function animate(time) {
-
             let matUV = mesh.material.map
             matUV.offset.set(controls.u, controls.v)
+            matUV.repeat.set(controls.repeat, controls.repeat)
+
+            if(animateU){
+                uCount -= 0.001
+                matUV.offset.set(uCount, controls.v)
+            }
+
+            if(animateV){
+                vCount -= 0.001
+                matUV.offset.set(controls.u, vCount)
+            }
+
             requestAnimationFrame(animate)
         }
 

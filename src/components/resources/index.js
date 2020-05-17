@@ -46,3 +46,10 @@ export const SideBarButton = (props) => (
         </svg>
     </a>
 )
+
+export const hoardingTextures = {
+    mainHoarding : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/pinkFloydHoarding.png",
+    psyTexture : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/psyTexture.png",
+    woodTex : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/woodTex.jpg",
+    darkSideCDTex : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/darkSideTex.png"
+}
