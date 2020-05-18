@@ -37,8 +37,14 @@ export const addFloydElements = (models, scene, gui) => {
             modelData.scale.set(10, 10, 10)
             modelData.rotation.y = 0.4
 
+            let cPos = 0
             function animate(time) {
                 modelData.rotation.y += 0.005
+                cPos += 0.015
+
+                let s = 4 * Math.abs(Math.sin(cPos) + 2.1)
+                modelData.position.y = Math.sin(cPos) + 1
+                // modelData.scale.set(s, s, s)
     
                 requestAnimationFrame(animate)
             }
@@ -164,44 +170,53 @@ export const addFloydElements = (models, scene, gui) => {
             
         }
 
-        else if(model === "vinylPlay"){
+        else if(model === "vinylPlayr"){
             console.log(modelData)
 
             let s = 1
 
-            modelData.position.set(9.9, 2.6, 35.8)
+            modelData.position.set(9.9, 2.5, 35.8)
             modelData.scale.set(s, s, s)
             modelData.rotation.x = Math.PI/2
             modelData.rotation.z = 4.1
 
             var controls = new function() {
-                this.posY = 2.6
+                this.posY = 2.5
                 this.rX = Math.PI/2
                 this.rZ = 4.1
             }
     
-            gui.add(controls, 'posY', 0, 5)
-            gui.add(controls, 'rX', 0, 4 * Math.PI)
-            gui.add(controls, 'rZ', 0, 4 * Math.PI)
+            // gui.add(controls, 'posY', 0, 5)
+            // gui.add(controls, 'rX', 0, 4 * Math.PI)
+            // gui.add(controls, 'rZ', 0, 4 * Math.PI)
 
-            function animate(time) {
-                modelData.position.set(9.9, controls.posY, 35.8)
-                // modelData.scale.set(s, s, s)
-                modelData.rotation.x = controls.rX
-                modelData.rotation.z = controls.rZ 
+            // function animate(time) {
+            //     modelData.position.set(9.9, controls.posY, 35.8)
+            //     // modelData.scale.set(s, s, s)
+            //     modelData.rotation.x = controls.rX
+            //     modelData.rotation.z = controls.rZ 
     
-                requestAnimationFrame(animate)
-            }
+            //     requestAnimationFrame(animate)
+            // }
     
-            animate()
+            // animate()
 
             modelData.children.map((item, i) => {
                 let cubeMaterial1 = new THREE.MeshStandardMaterial( {
-                    color: "#8f8f8f", metalness: 0.85, roughness: 0.2, name: 'metallic'
+                    color: "#8f8f8f", 
+                    metalness: 0.85, 
+                    roughness: 0.2, 
+                    name: 'metallic',
+                    transparent: true,
+                    opacity: 0.8
                 })
 
                 let cubeMaterial2 = new THREE.MeshStandardMaterial( {
-                    color: "#29abe2", metalness: 0.5, roughness: 0.2, name: 'metallic'
+                    color: "#FFF", metalness: 0.1, roughness: 0.2, name: 'metallic'
+                })
+
+                let cubeMaterial3 = new THREE.MeshStandardMaterial( {
+                    color: "#ff4ac9", emissive: "#ff4ac9", roughness: 0.2, name: 'metallic'
                 })
 
                 let basic = new THREE.MeshBasicMaterial({
@@ -213,10 +228,9 @@ export const addFloydElements = (models, scene, gui) => {
                     case "baseDisc":
                         item.material = cubeMaterial2
                         break
-                    
-                    case "midCube":
-                        item.material = basic
 
+                    case "frameForList":
+                        item.material = basic
                         const panOptions = { 
                             showGui : false, 
                             u : 1, 
@@ -229,7 +243,22 @@ export const addFloydElements = (models, scene, gui) => {
                         }
 
                         attachTextures(item, gui, hoardingTextures.woodTex, panOptions)
-                        
+                        break
+                    
+                    case "midCube":
+                        item.material = basic
+                        const panOptions1 = { 
+                            showGui : false, 
+                            u : 1, 
+                            v : 1, 
+                            zoom : 3, 
+                            flipY : false, 
+                            textureRotation : 0,
+                            // animateV : true,
+                            // animateU : true
+                        }
+
+                        attachTextures(item, gui, hoardingTextures.woodTex, panOptions1)
                         break
 
                     case "frame":
@@ -250,7 +279,14 @@ export const addFloydElements = (models, scene, gui) => {
                         break
                     
                     case "disc":
-                        item.material = cubeMaterial1
+                        item.material = cubeMaterial2
+                        function animate(time) {
+                            
+                            item.rotation.y += 0.02 
+                
+                            requestAnimationFrame(animate)
+                        }
+                        animate()
 
                         const panOptions3 = { 
                             showGui : false, 
@@ -263,12 +299,33 @@ export const addFloydElements = (models, scene, gui) => {
                             // animateU : true
                         }
 
-                        attachTextures(item, gui, hoardingTextures.darkSideCDTex, panOptions3)
+                        attachTextures(item, gui, hoardingTextures.psyTexture, panOptions3)
+                        break
+
+                    case "rotor":
+                        item.children.filter(item => item.name === "pinkPipe")[0].material = item.material = cubeMaterial3
+                        break
+
+                    case "songList":
+                        item.material = basic
+
+                        const panOptions4 = { 
+                            showGui : true, 
+                            u : 1, 
+                            v : 1, 
+                            zoom : 1, 
+                            flipY : false, 
+                            textureRotation : 0,
+                            animateV : false,
+                            animateU : false
+                        }
+
+                        attachTextures(item, gui, hoardingTextures.songList, panOptions4)
                         break
                 
                     default:
                         item.material = cubeMaterial1
-                        break;
+                        break
                 }
             })
         }

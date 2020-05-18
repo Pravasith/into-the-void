@@ -47,9 +47,28 @@ export const SideBarButton = (props) => (
     </a>
 )
 
+const mapsPath = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/"
+const songsPath = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/songs/"
+
 export const hoardingTextures = {
-    mainHoarding : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/pinkFloydHoarding.png",
-    psyTexture : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/psyTexture.png",
-    woodTex : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/woodTex.jpg",
-    darkSideCDTex : "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/darkSideTex.png"
+    mainHoarding: mapsPath + "pinkFloydHoarding.png",
+    psyTexture: mapsPath + "psyTexture.png",
+    woodTex: mapsPath + "woodTex.jpg",
+    darkSideCDTex: mapsPath + "darkSideTex.png",
+    songList: mapsPath + "darkSideOfTheMoonSongList.png",
+}
+
+export const albumSongs = {
+    darkSideOfTheMoon: {
+        speakToMe : songsPath + "speakToMe.mp3",
+        breatheInTheAir : songsPath + "breatheInTheAir.mp3",
+        onTheRun : songsPath + "onTheRun.mp3",
+        time : songsPath + "time.mp3",
+        theGreatGigInTheSky : songsPath + "theGreatGigInTheSky.mp3",
+        money : songsPath + "money.mp3",
+        usAndThem: songsPath + "usAndThem.mp3",
+        anyColorYouLike : songsPath + "anyColorYouLike.mp3",
+        brainDamage : songsPath + "brainDamage.mp3",
+        eclipse : songsPath + "eclipse.mp3",
+    }
 }

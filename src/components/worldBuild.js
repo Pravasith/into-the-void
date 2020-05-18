@@ -9,7 +9,7 @@ import createAxes from '../factories/axes'
 import "../assets/scss/world.scss"
 import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
-import { colors, skyboxGradients } from './resources'
+import { colors, skyboxGradients, albumSongs } from './resources'
 import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
 
@@ -172,7 +172,7 @@ const WorldBuild = () => {
 
             // Lights
             const lightDistance = 1
-            const ambientLight = new THREE.AmbientLight("#ffffff", 0.5),
+            const ambientLight = new THREE.AmbientLight("#ffffff", 0.05),
                 dirLight2 = new THREE.DirectionalLight("#ffffff", 0.2),
                 dirLight3 = new THREE.DirectionalLight("#ffffff", 0.2),
                 dirLight4 = new THREE.DirectionalLight("#ffffff", 0.1)
@@ -291,6 +291,26 @@ const WorldBuild = () => {
             // line.position.y = -0
             // line.material.color.setHex(0x000000)
             // scene.add(line)
+
+            // Audio
+            // create an AudioListener and add it to the camera
+            var listener = new THREE.AudioListener();
+            camera.add( listener );
+
+            // create a global audio source
+            var sound = new THREE.Audio( listener );
+
+            // load a sound and set it as the Audio object's buffer
+            var audioLoader = new THREE.AudioLoader();
+            audioLoader.load( albumSongs.darkSideOfTheMoon.time, function( buffer ) {
+                // console.log(buffer)
+                sound.setBuffer( buffer );
+                sound.setLoop( true );
+                sound.setVolume( 0.5 );
+                sound.play();
+                console.log("PPP")
+            },(x) => console.log(x)
+            );
 
             
             setInitComplete(true)
