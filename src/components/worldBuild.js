@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import * as THREE from 'three'
+import { Howl, Howler } from 'howler'
 
 import { addMass, removeMass } from '../factories/massObjects'
 import { applyVelocity, displace, applyAcceleration } from '../factories/physics'
@@ -293,24 +294,12 @@ const WorldBuild = () => {
             // scene.add(line)
 
             // Audio
-            // create an AudioListener and add it to the camera
-            var listener = new THREE.AudioListener();
-            camera.add( listener );
-
-            // create a global audio source
-            var sound = new THREE.Audio( listener );
-
-            // load a sound and set it as the Audio object's buffer
-            var audioLoader = new THREE.AudioLoader();
-            audioLoader.load( albumSongs.darkSideOfTheMoon.time, function( buffer ) {
-                // console.log(buffer)
-                sound.setBuffer( buffer );
-                sound.setLoop( true );
-                sound.setVolume( 0.5 );
-                sound.play();
-                console.log("PPP")
-            },(x) => console.log(x)
-            );
+            
+            var sound = new Howl({
+                src: albumSongs.darkSideOfTheMoon.time,
+                format: ['mp3', 'aac']
+            });
+            sound.play()
 
             
             setInitComplete(true)
