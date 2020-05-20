@@ -153,6 +153,7 @@ export const movements = {
                     y : anchor.rotation.y
                 })
 
+
                 // console.log(anchor.position, anchor.rotation)
         
                 // Run main character animations (girl)

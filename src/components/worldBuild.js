@@ -293,14 +293,6 @@ const WorldBuild = () => {
             // line.material.color.setHex(0x000000)
             // scene.add(line)
 
-            // Audio
-            
-            var sound = new Howl({
-                src: albumSongs.darkSideOfTheMoon.time,
-                format: ['mp3', 'aac']
-            });
-            sound.play()
-
             
             setInitComplete(true)
 
@@ -324,6 +316,8 @@ const WorldBuild = () => {
 
             // Animates movements (check girlMovement.js file)
             movements.animateMovements(keys, prevCurrKey)
+
+            console.log(keys)
 
             if(clock){
                 delta = clock.getDelta()
@@ -364,42 +358,7 @@ const WorldBuild = () => {
     return (
         <div
             className = "parent-class"  
-            onClick = {() => {
-                if(controls && typeOfControls === "pointerLock") controls.lock()
-            }}
-            tabIndex = "1"
-            onKeyDown = {(e) => {
-                // let keyPress = keys
-                // keyPress[e.keyCode] = true
-
-                // setKeys({
-                //     ...keys,
-                //     ...keyPress
-                // })
-
-                sceneAnimations.animationControllers(keys)
-
-
-                keys[e.keyCode] = true
-
-                // Stores the prev key in [0] and current key in [1]
-                if(prevCurrKey[1] !== e.keyCode){
-                    prevCurrKey[0] = prevCurrKey[1]
-                    prevCurrKey[1] = e.keyCode
-                }
-            }}
-            onKeyUp = {(e) => {
-
-                sceneAnimations.animationControllers(null, keys)
-
-
-                // let keyPress = keys
-                // delete keyPress[e.keyCode]
-
-                // setKeys(keyPress)
-
-                delete keys[e.keyCode]
-            }}
+            
             >
             <div
                 className="tools-holster"
@@ -444,25 +403,16 @@ const WorldBuild = () => {
                                 className="sub-option"
                                 onClick={() => {
 
-                                    let sphereObj,
-                                        c = newObj.length + 1,
-                                        rando = totesRandoInt(0, colors.length - 1),
-                                        color = colors[ rando ]
-                                    
-                                        // console.log(color, colors.indexOf(color), rando)
+                                    var material = new THREE.MeshBasicMaterial( {color: "#fff", side: THREE.DoubleSide} );
 
-                                    sphereObj = addMass(
-                                        scene,
-                                        new THREE.Vector3(
-                                            totesRando( -15, 15 ),
-                                            totesRando( -15, 15 ),
-                                            totesRando( -15, 15 )
-                                        ),
-                                        totesRando(0.1, 1.5),
-                                        color
-                                    )
+                                    let sphereG = new THREE.SphereGeometry(1, 10, 10)
+                                    let sphere = new THREE.Mesh(sphereG, material)
+                                    scene.add( sphere );
 
-                                    setNewObj(newObj.concat(sphereObj))
+                                    sphere.position.set(0, 0, 0)
+
+                                    sphere.castShadow = true
+
                                 }} 
                                 >
                                 <AddObjIcon />
@@ -486,6 +436,48 @@ const WorldBuild = () => {
             <div
                 ref = {canvasWrapper}
                 className="display-screen"
+                onClick = {() => {
+                    if(controls && typeOfControls === "pointerLock"){
+                        controls.lock()
+                        // controls.update()
+                        console.log(canvasWrapper.current.tabIndex)
+                    }
+                }}
+                tabIndex = "1"
+                onKeyDown = {(e) => {
+                    // let keyPress = keys
+                    // keyPress[e.keyCode] = true
+    
+                    // setKeys({
+                    //     ...keys,
+                    //     ...keyPress
+                    // })
+    
+                    sceneAnimations.animationControllers(keys)
+    
+    
+                    keys[e.keyCode] = true
+    
+                    // Stores the prev key in [0] and current key in [1]
+                    if(prevCurrKey[1] !== e.keyCode){
+                        prevCurrKey[0] = prevCurrKey[1]
+                        prevCurrKey[1] = e.keyCode
+                    }
+
+                    console.log(keys)
+                }}
+                onKeyUp = {(e) => {
+    
+                    sceneAnimations.animationControllers(null, keys)
+    
+    
+                    // let keyPress = keys
+                    // delete keyPress[e.keyCode]
+    
+                    // setKeys(keyPress)
+    
+                    delete keys[e.keyCode]
+                }}
                 >
             </div>
         </div>
