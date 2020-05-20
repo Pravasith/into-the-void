@@ -21,14 +21,7 @@ export const addFloydElements = (models, scene, gui) => {
             return all
         }, [])
 
-        const path = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/gradient/"
-        const format = ".jpg"
-        const vinylURLs = [
-            path + 'posX' + format, path + 'negX' + format,
-			path + 'posY' + format, path + 'negY' + format,
-			path + 'posZ' + format, path + 'negZ' + format
-        ]
-
+       
         let textures = new THREE.CubeTextureLoader().load(urls)
         // let vinylRefTexs = new THREE.CubeTextureLoader().load(vinylURLs)
 
@@ -171,7 +164,7 @@ export const addFloydElements = (models, scene, gui) => {
         }
 
         else if(model === "vinylPlayr"){
-            console.log(modelData)
+            // console.log(modelData)
 
             let s = 1
 
@@ -310,7 +303,7 @@ export const addFloydElements = (models, scene, gui) => {
                         item.material = basic
 
                         const panOptions4 = { 
-                            showGui : true, 
+                            showGui : false, 
                             u : 1, 
                             v : 1, 
                             zoom : 1, 

@@ -63,7 +63,7 @@ export const movements = {
             let dummyAnchorToGirl = new THREE.Object3D() // Acts as a parent to anything which follows the girl
 
 
-            anchor.position.set(0, 1000, 0)
+            // anchor.position.set(0, 1000, 0)
             anchor.rotation.order = "YXZ"
 
 
@@ -77,7 +77,7 @@ export const movements = {
             girl.scale.set(0.125, 0.125, 0.125)
 
             // Initial positions
-            anchor.position.set(38.5, 1.6, 63)
+            anchor.position.set(0, 1.6, 0)
             anchor.rotation.y = 0.73
             anchor.rotation.x = 0.29
             girl.position.y = -1

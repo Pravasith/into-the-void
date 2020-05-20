@@ -173,7 +173,7 @@ const WorldBuild = () => {
 
             // Lights
             const lightDistance = 1
-            const ambientLight = new THREE.AmbientLight("#ffffff", 0.05),
+            const ambientLight = new THREE.AmbientLight("#ffffff", 0.5),
                 dirLight2 = new THREE.DirectionalLight("#ffffff", 0.2),
                 dirLight3 = new THREE.DirectionalLight("#ffffff", 0.2),
                 dirLight4 = new THREE.DirectionalLight("#ffffff", 0.1)
@@ -269,6 +269,76 @@ const WorldBuild = () => {
 
             setAnimationPresets(animPresets)
 
+            // console.log(models.filter(item => item.name === "dingle")[0])
+
+
+
+            
+
+
+            let dingle = models.dingle
+
+            dingle.scene.scale.set(0.25, 0.25, 0.25)
+
+            // let t = new module.SkeletonUtils.clone( dingle.scene )
+
+
+            console.log(dingle)
+
+
+            
+
+
+            let replicaDingles = new Array(50).fill("")
+            replicaDingles = replicaDingles.map((item, i) => new module.SkeletonUtils.clone( dingle.scene ))
+
+            // let t = (dingle.scene.clone())
+        
+
+            
+
+            const wavingAnimation = (skinnedMesh) => {
+                let sinCount = 0
+                let modelBones = skinnedMesh.children[0].children.filter(n => n.name === "dinglePop")[0].skeleton.bones
+
+                function animate( time ) {
+
+                    // skinnedMesh.scale.y += Math.sin(sinCount) * totesRando(0, 0.01)
+
+                    sinCount+=0.05
+    
+                    modelBones[1].rotation.x = 0.25 * Math.sin(sinCount + 1)
+                    modelBones[2].rotation.x = 0.25 * Math.sin(sinCount - 1)
+                    modelBones[3].rotation.x = 0.25 * Math.sin(sinCount)
+                    modelBones[4].rotation.x = 0.25 *  Math.sin(sinCount - 1)
+
+                    requestAnimationFrame( animate )
+                }
+            
+                animate()
+            }
+
+
+            replicaDingles.map(item => {
+
+                item.children[0].children.filter(n => n.name === "dinglePop")[0]
+                .material = new THREE.MeshLambertMaterial({
+                    color: "#fff", 
+                    emissive: 'hsl(' + totesRandoInt(0, 255) + ', 50%, 50%)', 
+                    emissiveIntensity: 0.5,  
+                    side: THREE.DoubleSide
+                })
+
+                item.position.x = totesRando(0, 5)
+                item.position.z = totesRando(0, 5)
+                item.rotation.y = totesRando(0, 2 * Math.PI)
+                item.scale.y = totesRando(0.1, 0.5)
+                wavingAnimation(item)
+                scene.add(item)
+            })
+            
+            
+
 
             // Girl animations
             // girlAnimations(
@@ -317,7 +387,6 @@ const WorldBuild = () => {
             // Animates movements (check girlMovement.js file)
             movements.animateMovements(keys, prevCurrKey)
 
-            console.log(keys)
 
             if(clock){
                 delta = clock.getDelta()
@@ -337,7 +406,9 @@ const WorldBuild = () => {
             import('three/examples/jsm/loaders/DRACOLoader.js'),
             import('three/examples/jsm/controls/PointerLockControls.js'),
             import('three/examples/jsm/objects/Water2.js'),
-            import('three/examples/jsm/libs/dat.gui.module.js')
+            import('three/examples/jsm/libs/dat.gui.module.js'),
+            import('three/examples/jsm/utils/SkeletonUtils.js'),
+
         ])
         .then(modules => {
             modules.map((item, i) => {
@@ -403,7 +474,7 @@ const WorldBuild = () => {
                                 className="sub-option"
                                 onClick={() => {
 
-                                    var material = new THREE.MeshBasicMaterial( {color: "#fff", side: THREE.DoubleSide} );
+                                    var material = new THREE.MeshLambertMaterial( {color: "#eb4034", emissive: "#eb4034", emissiveIntensity: 5,  side: THREE.DoubleSide} );
 
                                     let sphereG = new THREE.SphereGeometry(1, 10, 10)
                                     let sphere = new THREE.Mesh(sphereG, material)
@@ -437,11 +508,7 @@ const WorldBuild = () => {
                 ref = {canvasWrapper}
                 className="display-screen"
                 onClick = {() => {
-                    if(controls && typeOfControls === "pointerLock"){
-                        controls.lock()
-                        // controls.update()
-                        console.log(canvasWrapper.current.tabIndex)
-                    }
+                    if(controls && typeOfControls === "pointerLock") controls.lock()
                 }}
                 tabIndex = "1"
                 onKeyDown = {(e) => {
@@ -464,7 +531,6 @@ const WorldBuild = () => {
                         prevCurrKey[1] = e.keyCode
                     }
 
-                    console.log(keys)
                 }}
                 onKeyUp = {(e) => {
     

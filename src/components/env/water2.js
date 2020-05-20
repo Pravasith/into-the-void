@@ -45,9 +45,12 @@ export const getSimpleWobblePlane = (options) => {
 const animateWater = (water, perkiness0to10, smoothing0to10, speed0to1) => {
 
     let vertices = water.geometry.vertices,
-        peak = 0
+        peak = 0,
+        count = 0
 
     function animate( time ) {
+
+        count+=0.05
 
         vertices.map((point, i) => {
             point.z = Math.sin(peak) * perkiness0to10 * noise.perlin3(
@@ -57,9 +60,11 @@ const animateWater = (water, perkiness0to10, smoothing0to10, speed0to1) => {
             )
         })
 
-        peak +=speed0to1
+        // peak +=speed0to1
 
-        if(peak >= 2 * Math.PI) peak = 0
+        // if(peak >= 2 * Math.PI) peak = 0
+
+        peak = Math.sin(count) + Math.cos(count + 1)
 
         water.geometry.verticesNeedUpdate = true
         water.geometry.normalsNeedUpdate = true

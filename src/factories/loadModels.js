@@ -6,7 +6,8 @@ export const loadModels = (module) => {
         "darkSideTerr",
         "animations-clean-x",
         "darkSideAlbumArt",
-        "vinylPlayr"
+        "vinylPlayr",
+        "dingle"
     ]
 
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data
