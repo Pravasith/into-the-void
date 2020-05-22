@@ -10,7 +10,7 @@ import createAxes from '../factories/axes'
 import "../assets/scss/world.scss"
 import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
-import { colors, skyboxGradients, albumSongs } from './resources'
+import { colors, skyboxGradients, albumSongs, hoardingTextures } from './resources'
 import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
 
@@ -23,6 +23,7 @@ import { WorldContext } from '../utils/contexts/worldContext'
 import { getSimpleWater } from './env/water2'
 import { attachTextures } from '../factories/textures'
 import { addFloydElements } from '../factories/floydElements'
+import { createDingles } from '../factories/dingles'
 
 
 const WorldBuild = () => {
@@ -161,9 +162,9 @@ const WorldBuild = () => {
 
             // Add fog
             scene.fog = new THREE.Fog(
-                "#ffffff",
+                "#000",
                 30, // near value
-                1500 // far value
+                300 // far value
             )
 
             // Add floyd - static elements
@@ -240,6 +241,8 @@ const WorldBuild = () => {
             if(typeOfControls === "pointerLock"){
                 // Pointer lock controls imported dynamically because it can only be imported in useEffect
                 anchor.add(camera) // Parents camera to Anchor
+                // const girlCharacter = models["animations-clean-x"].scene
+                // anchor.add(girlCharacter)
                 controls = new module.PointerLockControls(anchor, container)
                 scene.add(
                     controls.getObject()
@@ -269,75 +272,20 @@ const WorldBuild = () => {
 
             setAnimationPresets(animPresets)
 
-            // console.log(models.filter(item => item.name === "dingle")[0])
+            createDingles(scene, module, 6, models.dingleBo, {
+                x : 10,
+                z : 24
+            }, 3)
 
+            createDingles(scene, module, 7, models.dingleBo, {
+                x : 0.8,
+                z : 9.3
+            }, 3)
 
-
-            
-
-
-            let dingle = models.dingle
-
-            dingle.scene.scale.set(0.25, 0.25, 0.25)
-
-            // let t = new module.SkeletonUtils.clone( dingle.scene )
-
-
-            console.log(dingle)
-
-
-            
-
-
-            let replicaDingles = new Array(50).fill("")
-            replicaDingles = replicaDingles.map((item, i) => new module.SkeletonUtils.clone( dingle.scene ))
-
-            // let t = (dingle.scene.clone())
-        
-
-            
-
-            const wavingAnimation = (skinnedMesh) => {
-                let sinCount = 0
-                let modelBones = skinnedMesh.children[0].children.filter(n => n.name === "dinglePop")[0].skeleton.bones
-
-                function animate( time ) {
-
-                    // skinnedMesh.scale.y += Math.sin(sinCount) * totesRando(0, 0.01)
-
-                    sinCount+=0.05
-    
-                    modelBones[1].rotation.x = 0.25 * Math.sin(sinCount + 1)
-                    modelBones[2].rotation.x = 0.25 * Math.sin(sinCount - 1)
-                    modelBones[3].rotation.x = 0.25 * Math.sin(sinCount)
-                    modelBones[4].rotation.x = 0.25 *  Math.sin(sinCount - 1)
-
-                    requestAnimationFrame( animate )
-                }
-            
-                animate()
-            }
-
-
-            replicaDingles.map(item => {
-
-                item.children[0].children.filter(n => n.name === "dinglePop")[0]
-                .material = new THREE.MeshLambertMaterial({
-                    color: "#fff", 
-                    emissive: 'hsl(' + totesRandoInt(0, 255) + ', 50%, 50%)', 
-                    emissiveIntensity: 0.5,  
-                    side: THREE.DoubleSide
-                })
-
-                item.position.x = totesRando(0, 5)
-                item.position.z = totesRando(0, 5)
-                item.rotation.y = totesRando(0, 2 * Math.PI)
-                item.scale.y = totesRando(0.1, 0.5)
-                wavingAnimation(item)
-                scene.add(item)
-            })
-            
-            
+            createDingles(scene, module, 4, models.dingleBo, {
+                x : -10,
+                z : 34
+            }, 2)
 
 
             // Girl animations

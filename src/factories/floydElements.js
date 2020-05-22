@@ -21,8 +21,32 @@ export const addFloydElements = (models, scene, gui) => {
             return all
         }, [])
 
+
+        let cubeMaterial1 = new THREE.MeshStandardMaterial( {
+            color: "#8f8f8f", 
+            metalness: 0.85, 
+            roughness: 0.2, 
+            name: 'metallic',
+            transparent: true,
+            opacity: 0.8
+        })
+
+        let cubeMaterial2 = new THREE.MeshStandardMaterial( {
+            color: "#FFF", metalness: 0.1, roughness: 0.2, name: 'metallic'
+        })
+
+        let cubeMaterial3 = new THREE.MeshStandardMaterial( {
+            color: "#ff4ac9", emissive: "#ff4ac9", roughness: 0.2, name: 'metallic'
+        })
+
+        let basic = new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            transparent: true
+        })
+
        
         let textures = new THREE.CubeTextureLoader().load(urls)
+        textures.mapping = THREE.CubeRefractionMapping
         // let vinylRefTexs = new THREE.CubeTextureLoader().load(vinylURLs)
 
         if(model === "darkSideAlbumArt"){
@@ -47,7 +71,7 @@ export const addFloydElements = (models, scene, gui) => {
 
             modelData.children.map((item, i) => {
                 if(item.name === "prism"){
-                    textures.mapping = THREE.CubeRefractionMapping
+                        
 
                         let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
                             color: 0xccddff, 
@@ -163,6 +187,46 @@ export const addFloydElements = (models, scene, gui) => {
             
         }
 
+        else if(model === "darkSideTerrain"){
+            modelData.children.map((item, i) => {
+
+                switch (item.name) {
+                    // case "railing":
+                    //     item.material =  new THREE.MeshPhongMaterial( { 
+                    //         color: 0xccddff, 
+                    //         envMap: textures, 
+                    //         refractionRatio: 0.9, 
+                    //         reflectivity: 1,
+                    //         transparent : true,
+                    //         opacity : 0.92,
+                    //         side: THREE.FrontSide
+                    //     })
+                    //     break
+
+                    case "railing":
+                        item.material = basic
+                        const panOptions = { 
+                            showGui : true, 
+                            u : 1,
+                            v : 1, 
+                            zoom : 10, 
+                            flipY : false, 
+                            textureRotation : 0,
+                            animateV : true,
+                            animateU : true
+                        }
+
+                        attachTextures(item, gui, hoardingTextures.psyTexture, panOptions)
+                        break
+                    
+                
+                    // default:
+                    //     item.material = cubeMaterial1
+                    //     break
+                }
+            })
+        }
+
         else if(model === "vinylPlayr"){
             // console.log(modelData)
 
@@ -195,27 +259,9 @@ export const addFloydElements = (models, scene, gui) => {
             // animate()
 
             modelData.children.map((item, i) => {
-                let cubeMaterial1 = new THREE.MeshStandardMaterial( {
-                    color: "#8f8f8f", 
-                    metalness: 0.85, 
-                    roughness: 0.2, 
-                    name: 'metallic',
-                    transparent: true,
-                    opacity: 0.8
-                })
+               
 
-                let cubeMaterial2 = new THREE.MeshStandardMaterial( {
-                    color: "#FFF", metalness: 0.1, roughness: 0.2, name: 'metallic'
-                })
-
-                let cubeMaterial3 = new THREE.MeshStandardMaterial( {
-                    color: "#ff4ac9", emissive: "#ff4ac9", roughness: 0.2, name: 'metallic'
-                })
-
-                let basic = new THREE.MeshBasicMaterial({
-                    side: THREE.DoubleSide,
-                    transparent: true
-                })
+               
 
                 switch (item.name) {
                     case "baseDisc":

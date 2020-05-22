@@ -8,6 +8,11 @@ export const movements = {
     init : null, // this function initiates a few steps before animating the girl's movements
     globalVars : null, // this just stores some values from init function to pass them on to animateMovements
     animateMovements : null, // this is the function which does the moving stuff - should be looped in a reqAnimFrame()
+    fullRotCount : {
+        prev : 0,
+        curr : 0
+    },
+    turnMultiplier: 0,
     init_ES6 : function() { // a dummy function to access global 'this'
 
         // 'this' keyword below is local to init_ES6 function
@@ -27,7 +32,7 @@ export const movements = {
             } = presets
 
             let girl = models['animations-clean-x'].scene,
-                terrain = models['darkSideTerr'].scene
+                terrain = models['darkSideTerrain'].scene
 
             let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.05)
             dirLight1.castShadow = true;
@@ -39,13 +44,27 @@ export const movements = {
 
             scene.add(dirLight1)
             // shadows
-            girl.children.map(mesh => {
-                // mesh.castShadow = true
-                mesh.children.map(item => {
-                    if(item.type !== 'Bone') item.castShadow = true
-                })
-            })
+            // girl.children.map(mesh => {
+            //     // mesh.castShadow = true
+            //     mesh.children.map(item => {
+            //         if(item.type !== 'Bone') item.castShadow = true
+            //     })
+            // })
 
+
+            // girl.traverse(o => {
+            //     if (o.isMesh) {
+            //       o.castShadow = true;
+            //       o.receiveShadow = true;
+            //     }
+            // });
+
+            // terrain.traverse(o => {
+            //     if (o.isMesh) {
+            //       o.castShadow = true;
+            //       o.receiveShadow = true;
+            //     }
+            // });
 
             
 
@@ -71,14 +90,14 @@ export const movements = {
             scene.add(dummyAnchorToGirl)
 
             // Initital position and rotation of anchor
-            // anchor.position.set(-1.7433705819587333, 1.4001339569573819, -0.4527981524080006)
+            anchor.position.set(40, 1.4001339569573819, 83)
             // anchor.rotation.set(0.10999999999999673, -0.4940000000000117, 6.282978218408773e-17)
 
             girl.scale.set(0.125, 0.125, 0.125)
 
             // Initial positions
-            anchor.position.set(0, 1.6, 0)
-            anchor.rotation.y = 0.73
+
+            // anchor.rotation.y = 0.73
             anchor.rotation.x = 0.29
             girl.position.y = -1
 
@@ -98,14 +117,16 @@ export const movements = {
                 anchor,
                 girl,
                 dummyAnchorToGirl,
-                terrainMesh,
-                dirLight1
+                terrain,
+                dirLight1,
             }
         }
 
         this.animateMovements = (keys, prevCurrKey) => {
 
-            let timestep = 0.12, // Time step between animations
+            let 
+                // timestep = 0.12, // Time step between animations
+                timestep = 0.2,
                 positionStep = 0.25,
                 axis = new THREE.Vector3(0, 1, 0),
                 directionVector,
@@ -113,6 +134,7 @@ export const movements = {
                 anchorTerrainIntersection
 
             let girlRaycaster = new THREE.Raycaster(),
+                girlRaycaster2 = new THREE.Raycaster(),
                 rayDirection = new THREE.Vector3(0, -1, 0)
 
             const pi = Math.PI
@@ -122,16 +144,83 @@ export const movements = {
                 anchor,
                 girl,
                 dummyAnchorToGirl,
-                terrainMesh,
-                dirLight1
+                terrain,
+                dirLight1,
             } =  this.globalVars
 
-
-
+            let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
 
             directionVector = camera.getWorldDirection( new THREE.Vector3() )
             // animstate = animationStates
-        
+
+            // TEMP
+            let pointerDirectionObj = new THREE.Object3D() 
+            girl.add(pointerDirectionObj)
+            pointerDirectionObj.position.set(0, 0, -2)
+
+            let frontDirection = new THREE.Vector3()
+
+            pointerDirectionObj.getWorldPosition(frontDirection)
+            girlRaycaster2.set(girl.position, frontDirection.sub(girl.position))
+
+            const boundary = terrain.children.filter(item => item.name === "boundary")[0]
+            let basicMat = new THREE.MeshBasicMaterial({
+                side: THREE.BackSide,
+                visible : false
+            })
+
+            boundary.material = basicMat
+
+            // boundary.material.transparent = true
+            // boundary.material.opacity = 0
+
+            const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
+
+            if(boundaryIntersection.length > 0){
+                if(boundaryIntersection[0].distance >= 1) positionStep = 0.25
+                else positionStep = 0
+            } // UNCOMMENT - DONOT DELETE
+
+            // positionStep = 0
+
+            let anchorRot = anchor.rotation.y,
+                rotCount = 0
+
+            let dummyFullRot = {
+                ...this.fullRotCount
+            }
+
+            if(anchorRot < 0){
+                rotCount = pi + pi - Math.abs(anchorRot)
+            }
+
+            else {
+                rotCount = Math.abs(anchorRot)
+            }
+
+            dummyFullRot.prev = dummyFullRot.curr
+            dummyFullRot.curr = rotCount
+
+            this.fullRotCount = {
+                ...dummyFullRot
+            }
+
+            if(Math.abs(this.fullRotCount.curr - this.fullRotCount.prev) >= 6){
+                if(this.fullRotCount.curr - this.fullRotCount.prev > 0){
+                    console.log("CLOCKWISE")
+                    this.turnMultiplier--
+                }
+                else if(this.fullRotCount.curr - this.fullRotCount.prev < 0){
+                    this.turnMultiplier++
+                    console.log("ANTI-CLOCKWISE")
+                }
+            }
+
+            
+
+
+
+
             if(keys[87]){ // W
         
                 // Anchor movements
@@ -145,18 +234,16 @@ export const movements = {
                     0
                 ))
 
-                
-                
-        
+                // console.log(anchor.rotation.y)
                 // Girl movements
                 TweenMax.to(girl.rotation, timestep, {
-                    y : anchor.rotation.y
+                    // y : anchor.rotation.y
+                    y: rotCount + (2 * pi * this.turnMultiplier)
+                    
                 })
-
-
-                // console.log(anchor.position, anchor.rotation)
-        
                 // Run main character animations (girl)
+
+                // console.log(rotCount)
                 
             }
 
@@ -171,7 +258,8 @@ export const movements = {
         
                 // Girl movements
                 TweenMax.to(girl.rotation, timestep, {
-                    y : anchor.rotation.y + pi / 2
+                    // y : anchor.rotation.y + pi / 2
+                    y: rotCount + pi / 2 + (2 * pi * this.turnMultiplier)
                 })
             }
 
@@ -188,7 +276,8 @@ export const movements = {
         
                 // Girl movements
                 TweenMax.to(girl.rotation, timestep, {
-                    y : anchor.rotation.y + pi
+                    // y : anchor.rotation.y + pi
+                    y: rotCount + pi + (2 * pi * this.turnMultiplier)
                 })
             }
 
@@ -217,14 +306,17 @@ export const movements = {
                     (prevCurrKey[0] === 83 && prevCurrKey[1] === 68) || (prevCurrKey[0] === 68 && prevCurrKey[1] === 83)
                     // Above line checks if buttons pressed are s and d or vice versa, for rotation to happen properly
                     ?
-                    anchor.rotation.y + 3 * pi / 2
+                    // anchor.rotation.y + 3 * pi / 2
+                    rotCount + 3 * pi / 2 + (2 * pi * this.turnMultiplier)
                     :
-                    anchor.rotation.y + -pi / 2
+                    // anchor.rotation.y + -pi / 2
+                    rotCount + -pi / 2 + (2 * pi * this.turnMultiplier)
                 })
             }
 
             // Terrain raycasting
             girlRaycaster.set(anchor.position, rayDirection)
+
 
             if(terrainMesh.children.length > 0){
 
@@ -248,11 +340,7 @@ export const movements = {
             }
 
             else{
-
                 anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
-
-                // console.log(anchorTerrainIntersection)
-    
                 if(anchorTerrainIntersection[0]){
                     // Sets anchor's y position relative to Terrain topology (height)
                     anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
@@ -272,6 +360,7 @@ export const movements = {
                 anchor.position.y + 5,
                 anchor.position.z
             )
+
         }
     }
 }

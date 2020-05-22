@@ -3,11 +3,12 @@ export const loadModels = (module) => {
     const gltfLoader = new module.GLTFLoader()
     const s3Url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
     const urls = [
-        "darkSideTerr",
+        "darkSideTerrain",
         "animations-clean-x",
         "darkSideAlbumArt",
         "vinylPlayr",
-        "dingle"
+        "dingle",
+        "dingleBo"
     ]
 
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data
