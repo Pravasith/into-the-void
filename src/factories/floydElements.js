@@ -191,17 +191,7 @@ export const addFloydElements = (models, scene, gui) => {
             modelData.children.map((item, i) => {
 
                 switch (item.name) {
-                    // case "railing":
-                    //     item.material =  new THREE.MeshPhongMaterial( { 
-                    //         color: 0xccddff, 
-                    //         envMap: textures, 
-                    //         refractionRatio: 0.9, 
-                    //         reflectivity: 1,
-                    //         transparent : true,
-                    //         opacity : 0.92,
-                    //         side: THREE.FrontSide
-                    //     })
-                    //     break
+                   
 
                     case "railing":
                         item.material = basic

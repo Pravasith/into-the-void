@@ -32,7 +32,7 @@ export const movements = {
             } = presets
 
             let girl = models['animations-clean-x'].scene,
-                terrain = models['darkSideTerrain'].scene
+                terrain = models['darkSideTerrain2'].scene
 
             let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.05)
             dirLight1.castShadow = true;
@@ -68,8 +68,8 @@ export const movements = {
 
             
 
-
-            terrain.position.set(0, -0.85, 0)
+            const scale = 1
+            terrain.scale.set(scale, scale, scale)
 
             let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
             // let terrainMesh = terrain.children[0]
@@ -148,6 +148,9 @@ export const movements = {
                 dirLight1,
             } =  this.globalVars
 
+
+            // console.log(terrain)
+
             let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
 
             directionVector = camera.getWorldDirection( new THREE.Vector3() )
@@ -169,6 +172,15 @@ export const movements = {
                 visible : false
             })
 
+            // let toon = new THREE.MeshBasicMaterial({
+            //     side: THREE.FrontSide,
+            //     // visible : false
+            //     color : "#FFF"
+            // })
+
+            // terrainMesh.material = toon
+            // terrainMesh.material.flatShading = false
+
             boundary.material = basicMat
 
             // boundary.material.transparent = true
@@ -177,7 +189,7 @@ export const movements = {
             const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
 
             if(boundaryIntersection.length > 0){
-                if(boundaryIntersection[0].distance >= 1) positionStep = 0.25
+                if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.25
                 else positionStep = 0
             } // UNCOMMENT - DONOT DELETE
 

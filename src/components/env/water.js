@@ -32,6 +32,7 @@ export const getWater = (scene, Water) => {
 
 
     water.rotation.x = -Math.PI / 2
+    water.position.y = -0.16
     scene.add(water)
 
     water.updateMatrixWorld(true)

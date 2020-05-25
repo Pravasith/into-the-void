@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import * as THREE from 'three'
 import { Howl, Howler } from 'howler'
+import Stats from "stats.js"
 
 import { addMass, removeMass } from '../factories/massObjects'
 import { applyVelocity, displace, applyAcceleration } from '../factories/physics'
@@ -26,6 +27,8 @@ import { addFloydElements } from '../factories/floydElements'
 import { createDingles } from '../factories/dingles'
 
 
+
+
 const WorldBuild = () => {
 
     const [ newObj, setNewObj ] = useState([])
@@ -38,6 +41,8 @@ const WorldBuild = () => {
     const [ initComplete, setInitComplete ] = useState(false)
     const [ animationPresets, setAnimationPresets ] = useState(null)
     const [ gui, setGui ] = useState(null)
+    const [ stats, setStats ] = useState(null)
+
 
     // const [ slowKey, setSlowKey ] = useState(null)
     
@@ -45,7 +50,7 @@ const WorldBuild = () => {
     let keys = {},
         prevCurrKey = [],
         typeOfControls = "pointerLock", // trackBall or pointerLock,
-        slowKey 
+        requestId
 
     const canvasWrapper = useRef(null)
 
@@ -69,11 +74,24 @@ const WorldBuild = () => {
             // attachTextures(scene, models, gui)
 
             sceneAnimations.init(girl, animations)
+
+            console.log(keys)
             animate()
         }
     }
     ,[initComplete]
     )
+
+    function createStats() {
+        var stats = new Stats()
+        stats.setMode(0)
+  
+        stats.domElement.style.position = 'absolute'
+        stats.domElement.style.left = '0'
+        stats.domElement.style.top = '0'
+  
+        return stats
+    }
 
     const init = () => {
         let renderer,
@@ -95,6 +113,9 @@ const WorldBuild = () => {
             // renderer
             const container = canvasWrapper.current
 
+            let stats = createStats()
+            setStats(stats)
+            document.body.appendChild(stats.domElement)
            
 
             renderer = new THREE.WebGLRenderer({
@@ -105,8 +126,8 @@ const WorldBuild = () => {
             renderer.setSize(container.clientWidth, container.clientHeight)
             renderer.setClearColor(0x000000, 0) // Background color
 
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            // renderer.shadowMap.enabled = true;
+            // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
             container.appendChild(renderer.domElement)
 
@@ -160,6 +181,10 @@ const WorldBuild = () => {
             let gui = new module.GUI()
             setGui(gui)
 
+            // let stats = new module.Stats
+            // setStats(stats)
+
+            // console.log(module)
             // Add fog
             scene.fog = new THREE.Fog(
                 "#000",
@@ -272,20 +297,20 @@ const WorldBuild = () => {
 
             setAnimationPresets(animPresets)
 
-            createDingles(scene, module, 6, models.dingleBo, {
-                x : 10,
-                z : 24
-            }, 3)
+            // createDingles(scene, module, 6, models.dingleBo, {
+            //     x : 10,
+            //     z : 24
+            // }, 3)
 
-            createDingles(scene, module, 7, models.dingleBo, {
-                x : 0.8,
-                z : 9.3
-            }, 3)
+            // createDingles(scene, module, 7, models.dingleBo, {
+            //     x : 0.8,
+            //     z : 9.3
+            // }, 3)
 
-            createDingles(scene, module, 4, models.dingleBo, {
-                x : -10,
-                z : 34
-            }, 2)
+            // createDingles(scene, module, 4, models.dingleBo, {
+            //     x : -10,
+            //     z : 34
+            // }, 2)
 
 
             // Girl animations
@@ -319,28 +344,41 @@ const WorldBuild = () => {
 
 
     function animate( time ) {
-
         // Animation mixer update - START
         let delta
-        
         // Animation mixer update - END
 
-        
-        if(scene && camera && controls){
+        requestId = undefined
+
+        if(scene && camera && controls && stats){
             if(typeOfControls === "trackBall") controls.update()
 
-            renderer.render( scene, camera )
-            requestAnimationFrame( animate )
-
+            stats.update()
             // Animates movements (check girlMovement.js file)
-            movements.animateMovements(keys, prevCurrKey)
-
+            if(Object.keys(keys).length > 0) movements.animateMovements(keys, prevCurrKey)
+            else stop()
 
             if(clock){
                 delta = clock.getDelta()
             }
 
-            
+            console.log("X")
+            renderer.render(scene, camera)
+
+            start()
+        }
+    }
+
+    function start() {
+        if (!requestId) {
+           requestId = window.requestAnimationFrame(animate)
+        }
+    }
+    
+    function stop() {
+        if (requestId) {
+           window.cancelAnimationFrame(requestId)
+           requestId = undefined
         }
     }
 
@@ -355,6 +393,7 @@ const WorldBuild = () => {
             import('three/examples/jsm/controls/PointerLockControls.js'),
             import('three/examples/jsm/objects/Water2.js'),
             import('three/examples/jsm/libs/dat.gui.module.js'),
+            // import('three/examples/jsm/libs/stats.min.js'),
             import('three/examples/jsm/utils/SkeletonUtils.js'),
 
         ])
