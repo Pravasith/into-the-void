@@ -25,6 +25,7 @@ import { getSimpleWater } from './env/water2'
 import { attachTextures } from '../factories/textures'
 import { addFloydElements } from '../factories/floydElements'
 import { createDingles } from '../factories/dingles'
+import gsap from 'gsap'
 
 
 
@@ -75,7 +76,7 @@ const WorldBuild = () => {
 
             sceneAnimations.init(girl, animations)
 
-            console.log(keys)
+            // console.log(keys)
             animate()
         }
     }
@@ -126,7 +127,7 @@ const WorldBuild = () => {
             renderer.setSize(container.clientWidth, container.clientHeight)
             renderer.setClearColor(0x000000, 0) // Background color
 
-            // renderer.shadowMap.enabled = true;
+            renderer.shadowMap.enabled = true
             // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
             container.appendChild(renderer.domElement)
@@ -196,24 +197,112 @@ const WorldBuild = () => {
             
             addFloydElements(models, scene, gui)
 
+            function createPointlight(color, size, intensity) {
+                const sphereX = new THREE.SphereBufferGeometry( size, 16, 8 );
+				let light = new THREE.PointLight( color, intensity, 50 );
+                light.add( new THREE.Mesh( sphereX, new THREE.MeshBasicMaterial( { visible : false, color : color } ) ) );
+
+				return light
+
+			}
+
 
             // Lights
-            const lightDistance = 1
-            const ambientLight = new THREE.AmbientLight("#ffffff", 0.5),
-                dirLight2 = new THREE.DirectionalLight("#ffffff", 0.2),
-                dirLight3 = new THREE.DirectionalLight("#ffffff", 0.2),
-                dirLight4 = new THREE.DirectionalLight("#ffffff", 0.1)
+            const lightDistance = 5
+            const ambientLight = new THREE.AmbientLight("#ffffff", 0.4),
+                dirLight = new THREE.DirectionalLight("#ffffff", 0.2)
 
-            dirLight2.position.set(lightDistance, lightDistance, -lightDistance)
-            dirLight3.position.set(-lightDistance, lightDistance, lightDistance)
-            dirLight4.position.set(-lightDistance, lightDistance, -lightDistance)
+
+            dirLight.position.set(lightDistance + 20, lightDistance + 20, lightDistance)
+           
+            
+
+
+            // spotLight.target.position.x = 6
+            // spotLight.target.position.y = 0
+            // spotLight.target.position.z = 12
 
             scene.add(ambientLight)
+            scene.add(dirLight)
+            // scene.add(lightHelperS)
 
-            scene.add(dirLight2)
-            scene.add(dirLight3)
-            scene.add(dirLight4)
 
+            dirLight.castShadow = true;
+
+            dirLight.shadow.mapSize.width = 2048
+            dirLight.shadow.mapSize.height = 2048
+
+            var d = 35
+
+            dirLight.shadow.camera.left = - d
+            dirLight.shadow.camera.right = d
+            dirLight.shadow.camera.top = d
+            dirLight.shadow.camera.bottom = - d
+
+            dirLight.shadow.camera.far = 3500
+            dirLight.shadow.bias = -0.00005
+
+            let dirLightHeper = new THREE.DirectionalLightHelper( dirLight, 10 )
+            scene.add( dirLightHeper )
+
+
+            let light1 = createPointlight("#ff4242", 0.2, 4)
+            let light2 = createPointlight("#ff1ca4", 0.6, 4)
+            let light3 = createPointlight("#ff1ca4", 0.6, 4)
+
+            light2.position.set(
+                6.08,
+                6,
+                12.84
+            )
+
+            light3.position.set(
+                3.6,
+                5,
+                12.2
+            )
+            
+            scene.add(light1, light2, light3)
+
+           
+
+            // var controls = new function() {
+            //     this.intensity = 0
+            //     this.distance = 0
+            //     this.angle = 0
+            //     this.penumbra = 0
+            //     this.decay = 0
+
+            // }
+    
+            // gui.add(controls, 'intensity', 0, 10)
+            // gui.add(controls, 'distance', 0, 100)
+            // gui.add(controls, 'angle', 0, 1.05)
+            // gui.add(controls, 'penumbra', 0, 1)
+            // gui.add(controls, 'decay', 0, 3)
+            // // gui.add(controls, 'mapDims', 500, 5000)
+    
+            
+            // function animate(time) {
+            //     spotLight.angle = controls.angle
+			// 	spotLight.penumbra = controls.penumbra
+			// 	spotLight.decay = controls.decay
+            //     spotLight.distance = controls.distance
+            //     spotLight.intensity = controls.intensity
+
+            //     requestAnimationFrame(animate)
+            // }
+    
+            // animate()
+
+            let sinCount = 0
+            gsap.ticker.add(() => {
+                light1.position.y = Math.sin(sinCount) + 2
+                sinCount+= 0.01
+            })
+
+
+            
 
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
@@ -362,7 +451,7 @@ const WorldBuild = () => {
                 delta = clock.getDelta()
             }
 
-            console.log("X")
+            // console.log("X")
             renderer.render(scene, camera)
 
             start()

@@ -52,19 +52,22 @@ export const movements = {
             // })
 
 
-            // girl.traverse(o => {
-            //     if (o.isMesh) {
-            //       o.castShadow = true;
-            //       o.receiveShadow = true;
-            //     }
-            // });
+            girl.traverse(o => {
+                if (o.isMesh) {
+                    o.castShadow = true;
+                    o.receiveShadow = true;
+                }
+            })
 
-            // terrain.traverse(o => {
-            //     if (o.isMesh) {
-            //       o.castShadow = true;
-            //       o.receiveShadow = true;
-            //     }
-            // });
+            terrain.traverse(o => {
+                if (o.isMesh) {
+                    // o.material.emissive = "#ffffff"
+                    // o.material.emissiveIntensity = 1
+                    console.log(o.material)
+                    o.castShadow = true
+                    o.receiveShadow = true
+                }
+            })
 
             
 
@@ -219,12 +222,12 @@ export const movements = {
 
             if(Math.abs(this.fullRotCount.curr - this.fullRotCount.prev) >= 6){
                 if(this.fullRotCount.curr - this.fullRotCount.prev > 0){
-                    console.log("CLOCKWISE")
+                    // console.log("CLOCKWISE")
                     this.turnMultiplier--
                 }
                 else if(this.fullRotCount.curr - this.fullRotCount.prev < 0){
                     this.turnMultiplier++
-                    console.log("ANTI-CLOCKWISE")
+                    // console.log("ANTI-CLOCKWISE")
                 }
             }
 
@@ -255,7 +258,7 @@ export const movements = {
                 })
                 // Run main character animations (girl)
 
-                // console.log(rotCount)
+                console.log(anchor.position)
                 
             }
 
