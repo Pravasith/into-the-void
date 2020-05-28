@@ -1,32 +1,33 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import * as THREE from 'three'
+import gsap from 'gsap'
+
 import { Howl, Howler } from 'howler'
 import Stats from "stats.js"
 
-import { addMass, removeMass } from '../factories/massObjects'
-import { applyVelocity, displace, applyAcceleration } from '../factories/physics'
+// import { addMass, removeMass } from '../factories/massObjects'
+// import { applyVelocity, displace, applyAcceleration } from '../factories/physics'
 
 import createAxes from '../factories/axes'
 
-import "../assets/scss/world.scss"
-import { PhysicsContext } from '../utils/contexts/physicsContexts'
+
+// import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
-import { colors, skyboxGradients, albumSongs, hoardingTextures } from './resources'
-import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
+// import { colors, skyboxGradients, albumSongs, hoardingTextures } from './resources'
+// import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
 
 // import { noise } from '../factories/waterNoise'
-import { loadModels } from '../factories/loadModels'
+import { loadModelsTexturesAndEnvMaps } from '../factories/loadModels'
 import { getWater } from './env/water'
 import { movements } from '../factories/girlMovement'
-import { girlAnimations, sceneAnimations } from '../factories/animations'
-import { WorldContext } from '../utils/contexts/worldContext'
+import { sceneAnimations } from '../factories/animations'
+// import { WorldContext } from '../utils/contexts/worldContext'
 import { getSimpleWater } from './env/water2'
-import { attachTextures } from '../factories/textures'
 import { addFloydElements } from '../factories/floydElements'
 import { createDingles } from '../factories/dingles'
-import gsap from 'gsap'
 
+import "../assets/scss/world.scss"
 
 
 
@@ -35,7 +36,11 @@ const WorldBuild = () => {
     const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
     const [ camera, setCamera ] = useState(null)
+
     const [ models, setModels ] = useState(null)
+    const [ textures, setTextures ] = useState(null)
+    const [ envTextures, setEnvTextures ] = useState(null)
+
     const [ clock, setClock ] = useState(null)
     const [ renderer, setRenderer ] = useState(null)
     const [ controls, setControls ] = useState(null)
@@ -69,8 +74,8 @@ const WorldBuild = () => {
             // movements initiation -  see girlMovement.js file
             movements.init(animationPresets)
 
-            let girl = animationPresets.models["animations-clean-x"],
-                animations = animationPresets.models["animations-clean-x"].animations
+            let girl = animationPresets.models["currentCharacter"],
+                animations = animationPresets.models["currentCharacter"].animations
             
             // attachTextures(scene, models, gui)
 
@@ -101,6 +106,8 @@ const WorldBuild = () => {
             controls,
             mixer,
             models,
+            textures,
+            envTextures,
             clock = new THREE.Clock(),
             peak = 0
 
@@ -140,13 +147,14 @@ const WorldBuild = () => {
 
             
 
-            // TEXTURE SKYBOX - FOR WORLD ENV
-            addSkyBoxes(scene)
+            
 
             // Load models like terrain, character, yada yada
-            await loadModels(module)
-            .then((gltfs) => {
-                models = gltfs
+            await loadModelsTexturesAndEnvMaps(module)
+            .then((loadedData) => {
+                models = loadedData.models
+                textures = loadedData.textures
+                envTextures = loadedData.envTextures
 
                 Object.keys(models).forEach((gltf) => {
 
@@ -162,21 +170,13 @@ const WorldBuild = () => {
                         scale,
                         scale
                     )
-
-                    // Store animations
-
-                    // if(modelData.animations)
-                    // if(modelData.animations.length > 0){
-                    //     mixer = new THREE.AnimationMixer(model)
-                    //     mixer.clipAction(modelData.animations[0]).play()
-                    //     // mixer.clipAction(gltf.animations[0]).play()
-                    // }
                 })
             })
             .catch(e => console.error(e))
 
-            // setMixer(mixer)
             setModels(models)
+            setTextures(textures)
+            setEnvTextures(envTextures)
 
             // GUI
             let gui = new module.GUI()
@@ -193,9 +193,12 @@ const WorldBuild = () => {
                 300 // far value
             )
 
+            // TEXTURE SKYBOX - FOR WORLD ENV
+            const sky = addSkyBoxes(textures.skyTexture)
+            scene.add(sky)
+
             // Add floyd - static elements
-            
-            addFloydElements(models, scene, gui)
+            addFloydElements(models, scene, gui, textures, envTextures)
 
             function createPointlight(color, size, intensity) {
                 const sphereX = new THREE.SphereBufferGeometry( size, 16, 8 );
@@ -204,7 +207,23 @@ const WorldBuild = () => {
 
 				return light
 
-			}
+            }
+            
+            // models[terrain].children.map((model, i) => {
+            //     console.log(model)
+            // })
+
+            let glowRocks = models["terrain"].scene.children.filter(mesh => mesh.name === "glowingRocks")[0]
+            let cubeMaterial1 = new THREE.MeshStandardMaterial( {
+                color: "#29abe2", 
+                metalness: 0.95, 
+                roughness: 0.18, 
+                name: 'metallic',
+                // transparent: true,
+                // opacity: 0.8
+            })
+
+            glowRocks.material = cubeMaterial1
 
 
             // Lights
@@ -264,40 +283,9 @@ const WorldBuild = () => {
             
             scene.add(light1, light2, light3)
 
-           
-
-            // var controls = new function() {
-            //     this.intensity = 0
-            //     this.distance = 0
-            //     this.angle = 0
-            //     this.penumbra = 0
-            //     this.decay = 0
-
-            // }
-    
-            // gui.add(controls, 'intensity', 0, 10)
-            // gui.add(controls, 'distance', 0, 100)
-            // gui.add(controls, 'angle', 0, 1.05)
-            // gui.add(controls, 'penumbra', 0, 1)
-            // gui.add(controls, 'decay', 0, 3)
-            // // gui.add(controls, 'mapDims', 500, 5000)
-    
-            
-            // function animate(time) {
-            //     spotLight.angle = controls.angle
-			// 	spotLight.penumbra = controls.penumbra
-			// 	spotLight.decay = controls.decay
-            //     spotLight.distance = controls.distance
-            //     spotLight.intensity = controls.intensity
-
-            //     requestAnimationFrame(animate)
-            // }
-    
-            // animate()
-
             let sinCount = 0
             gsap.ticker.add(() => {
-                light1.position.y = Math.sin(sinCount) + 2
+                light1.position.y = Math.sin(sinCount) 
                 sinCount+= 0.01
             })
 
@@ -320,7 +308,9 @@ const WorldBuild = () => {
 
             // Add water 
             const { Water } = module
-            getWater(scene, Water)
+            const water = getWater(Water)
+            scene.add(water)
+            // OR
             // getSimpleWater(scene)
             // scene.add(water)
 
@@ -355,8 +345,6 @@ const WorldBuild = () => {
             if(typeOfControls === "pointerLock"){
                 // Pointer lock controls imported dynamically because it can only be imported in useEffect
                 anchor.add(camera) // Parents camera to Anchor
-                // const girlCharacter = models["animations-clean-x"].scene
-                // anchor.add(girlCharacter)
                 controls = new module.PointerLockControls(anchor, container)
                 scene.add(
                     controls.getObject()

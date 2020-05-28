@@ -31,8 +31,8 @@ export const movements = {
                 scene
             } = presets
 
-            let girl = models['animations-clean-x'].scene,
-                terrain = models['darkSideTerrain2'].scene
+            let girl = models['currentCharacter'].scene,
+                terrain = models['terrain'].scene
 
             let dirLight1 = new THREE.DirectionalLight("#ffffff", 0.05)
             dirLight1.castShadow = true;
@@ -43,13 +43,6 @@ export const movements = {
 
 
             scene.add(dirLight1)
-            // shadows
-            // girl.children.map(mesh => {
-            //     // mesh.castShadow = true
-            //     mesh.children.map(item => {
-            //         if(item.type !== 'Bone') item.castShadow = true
-            //     })
-            // })
 
 
             girl.traverse(o => {
@@ -61,9 +54,6 @@ export const movements = {
 
             terrain.traverse(o => {
                 if (o.isMesh) {
-                    // o.material.emissive = "#ffffff"
-                    // o.material.emissiveIntensity = 1
-                    console.log(o.material)
                     o.castShadow = true
                     o.receiveShadow = true
                 }
@@ -170,31 +160,28 @@ export const movements = {
             girlRaycaster2.set(girl.position, frontDirection.sub(girl.position))
 
             const boundary = terrain.children.filter(item => item.name === "boundary")[0]
-            let basicMat = new THREE.MeshBasicMaterial({
-                side: THREE.BackSide,
-                visible : false
-            })
 
-            // let toon = new THREE.MeshBasicMaterial({
-            //     side: THREE.FrontSide,
-            //     // visible : false
-            //     color : "#FFF"
-            // })
+            if(boundary){
+                
+                let basicMat = new THREE.MeshBasicMaterial({
+                    side: THREE.BackSide,
+                    visible : false
+                })
+    
+                boundary.material = basicMat
+    
+                // boundary.material.transparent = true
+                // boundary.material.opacity = 0
+    
+                const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
+    
+                if(boundaryIntersection.length > 0){
+                    if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.25
+                    else positionStep = 0
+                } // UNCOMMENT - DONOT DELETE
+            }
 
-            // terrainMesh.material = toon
-            // terrainMesh.material.flatShading = false
-
-            boundary.material = basicMat
-
-            // boundary.material.transparent = true
-            // boundary.material.opacity = 0
-
-            const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
-
-            if(boundaryIntersection.length > 0){
-                if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.25
-                else positionStep = 0
-            } // UNCOMMENT - DONOT DELETE
+            
 
             // positionStep = 0
 
@@ -258,7 +245,7 @@ export const movements = {
                 })
                 // Run main character animations (girl)
 
-                console.log(anchor.position)
+                // console.log(anchor.position)
                 
             }
 

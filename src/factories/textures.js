@@ -1,50 +1,44 @@
 import * as THREE from 'three'
 
-export const attachTextures = (model, gui, textureURL, panOptions) => {
-    let loader = new THREE.TextureLoader()
+export const attachTextures = (model, gui, texture, panOptions) => {
 
     const { showGui, u, v, zoom, flipY, textureRotation, animateU, animateV } = panOptions
     let mesh = model
-    // let welcomeMesh = terrain.children.filter(mesh => mesh.name === "holder")[0]
-
 
     let newMaterial = mesh.material.clone()
-    let tex = loader.load(textureURL, (texture) => {
-
-        texture.wrapS = THREE.RepeatWrapping
-        texture.wrapT = THREE.RepeatWrapping
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
 
 
-        var controls = new function() {
-            this.u = u
-            this.v = v
-            this.repeat = zoom
-        }
+    var controls = new function() {
+        this.u = u
+        this.v = v
+        this.repeat = zoom
+    }
 
-        if(showGui){
-            gui.add(controls, 'u', 0, 1)
-            gui.add(controls, 'v', 0, 1)
-            gui.add(controls, 'repeat', 0, 10)
-        }
+    if(showGui){
+        gui.add(controls, 'u', 0, 1)
+        gui.add(controls, 'v', 0, 1)
+        gui.add(controls, 'repeat', 0, 10)
+    }
 
-        
+    texture.offset.set(u, v)
+    texture.repeat.set(zoom, zoom)
+    texture.flipY = flipY
+    texture.rotation = textureRotation
 
-        texture.offset.set(u, v)
-        texture.repeat.set(zoom, zoom)
-        texture.flipY = flipY
-        texture.rotation = textureRotation
+    newMaterial.map = texture
+    mesh.material = newMaterial
 
-        newMaterial.map = texture
-        mesh.material = newMaterial
-
-        let uCount = 0, vCount = 0
+    let uCount = 0, vCount = 0
 
 
-        function animate(time) {
-            let matUV = mesh.material.map
-            matUV.offset.set(controls.u, controls.v)
-            matUV.repeat.set(controls.repeat, controls.repeat)
+    function animate(time) {
+        let matUV = mesh.material.map
+        matUV.offset.set(controls.u, controls.v)
+        matUV.repeat.set(controls.repeat, controls.repeat)
 
+        if(animateU || animateV || showGui){
             if(animateU){
                 uCount -= 0.001
                 matUV.offset.set(uCount, controls.v)
@@ -57,10 +51,11 @@ export const attachTextures = (model, gui, textureURL, panOptions) => {
 
             requestAnimationFrame(animate)
         }
+        
+    }
 
-        animate()
+    animate()
 
-    })
     
     
 }

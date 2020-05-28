@@ -1,39 +1,106 @@
-export const loadModels = (module) => {
+import * as THREE from 'three'
+import { s3URLs, modelLinkURLs, envMapURLs, imageLinkURLs } from "../components/resources"
 
+export const loadModelsTexturesAndEnvMaps = (module) => {
+
+    // MODEL LOADER
     const gltfLoader = new module.GLTFLoader()
-    const s3Url = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
-    const urls = [
-        "darkSideTerrain2",
-        "animations-clean-x",
-        "darkSideAlbumArt",
-        "vinylPlayr",
-        // "dingle",
-        // "dingleBo"
-    ]
-
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data
     let dracoLoader = new module.DRACOLoader()
-    dracoLoader.setDecoderPath( 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/draco/' )
-    gltfLoader.setDRACOLoader( dracoLoader )
+    dracoLoader.setDecoderPath('https://xi-upload.s3.amazonaws.com/app-pics/threejs/draco/')
+    gltfLoader.setDRACOLoader(dracoLoader)
+
+    // TEXTURE LOADER
+    let textureLoader = new THREE.TextureLoader()
+
+    // ENV TEXTURE LOADER
+    let envTextureLoader = new THREE.CubeTextureLoader()
+
+
+    const modelURLs = { ...modelLinkURLs },
+        textureURLs = { ...imageLinkURLs },
+        envURLs = { ...envMapURLs }
+
+    // Compute total loading items
+    const totalItemsToLoad = Object.keys(modelURLs).length +
+        Object.keys(textureURLs).length +
+        Object.keys(envURLs).length
+
+    let loadItemCount = 0,
+        allLoadedItemsData = {
+            models : {},
+            textures : {},
+            envTextures : {}
+        }
+
+
 
     return new Promise((resolve, reject) => {
+
+
+        // Loading models
         let models = {}
-        urls.map((url, i) => {
+
+        Object.keys(modelURLs).map(key => {
             gltfLoader.load(
-                s3Url + url + '.gltf', 
+                s3URLs.models + modelURLs[key], 
                 (gltf) => {
-                    models[url] = gltf
-                    // models.push({
-                    //     modelName: url,
-                    //     modelData: gltf
-                    // })
+                    models[key.split(".")[0]] = gltf
+                    loadItemCount++
 
-                    // console.log(url)
+                    allLoadedItemsData = {
+                        ...allLoadedItemsData,
+                        models : {
+                            ...allLoadedItemsData.models,
+                            ...models
+                        }
+                    }
 
-                    
+                    if(loadItemCount === totalItemsToLoad){
+                        resolve(allLoadedItemsData)
+                    }
 
-                    if(Object.keys(models).length === urls.length){
-                        resolve(models)
+                    // if(Object.keys(models).length === Object.keys(modelURLs).length){
+                    //     resolve(models)
+                    // }
+                },
+                // called while loading is progressing
+                (xhr) => {
+                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
+                },
+                // called when loading has errors
+                (error) => {
+                    reject({
+                        jist : 'An error occured while loading ' + key,
+                        error
+                    })
+                    console.error( 'An error happened' )
+                }
+            )
+        })
+
+
+        // Loading textures
+        let textures = {}
+
+        Object.keys(textureURLs).map(key => {
+            textureLoader.load(
+                s3URLs.mapsAndImages + textureURLs[key],
+                (texture) => {
+                    textures[key.split(".")[0]] = texture
+
+                    loadItemCount++
+
+                    allLoadedItemsData = {
+                        ...allLoadedItemsData,
+                        textures : {
+                            ...allLoadedItemsData.textures,
+                            ...textures
+                        }
+                    }
+
+                    if(loadItemCount === totalItemsToLoad){
+                        resolve(allLoadedItemsData)
                     }
                 },
                 // called while loading is progressing
@@ -43,13 +110,55 @@ export const loadModels = (module) => {
                 // called when loading has errors
                 (error) => {
                     reject({
-                        jist : 'An error happened while loading ' + url,
+                        jist : 'An error occured while loading ' + key,
                         error
                     })
                     console.error( 'An error happened' )
                 }
             )
         })
+
+
+        // Loading env maps
+        let envTextures = {}
+
+        Object.keys(envURLs).map(key => {
+            envTextureLoader.load(
+                envURLs[key],
+                (envTexture) => {
+                    envTexture.mapping = THREE.CubeRefractionMapping
+                    envTextures[key] = envTexture
+
+                    loadItemCount++
+
+                    allLoadedItemsData = {
+                        ...allLoadedItemsData,
+                        envTextures : {
+                            ...allLoadedItemsData.envTextures,
+                            ...envTextures
+                        }
+                    }
+
+                    if(loadItemCount === totalItemsToLoad){
+                        resolve(allLoadedItemsData)
+                    }
+                },
+                // called while loading is progressing
+                (xhr) => {
+                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
+                },
+                // called when loading has errors
+                (error) => {
+                    reject({
+                        jist : 'An error occured while loading ' + key,
+                        error
+                    })
+                    console.error( 'An error happened' )
+                }
+            )
+        })
+
+        
     })
  
 }

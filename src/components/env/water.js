@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { noise } from '../../factories/waterNoise'
 
-export const getWater = (scene, Water) => {
+export const getWater = (Water) => {
 
 
     let textureLoader = new THREE.TextureLoader()
@@ -33,14 +33,9 @@ export const getWater = (scene, Water) => {
 
     water.rotation.x = -Math.PI / 2
     water.position.y = -0.16
-    scene.add(water)
-
     water.updateMatrixWorld(true)
 
-    // animateWater(water)
-
-
-
+    return water
 }
 
 

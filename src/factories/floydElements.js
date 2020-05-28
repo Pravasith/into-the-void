@@ -1,25 +1,28 @@
-import { skyboxGradients, hoardingTextures } from "../components/resources"
+
 import * as THREE from 'three'
 import { getSimpleWobblePlane } from "../components/env/water2"
 import { attachTextures } from "./textures"
 
 
-export const addFloydElements = (models, scene, gui) => {
+export const addFloydElements = (models, scene, gui, textures, envTextures) => {
     Object.keys(models).forEach(model => {
         const modelData = models[model].scene
 
+
+
         // Refraction for prism
-        const urls = skyboxGradients.reduce((all, item, i) => {
-            // Reordering images for refraction maps
-            // Required Order - posX, negX, posY, negY, posZ, negZ
-            // Current order - refer sky.js in env and see how skyboxGradients are used from UIComponents folder
-            if(item.name === "spaceBgd"){
-                for(let j = 0; j < 6; j++){
-                    all[j] = item.image
-                }
-            }
-            return all
-        }, [])
+        // const urls = skyboxGradients.reduce((all, item, i) => {
+        //     // Reordering images for refraction maps
+        //     // Required Order - posX, negX, posY, negY, posZ, negZ
+        //     // Current order - refer sky.js in env and see how skyboxGradients are used from UIComponents folder
+        //     if(item.name === "spaceBgd"){
+        //         for(let j = 0; j < 6; j++){
+        //             all[j] = item.image
+        //         }
+        //     }
+        //     return all
+        // }, [])
+
 
 
         let cubeMaterial1 = new THREE.MeshStandardMaterial( {
@@ -44,12 +47,9 @@ export const addFloydElements = (models, scene, gui) => {
             transparent: true
         })
 
-       
-        let textures = new THREE.CubeTextureLoader().load(urls)
-        textures.mapping = THREE.CubeRefractionMapping
-        // let vinylRefTexs = new THREE.CubeTextureLoader().load(vinylURLs)
 
-        if(model === "darkSideAlbumArt"){
+
+        if(model === "darkSidePrism"){
             modelData.position.set(15.4, 1, 49)
             modelData.scale.set(10, 10, 10)
             modelData.rotation.y = 0.4
@@ -71,11 +71,10 @@ export const addFloydElements = (models, scene, gui) => {
 
             modelData.children.map((item, i) => {
                 if(item.name === "prism"){
-                        
 
                         let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
                             color: 0xccddff, 
-                            envMap: textures, 
+                            envMap: envTextures.skyBoxEnv, 
                             refractionRatio: 0.9, 
                             reflectivity: 1,
                             transparent : true,
@@ -95,8 +94,6 @@ export const addFloydElements = (models, scene, gui) => {
                             premultipliedAlpha: true
                             // TODO: Add custom blend mode that modulates background color by this materials color.
                         })
-
-                        
 
                         item.material = prismFrontMaterial
 
@@ -187,7 +184,7 @@ export const addFloydElements = (models, scene, gui) => {
             
         }
 
-        else if(model === "darkSideTerrain"){
+        else if(model === "terrain"){
             modelData.children.map((item, i) => {
 
                 switch (item.name) {
@@ -206,10 +203,9 @@ export const addFloydElements = (models, scene, gui) => {
                             animateU : true
                         }
 
-                        attachTextures(item, gui, hoardingTextures.psyTexture, panOptions)
+                        attachTextures(item, gui, textures.psyTexture, panOptions)
                         break
-                    
-                
+
                     // default:
                     //     item.material = cubeMaterial1
                     //     break
@@ -271,7 +267,7 @@ export const addFloydElements = (models, scene, gui) => {
                             // animateU : true
                         }
 
-                        attachTextures(item, gui, hoardingTextures.woodTex, panOptions)
+                        attachTextures(item, gui, textures.woodTexture, panOptions)
                         break
                     
                     case "midCube":
@@ -287,7 +283,7 @@ export const addFloydElements = (models, scene, gui) => {
                             // animateU : true
                         }
 
-                        attachTextures(item, gui, hoardingTextures.woodTex, panOptions1)
+                        attachTextures(item, gui, textures.woodTexture, panOptions1)
                         break
 
                     case "frame":
@@ -304,7 +300,7 @@ export const addFloydElements = (models, scene, gui) => {
                             animateU : true
                         }
 
-                        attachTextures(item, gui, hoardingTextures.psyTexture, panOptions2)
+                        attachTextures(item, gui, textures.psyTexture, panOptions2)
                         break
                     
                     case "disc":
@@ -328,7 +324,7 @@ export const addFloydElements = (models, scene, gui) => {
                             // animateU : true
                         }
 
-                        attachTextures(item, gui, hoardingTextures.psyTexture, panOptions3)
+                        attachTextures(item, gui, textures.psyTexture, panOptions3)
                         break
 
                     case "rotor":
@@ -349,7 +345,7 @@ export const addFloydElements = (models, scene, gui) => {
                             animateU : false
                         }
 
-                        attachTextures(item, gui, hoardingTextures.songList, panOptions4)
+                        attachTextures(item, gui, textures.songList, panOptions4)
                         break
                 
                     default:
@@ -406,7 +402,7 @@ export const addFloydElements = (models, scene, gui) => {
         animateV : true
     }
 
-    attachTextures(wobblyPlane, gui, hoardingTextures.mainHoarding, panOptions)
+    attachTextures(wobblyPlane, gui, textures.mainHoarding, panOptions)
 
 
     scene.add(wobblyPlane)
