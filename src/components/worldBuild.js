@@ -28,6 +28,7 @@ import { addFloydElements } from '../factories/floydElements'
 import { createDingles } from '../factories/dingles'
 
 import "../assets/scss/world.scss"
+import { attachTextures } from '../factories/textures'
 
 
 
@@ -209,21 +210,158 @@ const WorldBuild = () => {
 
             }
             
-            // models[terrain].children.map((model, i) => {
-            //     console.log(model)
-            // })
+            const materialsToSeaShack = () => {
+                //materials
+                let glowingRocksMat = new THREE.MeshLambertMaterial({ 
+                    color: "#ffffff", 
+                    envMap: envTextures.sceneEnv, 
+                    combine: THREE.MixOperation, 
+                    // reflectivity: 0.3
+                    reflectivity: 0.15
 
-            let glowRocks = models["terrain"].scene.children.filter(mesh => mesh.name === "glowingRocks")[0]
-            let cubeMaterial1 = new THREE.MeshStandardMaterial( {
-                color: "#29abe2", 
-                metalness: 0.95, 
-                roughness: 0.18, 
-                name: 'metallic',
-                // transparent: true,
-                // opacity: 0.8
-            })
+                })
 
-            glowRocks.material = cubeMaterial1
+                let basic = new THREE.MeshStandardMaterial({
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    roughness: 0.75
+                })
+
+                const panOptions1 = { 
+                    showGui : false, 
+                    u : 1, 
+                    v : 1, 
+                    zoom : 3, 
+                    flipY : false, 
+                    textureRotation : 0,
+                    // animateV : true,
+                    // animateU : true
+                }
+
+                const subdivide = (mesh, subdivisions) => {
+
+                    let geometry = mesh.geometry
+                    let modifier = new module.SubdivisionModifier(subdivisions)
+                    let smoothGeometry = modifier.modify(geometry)
+    
+                    // convert to THREE.BufferGeometry
+    
+                    if(mesh.geometry) mesh.geometry.dispose()
+    
+                    mesh.geometry = new THREE.BufferGeometry().fromGeometry(smoothGeometry)
+    
+                }
+                
+                models["terrain"].scene.children.map(mesh => {
+                    const { name } = mesh
+
+                    switch (mesh.name) {
+                        case "blueRocks":
+                            mesh.material = glowingRocksMat.clone()
+                            // mesh.material.color.set("#30ffbd")
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+                        
+                        case "greenRocks":
+                            mesh.material = glowingRocksMat.clone()
+                            // mesh.material.color.set("#00ffee")
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+
+                        case "orangeRocks":
+                            mesh.material = glowingRocksMat.clone()
+                            // mesh.material.color.set("#009dff")
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+                        
+                        case "pinkRocks":
+                            mesh.material = glowingRocksMat.clone()
+                            // mesh.material.color.set("#ea00ff")
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+
+                        case "redRocks":
+                            mesh.material = glowingRocksMat.clone()
+                            // mesh.material.color.set("#ff00a2")
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+                        
+                        case "yellowRocks":
+                            mesh.material = glowingRocksMat.clone()
+                            // mesh.material.color.set("#ff3700")
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+
+                        case "plainRocks":
+                            mesh.material = glowingRocksMat
+                            // subdivide(
+                            //     mesh,
+                            //     0.2
+                            // )
+                            break
+
+                        case "waterFront":
+                            mesh.material = basic
+                            attachTextures(mesh, gui, textures.woodTexture, panOptions1)
+                            break
+
+                        case "verticalSupport":
+                            mesh.material = basic
+                            attachTextures(mesh, gui, textures.woodTexture, panOptions1)
+                            break
+
+                        case "supportFrame":
+                            mesh.material = basic
+                            attachTextures(mesh, gui, textures.woodTexture, panOptions1)
+                            break
+
+                        case "cloth":
+                            mesh.material = basic
+                            mesh.material.side = THREE.DoubleSide
+                            attachTextures(mesh, gui, textures.psyCloth, panOptions1)
+                            break
+
+                        case "crystal":
+                            mesh.material = basic.clone()
+                            mesh.material.emissive.set("#29abe2")
+                            let crystalLight = createPointlight("#29abe2", 1, 4)
+                            crystalLight.position.set(
+                                mesh.position.x,
+                                mesh.position.y,
+                                mesh.position.z
+                            )
+
+                            scene.add(crystalLight)
+                            break
+                    
+                        default:
+                            break
+                    }
+                })
+
+                // console.log(meshes)
+                
+            }
+
+            materialsToSeaShack()
 
 
             // Lights
@@ -265,9 +403,9 @@ const WorldBuild = () => {
             scene.add( dirLightHeper )
 
 
-            let light1 = createPointlight("#ff4242", 0.2, 4)
-            let light2 = createPointlight("#ff1ca4", 0.6, 4)
-            let light3 = createPointlight("#ff1ca4", 0.6, 4)
+            let light1 = createPointlight("#ff4242", 0.2, 1)
+            let light2 = createPointlight("#ff1ca4", 0.6, 1)
+            let light3 = createPointlight("#ff1ca4", 0.6, 1)
 
             light2.position.set(
                 6.08,
@@ -470,7 +608,7 @@ const WorldBuild = () => {
             import('three/examples/jsm/controls/PointerLockControls.js'),
             import('three/examples/jsm/objects/Water2.js'),
             import('three/examples/jsm/libs/dat.gui.module.js'),
-            // import('three/examples/jsm/libs/stats.min.js'),
+            import('three/examples/jsm/modifiers/SubdivisionModifier.js'),
             import('three/examples/jsm/utils/SkeletonUtils.js'),
 
         ])

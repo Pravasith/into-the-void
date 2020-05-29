@@ -32,7 +32,9 @@ const modelsPath = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
 
 export const modelLinkURLs = {
     terrain : "pravasPlanet.gltf",
-    currentCharacter : "animations-clean-x.gltf",
+    // currentCharacter : "animations-clean-x.gltf",
+    currentCharacter : "mainCharacter.gltf",
+
     darkSidePrism : "darkSideAlbumArt.gltf",
     vinylPlayr : "vinylPlayr.gltf",
     // "dingle",
@@ -44,7 +46,8 @@ export const imageLinkURLs = {
     skyTexture: "space-background-pravasith-2U.png",
     mainHoarding: "pinkFloydHoarding.png",
     psyTexture: "psyTexture.png",
-    woodTexture: "woodTex.jpg",
+    psyCloth: "psyCloth.png",
+    woodTexture: "wood.png",
     darkSideCDTex: "darkSideTex.png",
     songList: "darkSideOfTheMoonSongList.png",
 }
@@ -55,8 +58,8 @@ export const envMapURLs = {
         s3URLs.mapsAndImages + "posX.jpg",
         s3URLs.mapsAndImages + "negX.jpg",
 
-        s3URLs.mapsAndImages + "posY.jpg",
         s3URLs.mapsAndImages + "negY.jpg",
+        s3URLs.mapsAndImages + "posY.jpg",
 
         s3URLs.mapsAndImages + "posZ.jpg",
         s3URLs.mapsAndImages + "negZ.jpg",
