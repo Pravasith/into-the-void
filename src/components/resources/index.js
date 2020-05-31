@@ -36,7 +36,7 @@ export const modelLinkURLs = {
     currentCharacter : "mainCharacter.gltf",
 
     darkSidePrism : "darkSideAlbumArt.gltf",
-    vinylPlayr : "vinylPlayr.gltf",
+    vinylPlayr : "sciFiVinyl.gltf",
     // "dingle",
     // "dingleBo"
 }
@@ -47,7 +47,7 @@ export const imageLinkURLs = {
     mainHoarding: "pinkFloydHoarding.png",
     psyTexture: "psyTexture.png",
     psyCloth: "psyCloth.png",
-    woodTexture: "wood.png",
+    woodTexture: "psyWood.png",
     darkSideCDTex: "darkSideTex.png",
     songList: "darkSideOfTheMoonSongList.png",
 }

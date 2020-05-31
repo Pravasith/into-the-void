@@ -87,7 +87,7 @@ export const sceneAnimations = {
                 let delta
                 delta = clock.getDelta()
 
-                
+                // console.log("XX")
                 // Animation mixer update - END
 
                 mixer.update(delta)

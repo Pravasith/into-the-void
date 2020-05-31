@@ -2,6 +2,7 @@
 import * as THREE from 'three'
 import { getSimpleWobblePlane } from "../components/env/water2"
 import { attachTextures } from "./textures"
+import { totesRando, totesRandoInt } from './math/usefulFuncs'
 
 
 export const addFloydElements = (models, scene, gui, textures, envTextures) => {
@@ -47,6 +48,38 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
             transparent: true
         })
 
+        let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
+            color: 0xccddff, 
+            envMap: envTextures.skyBoxEnv, 
+            refractionRatio: 0.9, 
+            reflectivity: 1,
+            transparent : true,
+            opacity : 0.92,
+            side: THREE.FrontSide
+        })
+
+        let prismBackMaterial = new THREE.MeshPhysicalMaterial({
+            map: null,
+            color: 0x888888,
+            metalness: 1,
+            roughness: 0,
+            opacity: 0.1,
+            side: THREE.FrontSide,
+            transparent: true,
+            envMapIntensity: 5,
+            premultipliedAlpha: true
+            // TODO: Add custom blend mode that modulates background color by this materials color.
+        })
+
+        const rainbowColors = {
+            red : "red",
+            blue : "#29abe2",
+            violet : "#cc34eb",
+            yellow : "yellow",
+            green : "green",
+            orange : "#ff4a03"
+        }
+
 
 
         if(model === "darkSidePrism"){
@@ -68,32 +101,13 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
     
             animate()
 
+            
+
 
             modelData.children.map((item, i) => {
                 if(item.name === "prism"){
 
-                        let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
-                            color: 0xccddff, 
-                            envMap: envTextures.skyBoxEnv, 
-                            refractionRatio: 0.9, 
-                            reflectivity: 1,
-                            transparent : true,
-                            opacity : 0.92,
-                            side: THREE.FrontSide
-                        })
-
-                        let prismBackMaterial = new THREE.MeshPhysicalMaterial({
-                            map: null,
-                            color: 0x888888,
-                            metalness: 1,
-                            roughness: 0,
-                            opacity: 0.1,
-                            side: THREE.FrontSide,
-                            transparent: true,
-                            envMapIntensity: 5,
-                            premultipliedAlpha: true
-                            // TODO: Add custom blend mode that modulates background color by this materials color.
-                        })
+                        
 
                         item.material = prismFrontMaterial
 
@@ -216,27 +230,28 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
         else if(model === "vinylPlayr"){
             // console.log(modelData)
 
-            let s = 1
+            let s = 0.4
 
-            modelData.position.set(9.9, 2.5, 35.8)
+            modelData.position.set(0.8, 0.5, -6.9)
             modelData.scale.set(s, s, s)
-            modelData.rotation.x = Math.PI/2
-            modelData.rotation.z = 4.1
+            // modelData.rotation.x = Math.PI/2
+            modelData.rotation.z =  Math.PI / 8
+            // modelData.rotation.z = 9.4
 
-            var controls = new function() {
-                this.posY = 2.5
-                this.rX = Math.PI/2
-                this.rZ = 4.1
-            }
+            // var controls = new function() {
+            //     this.posY = 0.5
+            //     this.rX = Math.PI/2
+            //     this.rZ = 0
+            // }
     
             // gui.add(controls, 'posY', 0, 5)
-            // gui.add(controls, 'rX', 0, 4 * Math.PI)
+            // // gui.add(controls, 'rX', 0, 4 * Math.PI)
             // gui.add(controls, 'rZ', 0, 4 * Math.PI)
 
             // function animate(time) {
-            //     modelData.position.set(9.9, controls.posY, 35.8)
+            //     modelData.position.set(0.8, controls.posY, -6.9)
             //     // modelData.scale.set(s, s, s)
-            //     modelData.rotation.x = controls.rX
+            //     // modelData.rotation.x = controls.rX
             //     modelData.rotation.z = controls.rZ 
     
             //     requestAnimationFrame(animate)
@@ -245,9 +260,6 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
             // animate()
 
             modelData.children.map((item, i) => {
-               
-
-               
 
                 switch (item.name) {
                     case "baseDisc":
@@ -270,21 +282,21 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                         attachTextures(item, gui, textures.woodTexture, panOptions)
                         break
                     
-                    case "midCube":
-                        item.material = basic
-                        const panOptions1 = { 
-                            showGui : false, 
-                            u : 1, 
-                            v : 1, 
-                            zoom : 3, 
-                            flipY : false, 
-                            textureRotation : 0,
-                            // animateV : true,
-                            // animateU : true
-                        }
+                    // case "midCube":
+                    //     item.material = prismFrontMaterial
+                    //     // const panOptions1 = { 
+                    //     //     showGui : false, 
+                    //     //     u : 1, 
+                    //     //     v : 1, 
+                    //     //     zoom : 3, 
+                    //     //     flipY : false, 
+                    //     //     textureRotation : 0,
+                    //     //     // animateV : true,
+                    //     //     // animateU : true
+                    //     // }
 
-                        attachTextures(item, gui, textures.woodTexture, panOptions1)
-                        break
+                    //     // attachTextures(item, gui, textures.woodTexture, panOptions1)
+                    //     break
 
                     case "frame":
                         item.material = basic
@@ -304,27 +316,16 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                         break
                     
                     case "disc":
-                        item.material = cubeMaterial2
-                        function animate(time) {
+                        item.material = prismFrontMaterial
+                        item.children[0].material = prismFrontMaterial
+
+                        function animate() {
                             
                             item.rotation.y += 0.02 
                 
                             requestAnimationFrame(animate)
                         }
                         animate()
-
-                        const panOptions3 = { 
-                            showGui : false, 
-                            u : 1, 
-                            v : 0.9, 
-                            zoom : 2.1, 
-                            flipY : false, 
-                            textureRotation : 0,
-                            // animateV : true,
-                            // animateU : true
-                        }
-
-                        attachTextures(item, gui, textures.psyTexture, panOptions3)
                         break
 
                     case "rotor":
@@ -349,7 +350,7 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                         break
                 
                     default:
-                        item.material = cubeMaterial1
+                        // item.material = cubeMaterial1
                         break
                 }
             })

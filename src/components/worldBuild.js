@@ -221,10 +221,12 @@ const WorldBuild = () => {
 
                 })
 
-                let basic = new THREE.MeshStandardMaterial({
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                    roughness: 0.75
+                let basic = new THREE.MeshLambertMaterial({
+                    side: THREE.FrontSide,
+                    // transparent: true,
+                    roughness: 0.75,
+                    flatShading : false,
+                    // emissive: 0x2d2d2d,
                 })
 
                 const panOptions1 = { 
@@ -310,28 +312,40 @@ const WorldBuild = () => {
                             // )
                             break
 
-                        case "plainRocks":
-                            mesh.material = glowingRocksMat
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
+                        // case "plainRocks":
+                        //     mesh.material = glowingRocksMat
+                        //     // subdivide(
+                        //     //     mesh,
+                        //     //     0.2
+                        //     // )
+                        //     break
 
-                        case "waterFront":
-                            mesh.material = basic
-                            attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-                            break
+                        // case "waterFront":
+                        //     mesh.material = basic
+                        //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
+                        //     // subdivide(
+                        //     //     mesh,
+                        //     //     0.2
+                        //     // )
+                        //     break
 
-                        case "verticalSupport":
-                            mesh.material = basic
-                            attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-                            break
+                        // case "verticalSupport":
+                        //     mesh.material = basic
+                        //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
+                        //     // subdivide(
+                        //     //     mesh,
+                        //     //     0.2
+                        //     // )
+                        //     break
 
-                        case "supportFrame":
-                            mesh.material = basic
-                            attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-                            break
+                        // case "supportFrame":
+                        //     mesh.material = basic
+                        //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
+                        //     // subdivide(
+                        //     //     mesh,
+                        //     //     0.2
+                        //     // )
+                        //     break
 
                         case "cloth":
                             mesh.material = basic
@@ -351,6 +365,30 @@ const WorldBuild = () => {
 
                             scene.add(crystalLight)
                             break
+
+                        case "mushroomPinkSpots":
+                            mesh.material = basic.clone()
+                            mesh.material.emissive.set("#29abe2")
+                            mesh.material.emissiveIntensity = (0.6)
+                            break
+
+                        case "mushroomRedParts":
+                            mesh.material = basic.clone()
+                            mesh.material.emissive.set("#ff0000")
+                            mesh.material.emissiveIntensity = (0.6)
+                            break
+
+                        case "mushroomYellowSpots":
+                            mesh.material = basic.clone()
+                            mesh.material.emissive.set("#ffff00")
+                            mesh.material.emissiveIntensity = (0.6)
+                            break
+
+                        case "mushroomGreenSpots":
+                            mesh.material = basic.clone()
+                            mesh.material.emissive.set("#00ff15")
+                            mesh.material.emissiveIntensity = (0.6)
+                            break
                     
                         default:
                             break
@@ -366,7 +404,7 @@ const WorldBuild = () => {
 
             // Lights
             const lightDistance = 5
-            const ambientLight = new THREE.AmbientLight("#ffffff", 0.4),
+            const ambientLight = new THREE.AmbientLight("#ffffff", 0.6),
                 dirLight = new THREE.DirectionalLight("#ffffff", 0.2)
 
 
@@ -721,8 +759,14 @@ const WorldBuild = () => {
                     //     ...keys,
                     //     ...keyPress
                     // })
-    
-                    sceneAnimations.animationControllers(keys)
+                    const { keyCode } = e
+
+                    if(
+                        keyCode === 87 ||
+                        keyCode === 83 ||
+                        keyCode === 65 ||
+                        keyCode === 68 
+                        ) sceneAnimations.animationControllers(keys)
     
     
                     keys[e.keyCode] = true
@@ -736,7 +780,14 @@ const WorldBuild = () => {
                 }}
                 onKeyUp = {(e) => {
     
-                    sceneAnimations.animationControllers(null, keys)
+                    const { keyCode } = e
+
+                    if(
+                        keyCode === 87 ||
+                        keyCode === 83 ||
+                        keyCode === 65 ||
+                        keyCode === 68 
+                        ) sceneAnimations.animationControllers(null, keys)
     
     
                     // let keyPress = keys

@@ -7,7 +7,6 @@ export const getSimpleWobblePlane = (options) => {
     const heightSections = widthSections / aspectRatio
 
     let geometry = new THREE.PlaneGeometry(width, height, widthSections, heightSections)
-    const loader = new THREE.TextureLoader()
 
     
 

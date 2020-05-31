@@ -83,16 +83,22 @@ export const movements = {
             scene.add(dummyAnchorToGirl)
 
             // Initital position and rotation of anchor
-            anchor.position.set(40, 1.4001339569573819, 83)
-            // anchor.rotation.set(0.10999999999999673, -0.4940000000000117, 6.282978218408773e-17)
+            anchor.position.set(-16, 1.65, -23.15)
+            anchor.rotation.y = -2.48
 
             girl.scale.set(0.125, 0.125, 0.125)
 
             // Initial positions
 
             // anchor.rotation.y = 0.73
-            anchor.rotation.x = 0.29
-            girl.position.y = -1
+            // anchor.rotation.x = 0.29
+            // girl.position.y = -1
+            girl.position.set(
+                anchor.position.x,
+                // anchor.position.y - 1.51,
+                anchor.position.y - 1.5,
+                anchor.position.z
+            )
 
             // x: 10.065508009029148
             // y: 1.6
@@ -245,7 +251,7 @@ export const movements = {
                 })
                 // Run main character animations (girl)
 
-                // console.log(anchor.position)
+                console.log(anchor.position)
                 
             }
 
