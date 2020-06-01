@@ -65,7 +65,7 @@ export const movements = {
             terrain.scale.set(scale, scale, scale)
 
             let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
-            // let terrainMesh = terrain.children[0]
+            terrainMesh.material.side = THREE.FrontSide
 
             // let terrainMesh = terrain
 
@@ -251,7 +251,7 @@ export const movements = {
                 })
                 // Run main character animations (girl)
 
-                console.log(anchor.position)
+                // console.log(anchor.position)
                 
             }
 

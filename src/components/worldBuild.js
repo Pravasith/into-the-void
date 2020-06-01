@@ -23,7 +23,7 @@ import { getWater } from './env/water'
 import { movements } from '../factories/girlMovement'
 import { sceneAnimations } from '../factories/animations'
 // import { WorldContext } from '../utils/contexts/worldContext'
-import { getSimpleWater } from './env/water2'
+import {  getSimpleWobblePlane } from './env/water2'
 import { addFloydElements } from '../factories/floydElements'
 import { createDingles } from '../factories/dingles'
 
@@ -136,7 +136,8 @@ const WorldBuild = () => {
             renderer.setClearColor(0x000000, 0) // Background color
 
             renderer.shadowMap.enabled = true
-            // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            // renderer.shadowMap.type = THREE.PCFSoftShadowMap
+            // renderer.sortObjects = false
 
             container.appendChild(renderer.domElement)
 
@@ -441,9 +442,9 @@ const WorldBuild = () => {
             scene.add( dirLightHeper )
 
 
-            let light1 = createPointlight("#ff4242", 0.2, 1)
-            let light2 = createPointlight("#ff1ca4", 0.6, 1)
-            let light3 = createPointlight("#ff1ca4", 0.6, 1)
+            let light1 = createPointlight("#ff4242", 0.2, 10)
+            let light2 = createPointlight("#ff1ca4", 0.6, 10)
+            let light3 = createPointlight("#ff1ca4", 0.6, 10)
 
             light2.position.set(
                 6.08,
@@ -483,12 +484,40 @@ const WorldBuild = () => {
 
 
             // Add water 
-            const { Water } = module
-            const water = getWater(Water)
-            scene.add(water)
-            // OR
-            // getSimpleWater(scene)
+            // const { Water } = module
+
+            // // waterPlaneScene.children[0].material.side = THREE.FrontSide
+            // const water = getWater(Water, gui)
             // scene.add(water)
+
+            // OR
+            let options = {
+                aspectRatio: 1,
+                width : 100, 
+                widthSections : 15,
+                opacity : 0.3, 
+                perkiness0to10 : 0.5, 
+                smoothing0to10 : 10, 
+                speed0to1 : 0.2
+            }
+        
+            let water = getSimpleWobblePlane(
+                options
+            )
+            scene.add(water)
+            water.position.set(0, -0.3, 5)
+            water.rotation.x = -Math.PI / 2
+
+            let glowingWaterMat = new THREE.MeshLambertMaterial({ 
+                color: "#3493eb", 
+                envMap: envTextures.skyBoxEnv, 
+                combine: THREE.MixOperation, 
+                reflectivity: 0.7,
+                opacity : 0.5,
+                transparent : true
+            })
+
+            water.material = glowingWaterMat
 
             // Anchor for 3D orbit movements (mouse)
             let anchor = new THREE.Object3D()
