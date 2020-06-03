@@ -37,8 +37,8 @@ export const modelLinkURLs = {
 
     darkSidePrism : "darkSideAlbumArt.gltf",
     vinylPlayr : "sciFiVinyl.gltf",
-    // "dingle",
-    // "dingleBo"
+    fish : "pinkFISH.gltf",
+    dingleBo : "dingleBo.gltf"
 }
 
 export const imageLinkURLs = {
@@ -55,14 +55,14 @@ export const imageLinkURLs = {
 export const envMapURLs = {
     // Env maps || cube maps
     sceneEnv : [
-        s3URLs.mapsAndImages + "posX.jpg",
-        s3URLs.mapsAndImages + "negX.jpg",
+        s3URLs.mapsAndImages + "posXEnv.png",
+        s3URLs.mapsAndImages + "negXEnv.png",
 
-        s3URLs.mapsAndImages + "negY.jpg",
-        s3URLs.mapsAndImages + "posY.jpg",
+        s3URLs.mapsAndImages + "posYEnv.png",
+        s3URLs.mapsAndImages + "negYEnv.png",
 
-        s3URLs.mapsAndImages + "posZ.jpg",
-        s3URLs.mapsAndImages + "negZ.jpg",
+        s3URLs.mapsAndImages + "posZEnv.png",
+        s3URLs.mapsAndImages + "negZEnv.png",
     ],
 
     skyBoxEnv : new Array(6).fill(s3URLs.mapsAndImages + "space-background-pravasith-2U.png")

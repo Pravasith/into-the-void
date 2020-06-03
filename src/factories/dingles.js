@@ -2,7 +2,8 @@ import { totesRando } from "./math/usefulFuncs"
 
 export const createDingles = (scene, module, num, dingle, xZCords, delta) => {
     
-    dingle.scene.scale.set(0.25, 0.25, 0.25)
+    scene.remove(dingle.scene)
+    // dingle.scene.scale.set(0.1, 0.1, 0.1)
 
     let replicaDingles = new Array(num).fill("")
     replicaDingles = replicaDingles.map((item, i) => new module.SkeletonUtils.clone( dingle.scene ))
@@ -18,15 +19,17 @@ export const createDingles = (scene, module, num, dingle, xZCords, delta) => {
 
             // skinnedMesh.scale.y += Math.sin(sinCount) * totesRando(0, 0.01)
 
-            model.material.emissive.set(
+            let x = model.material.clone()
+            x.emissive.set(
                 'hsl(' + 
                 Math.abs(Math.cos(colorCount + 0) * 255) 
 
                 + ', 50%, 50%)'
             )
+            model.material = x
 
-            sinCount+=0.05
-            colorCount+=0.01
+            sinCount = 0.001 * time
+            colorCount = 0.001 * time
 
             modelBones[1].rotation.x = 0.25 * Math.sin(sinCount + 1)
             modelBones[2].rotation.x = 0.25 * Math.sin(sinCount - 1)
@@ -42,13 +45,18 @@ export const createDingles = (scene, module, num, dingle, xZCords, delta) => {
     replicaDingles.map(item => {
 
         wavingAnimation(item)
+        let rando = totesRando(0.01, 0.1)
 
-        let model = item.children[0].children.filter(n => n.name === "dinglePop")[0]
+        // let model = item.children[0].children.filter(n => n.name === "dinglePop")[0]
 
         item.position.x = totesRando(xZCords.x - delta, xZCords.x + delta)
         item.position.z = totesRando(xZCords.z - delta, xZCords.z + delta)
         item.rotation.y = totesRando(0, 2 * Math.PI)
-        item.scale.y = totesRando(0.1, 0.5)
+        item.scale.set(
+            rando,
+            rando,
+            rando
+        )
 
 
         scene.add(item)

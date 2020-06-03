@@ -109,7 +109,7 @@ export const movements = {
             // else terrainMesh.material.side = THREE.FrontSide
 
 
-            // console.log(terrain.position, terrainMesh)
+            console.log(terrain.position)
 
             this.globalVars = {
                 camera,

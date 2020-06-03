@@ -87,12 +87,12 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
             modelData.scale.set(10, 10, 10)
             modelData.rotation.y = 0.4
 
-            let cPos = 0
-            function animate(time) {
-                modelData.rotation.y += 0.005
-                cPos += 0.015
+            // let cPos = 0
+            function animate(now) {
+                modelData.rotation.y = now * 0.0008
+                const cPos = now * 0.001
 
-                let s = 4 * Math.abs(Math.sin(cPos) + 2.1)
+                // let s = 4 * Math.abs(Math.sin(cPos) + 2.1)
                 modelData.position.y = Math.sin(cPos) + 1
                 // modelData.scale.set(s, s, s)
     

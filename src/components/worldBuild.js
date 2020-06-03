@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import * as THREE from 'three'
-import gsap from 'gsap'
+
 
 import { Howl, Howler } from 'howler'
 import Stats from "stats.js"
@@ -29,6 +29,9 @@ import { createDingles } from '../factories/dingles'
 
 import "../assets/scss/world.scss"
 import { attachTextures } from '../factories/textures'
+import { materialsToSeaShack } from './assignMaterials'
+import { addLights } from './env/lights'
+import { addFishes } from '../factories/animateFish'
 
 
 
@@ -202,272 +205,18 @@ const WorldBuild = () => {
             // Add floyd - static elements
             addFloydElements(models, scene, gui, textures, envTextures)
 
-            function createPointlight(color, size, intensity) {
-                const sphereX = new THREE.SphereBufferGeometry( size, 16, 8 );
-				let light = new THREE.PointLight( color, intensity, 50 );
-                light.add( new THREE.Mesh( sphereX, new THREE.MeshBasicMaterial( { visible : false, color : color } ) ) );
-
-				return light
-
-            }
-            
-            const materialsToSeaShack = () => {
-                //materials
-                let glowingRocksMat = new THREE.MeshLambertMaterial({ 
-                    color: "#ffffff", 
-                    envMap: envTextures.sceneEnv, 
-                    combine: THREE.MixOperation, 
-                    // reflectivity: 0.3
-                    reflectivity: 0.15
-
-                })
-
-                let basic = new THREE.MeshLambertMaterial({
-                    side: THREE.FrontSide,
-                    // transparent: true,
-                    roughness: 0.75,
-                    flatShading : false,
-                    // emissive: 0x2d2d2d,
-                })
-
-                const panOptions1 = { 
-                    showGui : false, 
-                    u : 1, 
-                    v : 1, 
-                    zoom : 3, 
-                    flipY : false, 
-                    textureRotation : 0,
-                    // animateV : true,
-                    // animateU : true
-                }
-
-                const subdivide = (mesh, subdivisions) => {
-
-                    let geometry = mesh.geometry
-                    let modifier = new module.SubdivisionModifier(subdivisions)
-                    let smoothGeometry = modifier.modify(geometry)
-    
-                    // convert to THREE.BufferGeometry
-    
-                    if(mesh.geometry) mesh.geometry.dispose()
-    
-                    mesh.geometry = new THREE.BufferGeometry().fromGeometry(smoothGeometry)
-    
-                }
-                
-                models["terrain"].scene.children.map(mesh => {
-                    const { name } = mesh
-
-                    switch (mesh.name) {
-                        case "blueRocks":
-                            mesh.material = glowingRocksMat.clone()
-                            // mesh.material.color.set("#30ffbd")
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
-                        
-                        case "greenRocks":
-                            mesh.material = glowingRocksMat.clone()
-                            // mesh.material.color.set("#00ffee")
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
-
-                        case "orangeRocks":
-                            mesh.material = glowingRocksMat.clone()
-                            // mesh.material.color.set("#009dff")
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
-                        
-                        case "pinkRocks":
-                            mesh.material = glowingRocksMat.clone()
-                            // mesh.material.color.set("#ea00ff")
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
-
-                        case "redRocks":
-                            mesh.material = glowingRocksMat.clone()
-                            // mesh.material.color.set("#ff00a2")
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
-                        
-                        case "yellowRocks":
-                            mesh.material = glowingRocksMat.clone()
-                            // mesh.material.color.set("#ff3700")
-                            // subdivide(
-                            //     mesh,
-                            //     0.2
-                            // )
-                            break
-
-                        // case "plainRocks":
-                        //     mesh.material = glowingRocksMat
-                        //     // subdivide(
-                        //     //     mesh,
-                        //     //     0.2
-                        //     // )
-                        //     break
-
-                        // case "waterFront":
-                        //     mesh.material = basic
-                        //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-                        //     // subdivide(
-                        //     //     mesh,
-                        //     //     0.2
-                        //     // )
-                        //     break
-
-                        // case "verticalSupport":
-                        //     mesh.material = basic
-                        //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-                        //     // subdivide(
-                        //     //     mesh,
-                        //     //     0.2
-                        //     // )
-                        //     break
-
-                        // case "supportFrame":
-                        //     mesh.material = basic
-                        //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-                        //     // subdivide(
-                        //     //     mesh,
-                        //     //     0.2
-                        //     // )
-                        //     break
-
-                        case "cloth":
-                            mesh.material = basic
-                            mesh.material.side = THREE.DoubleSide
-                            attachTextures(mesh, gui, textures.psyCloth, panOptions1)
-                            break
-
-                        case "crystal":
-                            mesh.material = basic.clone()
-                            mesh.material.emissive.set("#29abe2")
-                            let crystalLight = createPointlight("#29abe2", 1, 4)
-                            crystalLight.position.set(
-                                mesh.position.x,
-                                mesh.position.y,
-                                mesh.position.z
-                            )
-
-                            scene.add(crystalLight)
-                            break
-
-                        case "mushroomPinkSpots":
-                            mesh.material = basic.clone()
-                            mesh.material.emissive.set("#29abe2")
-                            mesh.material.emissiveIntensity = (0.6)
-                            break
-
-                        case "mushroomRedParts":
-                            mesh.material = basic.clone()
-                            mesh.material.emissive.set("#ff0000")
-                            mesh.material.emissiveIntensity = (0.6)
-                            break
-
-                        case "mushroomYellowSpots":
-                            mesh.material = basic.clone()
-                            mesh.material.emissive.set("#ffff00")
-                            mesh.material.emissiveIntensity = (0.6)
-                            break
-
-                        case "mushroomGreenSpots":
-                            mesh.material = basic.clone()
-                            mesh.material.emissive.set("#00ff15")
-                            mesh.material.emissiveIntensity = (0.6)
-                            break
-                    
-                        default:
-                            break
-                    }
-                })
-
-                // console.log(meshes)
-                
-            }
-
-            materialsToSeaShack()
+            // Assign materials and adds WATER too
+            materialsToSeaShack(models, scene, gui, textures, envTextures)
 
 
-            // Lights
-            const lightDistance = 5
-            const ambientLight = new THREE.AmbientLight("#ffffff", 0.6),
-                dirLight = new THREE.DirectionalLight("#ffffff", 0.2)
-
-
-            dirLight.position.set(lightDistance + 20, lightDistance + 20, lightDistance)
            
-            
 
 
-            // spotLight.target.position.x = 6
-            // spotLight.target.position.y = 0
-            // spotLight.target.position.z = 12
-
-            scene.add(ambientLight)
-            scene.add(dirLight)
-            // scene.add(lightHelperS)
+            // Add lights
+            addLights(scene)
 
 
-            dirLight.castShadow = true;
 
-            dirLight.shadow.mapSize.width = 2048
-            dirLight.shadow.mapSize.height = 2048
-
-            var d = 35
-
-            dirLight.shadow.camera.left = - d
-            dirLight.shadow.camera.right = d
-            dirLight.shadow.camera.top = d
-            dirLight.shadow.camera.bottom = - d
-
-            dirLight.shadow.camera.far = 3500
-            dirLight.shadow.bias = -0.00005
-
-            let dirLightHeper = new THREE.DirectionalLightHelper( dirLight, 10 )
-            scene.add( dirLightHeper )
-
-
-            let light1 = createPointlight("#ff4242", 0.2, 10)
-            let light2 = createPointlight("#ff1ca4", 0.6, 10)
-            let light3 = createPointlight("#ff1ca4", 0.6, 10)
-
-            light2.position.set(
-                6.08,
-                6,
-                12.84
-            )
-
-            light3.position.set(
-                3.6,
-                5,
-                12.2
-            )
-            
-            scene.add(light1, light2, light3)
-
-            let sinCount = 0
-            gsap.ticker.add(() => {
-                light1.position.y = Math.sin(sinCount) 
-                sinCount+= 0.01
-            })
-
-
-            
 
 
             // createAxes( scene, maxRange, incDecStepSize, colors )
@@ -491,33 +240,6 @@ const WorldBuild = () => {
             // scene.add(water)
 
             // OR
-            let options = {
-                aspectRatio: 1,
-                width : 100, 
-                widthSections : 15,
-                opacity : 0.3, 
-                perkiness0to10 : 0.5, 
-                smoothing0to10 : 10, 
-                speed0to1 : 0.2
-            }
-        
-            let water = getSimpleWobblePlane(
-                options
-            )
-            scene.add(water)
-            water.position.set(0, -0.3, 5)
-            water.rotation.x = -Math.PI / 2
-
-            let glowingWaterMat = new THREE.MeshLambertMaterial({ 
-                color: "#3493eb", 
-                envMap: envTextures.skyBoxEnv, 
-                combine: THREE.MixOperation, 
-                reflectivity: 0.7,
-                opacity : 0.5,
-                transparent : true
-            })
-
-            water.material = glowingWaterMat
 
             // Anchor for 3D orbit movements (mouse)
             let anchor = new THREE.Object3D()
@@ -534,17 +256,9 @@ const WorldBuild = () => {
             // sets camera to the state
             setCamera(camera)
 
-            var material = new THREE.MeshBasicMaterial( {color: "#fff", side: THREE.DoubleSide} );
 
-            let sphereG = new THREE.SphereGeometry(1, 10, 10)
-            let sphere = new THREE.Mesh(sphereG, material)
-            scene.add( sphere );
-
-            sphere.position.set(0, 0, -20)
-
-            sphere.castShadow = true
-            // plane.receiveShadow = true
-            
+            // Add fishes
+            addFishes(models, clock, scene)
 
             // controls
             if(typeOfControls === "pointerLock"){
@@ -579,10 +293,10 @@ const WorldBuild = () => {
 
             setAnimationPresets(animPresets)
 
-            // createDingles(scene, module, 6, models.dingleBo, {
-            //     x : 10,
-            //     z : 24
-            // }, 3)
+            // createDingles(scene, module, 10, models.dingleBo, {
+            //     x : 0,
+            //     z : 0
+            // }, 0.3)
 
             // createDingles(scene, module, 7, models.dingleBo, {
             //     x : 0.8,
@@ -625,10 +339,12 @@ const WorldBuild = () => {
     }
 
 
-    function animate( time ) {
+    function animate( now ) {
         // Animation mixer update - START
         let delta
+        // now *= 0.001  // make it seconds
         // Animation mixer update - END
+
 
         requestId = undefined
 

@@ -47,26 +47,28 @@ const animateWater = (water, perkiness0to10, smoothing0to10, speed0to1) => {
         peak = 0,
         count = 0
 
-    function animate( time ) {
+    function animate( now ) {
+        count = now * 0.002
 
-        count+=0.05
-
-        vertices.map((point, i) => {
-            point.z = Math.sin(peak) * perkiness0to10 * noise.perlin3(
-                point.x / smoothing0to10,
-                point.y / smoothing0to10,
-                point.z / smoothing0to10
-            )
-        })
-
-        // peak +=speed0to1
-
-        // if(peak >= 2 * Math.PI) peak = 0
-
-        peak = Math.sin(count) + Math.cos(count + 1)
-
-        water.geometry.verticesNeedUpdate = true
-        water.geometry.normalsNeedUpdate = true
+        if(count){
+            vertices.map((point, i) => {
+                point.z = Math.sin(peak) * perkiness0to10 * noise.perlin3(
+                    point.x / smoothing0to10,
+                    point.y / smoothing0to10,
+                    point.z / smoothing0to10
+                )
+            })
+    
+            // peak +=speed0to1
+    
+            // if(peak >= 2 * Math.PI) peak = 0
+    
+            peak = Math.sin(count) + Math.cos(count + 1)
+    
+            water.geometry.verticesNeedUpdate = true
+            water.geometry.normalsNeedUpdate = true
+        }
+        
 
         requestAnimationFrame( animate )
     }
