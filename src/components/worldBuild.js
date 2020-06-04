@@ -239,7 +239,6 @@ const WorldBuild = () => {
             // const water = getWater(Water, gui)
             // scene.add(water)
 
-            // OR
 
             // Anchor for 3D orbit movements (mouse)
             let anchor = new THREE.Object3D()

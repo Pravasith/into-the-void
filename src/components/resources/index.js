@@ -38,6 +38,7 @@ export const modelLinkURLs = {
     darkSidePrism : "darkSideAlbumArt.gltf",
     vinylPlayr : "sciFiVinyl.gltf",
     fish : "pinkFISH.gltf",
+    fish2 : "redFISH.gltf",
     dingleBo : "dingleBo.gltf"
 }
 

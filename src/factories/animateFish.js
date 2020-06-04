@@ -1,32 +1,46 @@
 import * as THREE from 'three'
 
 export const addFishes = (models, clock, scene) => {
-    let fish = models["fish"]
+    let fish1 = models["fish"],
+        fish2 = models["fish2"]
 
     // fish.scene.rotation.x = Math.PI / 2
-    let mixer = new THREE.AnimationMixer(fish.scene)
-    let fishAction = mixer.clipAction(fish.animations[0])
+    let mixer1 = new THREE.AnimationMixer(fish1.scene),
+        mixer2 = new THREE.AnimationMixer(fish2.scene)
 
-    fishAction.play()
+    let fishAction1 = mixer1.clipAction(fish1.animations[0]),
+        fishAction2 = mixer2.clipAction(fish2.animations[0])
+
+    fishAction1.play()
+    fishAction2.play()
 
 
-    fish.scene.traverse(o => {
-        if(o.isMesh){
-
-            // o.rotation.z = -Math.PI / 2
-
-            if(o.name === "glowGroups"){
-                // console.log(o)
-                o.material.emissive.set("#33ff00")
-                o.material.emissiveIntensity = 0.8
+    const assignEmissiveColors = (fish, color) => {
+        fish.scene.traverse(o => {
+            if(o.isMesh){
+    
+                // o.rotation.z = -Math.PI / 2
+    
+                if(o.name === "glowGroups"){
+                    // console.log(o)
+                    o.material.emissive.set(color)
+                    o.material.emissiveIntensity = 1
+                }
+    
+                else {
+                    // console.log(o)
+                    o.material.emissive.set(color)
+                    o.material.emissiveIntensity = 0.3
+                }
             }
-            else{
-                o.material.emissive.set("#33ff00")
-                o.material.emissiveIntensity = 0.2
-            }
-        }
-    })
+        })    
+    }
 
+    assignEmissiveColors(fish1, "green")
+    assignEmissiveColors(fish2, "red")
+
+
+    
     
 
     //========== the curve points we copied from Blender
@@ -90,38 +104,61 @@ export const addFishes = (models, clock, scene) => {
     // scene.add( tube )
 
 
-    let percentage = 0
-    let greenFish = fish.scene.children.filter((group, i) => {
-        return group.name === "Armature"
-    })[0]
-
-    // let greenFish = fish.scene.children.filter((group, i) => {
-    //     return group.name === "greenFish"
-    // })[0]
 
     
+    let percent1 = 0,
+        percent2 = 50
 
-    // pinkFish.rotation.order = "YXZ"
 
-    // pinkFish.lookAt(
-    //     new THREE.Vector3(0, 1, 1)
-    // )
-    // console.log(pinkFish)
-    function moveFish() {
-        percentage += 0.00095
-        let p1 = curvePath.getPointAt(percentage % 1)
-        let p2 = curvePath.getPointAt((percentage + 0.01) % 1)
+    let greenFishMesh = fish1.scene.children.filter((group, i) => {
+            return group.name === "GreenFishAnim"
+        })[0],
+        redFishMesh = fish2.scene.children.filter((group, i) => {
+            return group.name === "RedFishAnim"
+        })[0]
+
+    const createPointlight = (color, intensity) => {
+        let light = new THREE.PointLight( color, intensity, 50 )
+        return light
+
+    }
+
+    let light1 = createPointlight("green", 2),
+        light2 = createPointlight("red", 2)
+
+        greenFishMesh.add(light1)
+        redFishMesh.add(light2)
+
+    const moveFish = (fishMesh, bufferPercent, fish1Or2) => {
+
+        let percentage
+
+        if(fish1Or2 === 1){
+            percentage = percent1
+            percentage += 0.00015 
+            percent1 = percentage
+        }
+
+        else if(fish1Or2 === 2){
+            percentage = percent2
+            percentage += 0.00015 
+            percent2 = percentage
+        }        
+        
+
+        let p1 = curvePath.getPointAt((percentage + bufferPercent) % 1)
+        let p2 = curvePath.getPointAt((percentage + bufferPercent + 0.01) % 1)
+
       
-        greenFish.position.x = p1.x
-        greenFish.position.y = p1.y + 0.2
-        greenFish.position.z = p1.z
+        fishMesh.position.x = p1.x
+        fishMesh.position.y = p1.y + 0.2
+        fishMesh.position.z = p1.z
 
-        greenFish.lookAt(
+        fishMesh.lookAt(
             new THREE.Vector3(
                 p2.x, p2.y + 0.2, p2.z
-                // 0, 0, 0
             )
-        )      
+        )
     }
 
     
@@ -135,8 +172,13 @@ export const addFishes = (models, clock, scene) => {
         // console.log("XX")
         // Animation mixer update - END
     
-        moveFish()
-        mixer.update(delta)
+        moveFish(greenFishMesh, 0, 1)
+        moveFish(redFishMesh, 0.5, 2)
+
+
+        mixer1.update(delta)
+        mixer2.update(delta)
+
         requestAnimationFrame( animate )
         
     }
