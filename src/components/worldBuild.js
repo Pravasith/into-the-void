@@ -53,14 +53,14 @@ const WorldBuild = () => {
     const [ gui, setGui ] = useState(null)
     const [ stats, setStats ] = useState(null)
 
-
     // const [ slowKey, setSlowKey ] = useState(null)
     
 
     let keys = {},
         prevCurrKey = [],
         typeOfControls = "pointerLock", // trackBall or pointerLock,
-        requestId
+        firstMouseLock = false,
+        pause = false
 
     const canvasWrapper = useRef(null)
 
@@ -74,6 +74,21 @@ const WorldBuild = () => {
     useEffect(() => {
         // If init() is finished executing
         if(animationPresets){
+
+            if(typeOfControls === "pointerLock"){
+                controls.addEventListener("lock", () => {
+                    pause = false
+                    if(firstMouseLock){
+                        animate()
+                    }
+                    else firstMouseLock = true
+                    
+                })
+                
+                controls.addEventListener( 'unlock', function () {
+                    pause = true
+                })
+            }
 
             // movements initiation -  see girlMovement.js file
             movements.init(animationPresets)
@@ -264,6 +279,9 @@ const WorldBuild = () => {
                 // Pointer lock controls imported dynamically because it can only be imported in useEffect
                 anchor.add(camera) // Parents camera to Anchor
                 controls = new module.PointerLockControls(anchor, container)
+
+                
+
                 scene.add(
                     controls.getObject()
                 )
@@ -279,8 +297,6 @@ const WorldBuild = () => {
 
             // Add controls to state
             setControls(controls)
-
-            
 
             const animPresets = {
                 models,
@@ -338,46 +354,43 @@ const WorldBuild = () => {
     }
 
 
-    function animate( now ) {
+    const animate = (now) => {
         // Animation mixer update - START
         let delta
         // now *= 0.001  // make it seconds
         // Animation mixer update - END
 
-
-        requestId = undefined
+        // console.log("STILL RUNNING")
 
         if(scene && camera && controls && stats){
-            if(typeOfControls === "trackBall") controls.update()
+
+            
+
+
+            
 
             stats.update()
             // Animates movements (check girlMovement.js file)
             if(Object.keys(keys).length > 0) movements.animateMovements(keys, prevCurrKey)
-            else stop()
 
             if(clock){
                 delta = clock.getDelta()
             }
 
-            // console.log("X")
+            models["vinylPlayr"].scene.rotation.y += 0.001
             renderer.render(scene, camera)
 
-            start()
+
+            if(typeOfControls === "trackBall"){
+                controls.update()
+            }
+
+            if(pause) return
+            requestAnimationFrame(animate)
+            // console.log(pause)
         }
     }
 
-    function start() {
-        if (!requestId) {
-           requestId = window.requestAnimationFrame(animate)
-        }
-    }
-    
-    function stop() {
-        if (requestId) {
-           window.cancelAnimationFrame(requestId)
-           requestId = undefined
-        }
-    }
 
     const dynamicallyImportPackage = async () => {
         let allMods = {}
@@ -492,7 +505,9 @@ const WorldBuild = () => {
                 ref = {canvasWrapper}
                 className="display-screen"
                 onClick = {() => {
-                    if(controls && typeOfControls === "pointerLock") controls.lock()
+                    if(controls && typeOfControls === "pointerLock"){
+                        controls.lock()
+                    }
                 }}
                 tabIndex = "1"
                 onKeyDown = {(e) => {
