@@ -350,6 +350,7 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                         break
                 
                     default:
+                        item.material = prismFrontMaterial
                         // item.material = cubeMaterial1
                         break
                 }

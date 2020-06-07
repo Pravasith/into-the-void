@@ -60,7 +60,7 @@ export const addLights = (scene) => {
     dirLight.shadow.bias = -0.00005
 
     let dirLightHeper = new THREE.DirectionalLightHelper( dirLight, 10 )
-    scene.add( dirLightHeper )
+    // scene.add( dirLightHeper )
 
 
     let light1 = createPointlight("#ff4242", 0.2, 10)

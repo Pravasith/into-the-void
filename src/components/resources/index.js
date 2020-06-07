@@ -31,15 +31,17 @@ const modelsPath = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
 
 
 export const modelLinkURLs = {
-    terrain : "pravasPlanetNew.gltf",
+    terrain : "pravasPlanetXX.gltf",
     // waterPlane : "waterPlaneGeo.gltf",
-    currentCharacter : "mainCharacter.gltf",
+    // currentCharacter : "mainCharacter.gltf",
+    currentCharacter : "girlX.gltf",
+
 
     darkSidePrism : "darkSideAlbumArt.gltf",
     vinylPlayr : "sciFiVinyl.gltf",
     fish : "pinkFISH.gltf",
     fish2 : "redFISH.gltf",
-    dingleBo : "dingleBo.gltf"
+    // dingleBo : "dingleBo.gltf"
 }
 
 export const imageLinkURLs = {
@@ -56,14 +58,14 @@ export const imageLinkURLs = {
 export const envMapURLs = {
     // Env maps || cube maps
     sceneEnv : [
-        s3URLs.mapsAndImages + "posXEnv.png",
-        s3URLs.mapsAndImages + "negXEnv.png",
+        s3URLs.mapsAndImages + "whitePosX.png",
+        s3URLs.mapsAndImages + "whiteNegX.png",
 
-        s3URLs.mapsAndImages + "posYEnv.png",
-        s3URLs.mapsAndImages + "negYEnv.png",
+        s3URLs.mapsAndImages + "whitePosY.png",
+        s3URLs.mapsAndImages + "whiteNegY.png",
 
-        s3URLs.mapsAndImages + "posZEnv.png",
-        s3URLs.mapsAndImages + "negZEnv.png",
+        s3URLs.mapsAndImages + "whitePosZ.png",
+        s3URLs.mapsAndImages + "whiteNegZ.png",
     ],
 
     skyBoxEnv : new Array(6).fill(s3URLs.mapsAndImages + "space-background-pravasith-2U.png")

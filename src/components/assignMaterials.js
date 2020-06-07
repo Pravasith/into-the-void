@@ -5,11 +5,11 @@ import { getSimpleWobblePlane } from './env/water2'
 export const materialsToSeaShack = (models, scene, gui, textures, envTextures) => {
     //materials
     let glowingRocksMat = new THREE.MeshLambertMaterial({ 
-        color: "#29abe2", 
-        envMap: envTextures.sceneEnv, 
+        color: "#000000", 
+        envMap: envTextures.skyBoxEnv, 
         combine: THREE.MixOperation, 
         // reflectivity: 0.3
-        reflectivity: 0.6
+        reflectivity: 0.8
 
     })
 
@@ -139,18 +139,28 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 attachTextures(mesh, gui, textures.psyCloth, panOptions1)
                 break
 
-            case "crystal":
-                mesh.material = basic.clone()
-                mesh.material.emissive.set("#29abe2")
-                let crystalLight = createPointlight("#29abe2", 4)
+            case "balloon":
 
-                crystalLight.position.set(
-                    mesh.position.x,
-                    mesh.position.y,
-                    mesh.position.z
+                let crystal = mesh.children[0]
+                // crystal.material.emissive.set("#29abe2")
+                // crystal.material.emissiveIntensity = (0.6)
+                let crystalLight = createPointlight("#29abe2", 2),
+                crystalLight2 = createPointlight("#fc036f", 2)
+
+                crystal.add(crystalLight)
+                crystalLight.add(crystalLight2)
+
+                crystalLight2.position.set(
+                    7, 7, 7
                 )
 
-                scene.add(crystalLight)
+                // crystalLight2.position.set(
+                //     crystal.position.x,
+                //     crystal.position.y,
+                //     crystal.position.z
+                // )
+
+                // scene.add(crystalLight)
                 break
 
             case "mushroomPinkSpots":
@@ -175,6 +185,33 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#00ff15")
                 mesh.material.emissiveIntensity = (0.6)
+                break
+
+            case "glowSpaceShip":
+                // mesh.material = basic.clone()
+                // const panOptions2 = { 
+                //     showGui : false, 
+                //     u : 1, 
+                //     v : 1, 
+                //     zoom : 3, 
+                //     flipY : false, 
+                //     textureRotation : 0,
+                //     animateV : true,
+                //     animateU : true
+                // }
+
+                // attachTextures(mesh, gui, textures.psyTexture, panOptions2)
+
+                mesh.material = basic.clone()
+                mesh.material.emissive.set("#29abe2")
+                mesh.material.emissiveIntensity = (0.8)
+                break
+
+            case "spaceship":
+                // mesh.material = basic.clone()
+               
+                mesh.material = glowingRocksMat.clone()
+                // mesh.material.color.set("#000000") 
                 break
         
             default:

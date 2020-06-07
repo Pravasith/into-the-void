@@ -109,7 +109,7 @@ export const movements = {
             // else terrainMesh.material.side = THREE.FrontSide
 
 
-            console.log(terrain.position)
+            // console.log(terrain.position)
 
             this.globalVars = {
                 camera,
@@ -132,7 +132,8 @@ export const movements = {
                 intersectingMesh,
                 anchorTerrainIntersection
 
-            let girlRaycaster = new THREE.Raycaster(),
+            let girlToTerrainRaycaster1 = new THREE.Raycaster(),
+                girlToTerrainRaycaster2 = new THREE.Raycaster(),
                 girlRaycaster2 = new THREE.Raycaster(),
                 rayDirection = new THREE.Vector3(0, -1, 0)
 
@@ -148,9 +149,11 @@ export const movements = {
             } =  this.globalVars
 
 
+
             // console.log(terrain)
 
-            let terrainMesh = terrain.children.filter(item => item.name === "terrain")[0]
+            let terrainMesh = terrain
+            // .children.filter(item => item.name === "terrain")[0]
 
             directionVector = camera.getWorldDirection( new THREE.Vector3() )
             // animstate = animationStates
@@ -165,27 +168,27 @@ export const movements = {
             pointerDirectionObj.getWorldPosition(frontDirection)
             girlRaycaster2.set(girl.position, frontDirection.sub(girl.position))
 
-            const boundary = terrain.children.filter(item => item.name === "boundary")[0]
 
-            if(boundary){
+            const boundary = terrain.children.filter(item => item.name === "boundary")[0]
+            // console.log(boundary)
+            let basicMat = new THREE.MeshBasicMaterial({
+                side: THREE.FrontSide,
+                visible : false
+            })
+
+            boundary.material = basicMat
+
+            // boundary.material.transparent = true
+            // boundary.material.opacity = 0
+
+            const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
+            // console.log(boundaryIntersection)
+
+            if(boundaryIntersection.length > 0){
                 
-                let basicMat = new THREE.MeshBasicMaterial({
-                    side: THREE.BackSide,
-                    visible : false
-                })
-    
-                boundary.material = basicMat
-    
-                // boundary.material.transparent = true
-                // boundary.material.opacity = 0
-    
-                const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
-    
-                if(boundaryIntersection.length > 0){
-                    if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.15
-                    else positionStep = 0
-                } // UNCOMMENT - DONOT DELETE
-            }
+                if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.15
+                else positionStep = 0
+            } // UNCOMMENT - DONOT DELETE
 
             
 
@@ -323,34 +326,67 @@ export const movements = {
             }
 
             // Terrain raycasting
-            girlRaycaster.set(anchor.position, rayDirection)
+            girlToTerrainRaycaster1.set(anchor.position, rayDirection)
+            girlToTerrainRaycaster2.set(anchor.position, rayDirection)
 
 
-            if(terrainMesh.children.length > 0){
-                intersectingMesh = terrainMesh.children.map(mesh => {
-                    if(girlRaycaster.intersectObject(mesh)[0] !== undefined){
-                        return mesh
-                    }
-                })[0]
+            const setAnchorYPosWRTTerrain = (rayCaster, mesh) => {
+                const rayMeshIntersection = rayCaster.intersectObject(mesh)
 
-
-                if(intersectingMesh !== undefined){
-                    anchorTerrainIntersection = girlRaycaster.intersectObject(intersectingMesh)
-        
-                    if(anchorTerrainIntersection[0]){
-                        // Sets anchor's y position relative to Terrain topology (height)
-                        anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
-                    }
-                }
-            }
-
-            else{
-                anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
-                if(anchorTerrainIntersection[0]){
+                
+                if(rayMeshIntersection[0]){
+                    console.log(rayMeshIntersection)
                     // Sets anchor's y position relative to Terrain topology (height)
-                    anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+                    anchor.position.y = rayMeshIntersection[0].point.y  + 1.5
                 }
             }
+
+            terrainMesh.traverse(o => {
+                if(o.isMesh){
+                    // if(o.name === "terrain"){
+                    //     setAnchorYPosWRTTerrain(girlToTerrainRaycaster1, o)
+                    // }
+
+                    if(o.name === "terrain2"){
+                        setAnchorYPosWRTTerrain(girlToTerrainRaycaster2, o)
+                    }
+                }
+            })
+
+            // setAnchorYPosWRTTerrain(girlToTerrainRaycaster1, )
+
+
+
+
+            // if(terrainMesh.children.length > 0){
+                
+            //     intersectingMesh = terrainMesh.children.map(mesh => {
+            //         if(girlRaycaster.intersectObject(mesh)[0] !== undefined){
+            //             return mesh
+            //         }
+            //     })[0]
+
+
+
+
+            //     // if(intersectingMesh !== undefined){
+            //     //     anchorTerrainIntersection = girlRaycaster.intersectObject(intersectingMesh)
+        
+                    
+            //     //     if(anchorTerrainIntersection[0]){
+            //     //         // Sets anchor's y position relative to Terrain topology (height)
+            //     //         anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+            //     //     }
+            //     // }
+            // }
+
+            // else{
+            //     anchorTerrainIntersection = girlRaycaster.intersectObject(terrainMesh)
+            //     if(anchorTerrainIntersection[0]){
+            //         // Sets anchor's y position relative to Terrain topology (height)
+            //         anchor.position.y = anchorTerrainIntersection[0].point.y  + 1.5
+            //     }
+            // }
 
             // Links girl's position to anchor's position
             girl.position.set(
