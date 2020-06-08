@@ -202,6 +202,9 @@ const WorldBuild = () => {
             let gui = new module.GUI()
             setGui(gui)
 
+            // TOGGLE GUI
+            gui.destroy()
+
             // let stats = new module.Stats
             // setStats(stats)
 
@@ -262,6 +265,8 @@ const WorldBuild = () => {
             scene.add(anchor)
 
 
+            
+
             // camera
             camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 10, 10000)
             camera.position.set(0, (2.5/2 * 5.5) - 7, 2.5 * 10)
@@ -273,6 +278,23 @@ const WorldBuild = () => {
 
             // Add fishes
             addFishes(models, clock, scene)
+
+
+           
+
+
+
+            window.addEventListener( 'resize', onWindowResize, false );
+
+            function onWindowResize(){
+
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+
+            }
+
 
             // controls
             if(typeOfControls === "pointerLock"){
@@ -382,6 +404,16 @@ const WorldBuild = () => {
                 function animate( time ) {
     
                     positBalloon()
+
+                    // console.log(
+                    //     anchor.rotation.x,
+                    //     anchor.rotation.y,
+                    //     anchor.rotation.z
+                    // )
+
+                    if(anchor.rotation.x > 0.12){
+                        anchor.rotation.x = 0.12
+                    }
             
                     requestAnimationFrame( animate )
                     
@@ -451,10 +483,6 @@ const WorldBuild = () => {
 
         if(scene && camera && controls && stats){
 
-            
-
-
-            
 
             stats.update()
             // Animates movements (check girlMovement.js file)
@@ -472,7 +500,7 @@ const WorldBuild = () => {
                 controls.update()
             }
 
-            // if(pause) return
+            if(pause) return
             requestAnimationFrame(animate)
             // console.log(pause)
         }
