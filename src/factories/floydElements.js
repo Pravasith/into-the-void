@@ -232,10 +232,17 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
 
             let s = 0.4
 
-            modelData.position.set(0.8, 0.5, -6.9)
+            // modelData.position.set(0.8, 0.5, -6.9)
+            modelData.position.set(
+                -4.194829940795898,
+                0.8241021037101746,
+                -9.066085815429688,
+            )
+
             modelData.scale.set(s, s, s)
             // modelData.rotation.x = Math.PI/2
             modelData.rotation.z =  Math.PI / 8
+            modelData.rotation.z =  5
             // modelData.rotation.z = 9.4
 
             // var controls = new function() {
@@ -249,10 +256,10 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
             // gui.add(controls, 'rZ', 0, 4 * Math.PI)
 
             // function animate(time) {
-            //     modelData.position.set(0.8, controls.posY, -6.9)
+            //     modelData.position.y = controls.posY
             //     // modelData.scale.set(s, s, s)
             //     // modelData.rotation.x = controls.rX
-            //     modelData.rotation.z = controls.rZ 
+            //     modelData.rotation.y = controls.rZ 
     
             //     requestAnimationFrame(animate)
             // }
@@ -348,9 +355,14 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
 
                         attachTextures(item, gui, textures.songList, panOptions4)
                         break
+
+                    case "blackDunt":
+                        item.material = prismFrontMaterial
+                        break
+                   
                 
                     default:
-                        item.material = prismFrontMaterial
+                        // item.material = prismFrontMaterial
                         // item.material = cubeMaterial1
                         break
                 }
@@ -371,41 +383,5 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
         
     })
 
-    // Create Hoarding
 
-    
-    let options = {
-        aspectRatio: 818/541,
-        width : 8, 
-        widthSections : 50,
-        opacity : 0.9, 
-        perkiness0to10 : 0.5, 
-        smoothing0to10 : 1, 
-        speed0to1 : 0.02
-    }
-
-    let wobblyPlane = getSimpleWobblePlane(
-        options
-    )
-
-    wobblyPlane.position.set(
-        38.10,
-        4,
-        56
-    )
-
-    const panOptions = { 
-        showGui : false, 
-        u : 1, 
-        v : 1, 
-        zoom : 1, 
-        flipY : true, 
-        textureRotation : 0,
-        animateV : true
-    }
-
-    attachTextures(wobblyPlane, gui, textures.mainHoarding, panOptions)
-
-
-    scene.add(wobblyPlane)
 }

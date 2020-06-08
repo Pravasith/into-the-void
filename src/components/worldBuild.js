@@ -464,7 +464,7 @@ const WorldBuild = () => {
                 delta = clock.getDelta()
             }
 
-            models["vinylPlayr"].scene.rotation.y += 0.001
+            // models["vinylPlayr"].scene.rotation.y += 0.001
             renderer.render(scene, camera)
 
 
@@ -472,7 +472,7 @@ const WorldBuild = () => {
                 controls.update()
             }
 
-            if(pause) return
+            // if(pause) return
             requestAnimationFrame(animate)
             // console.log(pause)
         }

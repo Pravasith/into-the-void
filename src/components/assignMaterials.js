@@ -142,13 +142,18 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
             case "balloon":
 
                 let crystal = mesh.children[0]
+
                 // crystal.material.emissive.set("#29abe2")
                 // crystal.material.emissiveIntensity = (0.6)
-                let crystalLight = createPointlight("#29abe2", 2),
+                let crystalLight1 = createPointlight("#29abe2", 2),
                 crystalLight2 = createPointlight("#fc036f", 2)
 
-                crystal.add(crystalLight)
-                crystalLight.add(crystalLight2)
+                crystal.add(crystalLight1)
+                crystalLight1.add(crystalLight2)
+
+                crystalLight1.position.set(
+                    -7, 7, -7
+                )
 
                 crystalLight2.position.set(
                     7, 7, 7
@@ -169,6 +174,10 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material.emissiveIntensity = (0.6)
                 break
 
+                case "vinylPos":
+                    console.log(mesh.position)
+                    break
+
             case "mushroomRedParts":
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#ff0000")
@@ -187,21 +196,17 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material.emissiveIntensity = (0.6)
                 break
 
+            case "terrain2":
+                mesh.material = basic.clone()
+                mesh.material.visible = false
+                break
+
+            case "boundary":
+                mesh.material = basic.clone()
+                mesh.material.visible = false
+                break
+
             case "glowSpaceShip":
-                // mesh.material = basic.clone()
-                // const panOptions2 = { 
-                //     showGui : false, 
-                //     u : 1, 
-                //     v : 1, 
-                //     zoom : 3, 
-                //     flipY : false, 
-                //     textureRotation : 0,
-                //     animateV : true,
-                //     animateU : true
-                // }
-
-                // attachTextures(mesh, gui, textures.psyTexture, panOptions2)
-
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#29abe2")
                 mesh.material.emissiveIntensity = (0.8)
@@ -213,7 +218,51 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material = glowingRocksMat.clone()
                 // mesh.material.color.set("#000000") 
                 break
-        
+
+            case "elevator":
+                // mesh.material = basic.clone()
+                
+                mesh.material = glowingRocksMat.clone()
+                // mesh.material.color.set("#000000") 
+                break    
+                
+            case "elevatorShaft":
+                // mesh.material = basic.clone()
+                
+                mesh.material = glowingRocksMat.clone()
+                // mesh.material.color.set("#000000") 
+                break  
+
+            case "pinkGlow1":
+                mesh.material = basic.clone()
+                mesh.material.emissive.set("#29abe2")
+                mesh.material.emissiveIntensity = (0.8)
+                break
+
+            case "pinkGlow2":
+                mesh.material = basic.clone()
+                mesh.material.emissive.set("#29abe2")
+                mesh.material.emissiveIntensity = (0.8)
+                break
+
+             
+            case "hoardingPicture":
+                mesh.material = basic
+
+                const panOptions3 = { 
+                    showGui : false, 
+                    u : 0.9, 
+                    v : 0.9, 
+                    zoom : 0.8, 
+                    flipY : true, 
+                    textureRotation : Math.PI,
+                    animateV : false,
+                    animateU : false
+                }
+
+                attachTextures(mesh, gui, textures.mainHoarding, panOptions3)
+                break
+
             default:
                 break
         }

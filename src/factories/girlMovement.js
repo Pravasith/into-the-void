@@ -170,25 +170,17 @@ export const movements = {
 
 
             const boundary = terrain.children.filter(item => item.name === "boundary")[0]
-            // console.log(boundary)
-            let basicMat = new THREE.MeshBasicMaterial({
-                side: THREE.FrontSide,
-                visible : false
-            })
 
-            boundary.material = basicMat
+            if(boundary){
+                const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
 
-            // boundary.material.transparent = true
-            // boundary.material.opacity = 0
-
-            const boundaryIntersection = girlRaycaster2.intersectObject(boundary)
-            // console.log(boundaryIntersection)
-
-            if(boundaryIntersection.length > 0){
-                
-                if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.15
-                else positionStep = 0
-            } // UNCOMMENT - DONOT DELETE
+                if(boundaryIntersection.length > 0){
+                    
+                    if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.15
+                    else positionStep = 0
+                } // UNCOMMENT - DONOT DELETE
+            }
+            
 
             
 
@@ -330,30 +322,53 @@ export const movements = {
             girlToTerrainRaycaster2.set(anchor.position, rayDirection)
 
 
-            const setAnchorYPosWRTTerrain = (rayCaster, mesh) => {
-                const rayMeshIntersection = rayCaster.intersectObject(mesh)
+            const setAnchorYPosWRTTerrain = (rayCasters, meshes) => {
+
+                let intersectionPoints = rayCasters.map((item, i) => {
+                    let intersectionPoint = item.intersectObject(meshes[i])
+                    if(intersectionPoint.length > 0){
+                        return intersectionPoint[0].point.y
+                    }
+                    else return -1
+                })
 
                 
-                if(rayMeshIntersection[0]){
-                    console.log(rayMeshIntersection)
-                    // Sets anchor's y position relative to Terrain topology (height)
-                    anchor.position.y = rayMeshIntersection[0].point.y  + 1.5
-                }
+
+                Array.max = (intersectionPoints) => Math.max.apply(Math, intersectionPoints)
+
+                let maximum = Array.max(intersectionPoints)
+                anchor.position.y = maximum  + 1.47
+                // if(rayMeshIntersection[0]){
+                //     // console.log(rayMeshIntersection)
+                //     // Sets anchor's y position relative to Terrain topology (height)
+                //     anchor.position.y = rayMeshIntersection[0].point.y  + 1.5
+                // }
             }
+
+            let terrainMeshes = []
 
             terrainMesh.traverse(o => {
                 if(o.isMesh){
-                    // if(o.name === "terrain"){
-                    //     setAnchorYPosWRTTerrain(girlToTerrainRaycaster1, o)
-                    // }
+                    if(o.name === "terrain"){
+                        terrainMeshes.push(o)
+                    }
 
                     if(o.name === "terrain2"){
-                        setAnchorYPosWRTTerrain(girlToTerrainRaycaster2, o)
+                        terrainMeshes.push(o)
                     }
                 }
             })
 
-            // setAnchorYPosWRTTerrain(girlToTerrainRaycaster1, )
+            
+
+            setAnchorYPosWRTTerrain(
+                [
+                    girlToTerrainRaycaster1,
+                    girlToTerrainRaycaster2
+                ],
+                terrainMeshes
+            )
+
 
 
 
