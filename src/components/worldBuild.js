@@ -213,7 +213,7 @@ const WorldBuild = () => {
             scene.fog = new THREE.Fog(
                 "#000",
                 30, // near value
-                300 // far value
+                200 // far value
             )
 
             // TEXTURE SKYBOX - FOR WORLD ENV

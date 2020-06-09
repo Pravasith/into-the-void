@@ -26,7 +26,7 @@ export const addLights = (scene) => {
 
     // Lights
     const lightDistance = 5
-    const ambientLight = new THREE.AmbientLight("#ffffff", 0.6),
+    const ambientLight = new THREE.AmbientLight("#ffffff", 0.8),
         dirLight = new THREE.DirectionalLight("#ffffff", 0.2)
 
 
