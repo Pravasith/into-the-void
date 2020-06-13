@@ -1,6 +1,8 @@
 // flex-row -centre mixin:
 @import "./vars";
-@import url('https://fonts.googleapis.com/css?family=Athiti|Open+Sans|Prata');
+@import url('https://db.onlinewebfonts.com/c/30a71dcf9a1c39558ca4e97c92a4b2fa?family=Noe+Display+Bold');
+
+
 
 
 // FLEX MIXINS
@@ -17,6 +19,255 @@
     justify-content: center;
     align-items: center;
 }
+
+
+// FLEXBOX STYLES
+
+// ROW CLASSES
+.flexRow-Centre{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+// DIRECTIONS
+.flexRow-N{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    align-items: flex-start;
+}
+
+.flexRow-E{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    justify-content: flex-end;
+}
+
+.flexRow-S{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    align-items: flex-end;
+}
+
+.flexRow-W{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    justify-content: flex-start;
+}
+
+// SUBDIRECTIONS
+.flexRow-NE{
+    display: flex;
+    flex-direction: row;
+
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.flexRow-SE{
+    display: flex;
+    flex-direction: row;
+
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.flexRow-SW{
+    display: flex;
+    flex-direction: row;
+
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.flexRow-NW{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+// COLUMN CLASSES
+.flexCol-Centre{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+// DIRECTIONS
+.flexCol-N{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    justify-content: flex-start;
+}
+
+.flexCol-E{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    align-items: flex-end;
+}
+
+.flexCol-S{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    justify-content: flex-end;
+}
+
+.flexCol-W{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    align-items: flex-start;
+}
+
+// SUBDIRECTIONS
+.flexCol-NE{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.flexCol-SE{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.flexCol-SW{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.flexCol-NW{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+
+// POSITIONS
+.posRel{
+    position: relative;
+}
+
+.posAbs-NE{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.posAbs-SE{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.posAbs-SW{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.posAbs-NW{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+@mixin blueShadow {
+    box-shadow: 2px 2px 13px 2px #a96ee0;
+}
+  
+
+
+
+body{
+    margin: 0;
+    height: 100vh;
+    
+}
+
+canvas{
+    display: block;
+}
+
+
+h1{
+    color: $darkestGrey;
+    font-family: "Noe Display Bold", serif;
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+h2{
+    color: $darkestGrey;
+    font-family: "Calibre", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.35em;
+    margin: 0;
+    padding: 0;
+}
+
+
+h3{
+    color: $darkestGrey;
+    font-family: "Noe Display Bold", serif;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0;
+}
+
+p{
+    color: $darkestGrey;
+    font-family: "Calibre", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @mixin scrollStyles{
   
@@ -158,98 +409,6 @@
 
 
 
-@mixin ignoreDefaultStyles{
-    body{
-    margin: 0;
-    // background: linear-gradient(0deg, $white, $lightGrey);
-    // background: $white;
-    }
-
-    a{
-    color: $darkGrey;
-    }
-}
-
-@mixin includeCommonStyles {
-
-    ::selection{
-        background: $highLightRed;
-        color: $white;
-    }
-
-    h1, h2, h3, h4, h5, h6, p, div{
-        // font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        font-family: 'Open Sans', sans-serif;
-    }
-
-    // @font-face {
-    //     font-family: 'quotusThin'; /*a name to be used later*/
-    //     src: url('../fonts/Quotus-Thin.ttf'); /*URL to font*/
-    // }
-
-    h1{
-        // font-family: 'EB Garamond', serif;
-        font-family: 'Prata', serif;
-        margin: 0;
-        font-size: 0.9em;
-        font-weight: 600;
-    }
-
-    h3{
-        font-size: 1em;
-        font-weight: 600;
-        color: $black;
-                margin: 0;
-        line-height: 1.2;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-
-    .hide{
-        display: none;
-    }
-
-
-    // fonts
-    body{
-        // background: $white;
-    }
-
- 
-    p{
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        font-size: 0.9em;
-        font-weight: 500;
-        margin: 0.2em 0;
-        color: $black;
-    }
-
-
-    a{
-        text-decoration: none;
-    }
-
-
-}
-
-
-@mixin inputFields{
-    background: $semiDarkGrey;
-    color: $white;
-    padding: 0.5em 1em;
-    border: none;
-    width: 80%;
-    outline: none;
-    border-radius: 0.5em;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    border: 0.2em solid $white;
-    font-weight: 600;
-
-    &:focus{
-        border-color: $black;
-    }
-}
-
-
 @mixin box_shadow_light{
     box-shadow: 0px 9px 13px 2px rgba(0, 0, 0, 0.02);
 }
@@ -272,9 +431,6 @@
   
 }
 
-@mixin blueShadow {
-  box-shadow: 2px 2px 13px 2px rgba(0, 179, 255, 0.2)
-}
 
 @mixin  inShadow {
   box-shadow: inset 3px 3px 11px 1px #d0d0d0;

@@ -12,7 +12,7 @@ import createAxes from '../factories/axes'
 
 
 // import { PhysicsContext } from '../utils/contexts/physicsContexts'
-import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon } from '../assets/images'
+import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon, LoadingIcon } from '../assets/images'
 // import { colors, skyboxGradients, albumSongs, hoardingTextures } from './resources'
 // import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
@@ -38,7 +38,6 @@ import { moveBalloon } from './env/balloon'
 
 const WorldBuild = () => {
 
-    const [ newObj, setNewObj ] = useState([])
     const [ scene, setScene ] = useState(null)
     const [ camera, setCamera ] = useState(null)
 
@@ -55,7 +54,6 @@ const WorldBuild = () => {
     const [ stats, setStats ] = useState(null)
 
     // const [ slowKey, setSlowKey ] = useState(null)
-    
 
     let keys = {},
         prevCurrKey = [],
@@ -99,7 +97,6 @@ const WorldBuild = () => {
 
             sceneAnimations.init(girl, animations)
 
-            // console.log(keys)
             animate()
         }
     }
@@ -141,7 +138,7 @@ const WorldBuild = () => {
 
             let stats = createStats()
             setStats(stats)
-            document.body.appendChild(stats.domElement)
+            // document.body.appendChild(stats.domElement)
 
             renderer = new THREE.WebGLRenderer({
                 antialias: true,
@@ -432,77 +429,46 @@ const WorldBuild = () => {
 
     return (
         <div
-            className = "parent-class"  
-            
+            className = "parent-class"
             >
             <div
-                className="tools-holster"
-                tabIndex="0"
+                className = "sub-menu"
+                tabIndex = "0"
                 >
-                {/* <p>{addVelocityStats.stats.timeElapsed}</p> */}
-                <div className="icon-wrap">
-
-                    <div className="icon-wrap-abs">
-                        {/* Background dummy div */}
-                            <div className="icon-wrap-gradient">
-                            </div>
-                        {/* Background dummy div */}
-
-                        <div className="icon-wrap-gradient-abs">
-                            <GridIcon />
-                        </div>
-                    </div>
-
-                    <div className="side-icon-wrap hide">
-                        <div className="side-icon-wrap-abs"> 
-                        </div>
-                    </div>
-                    
-                </div>
-
-                <div className="icon-wrap">
-                    <div className="icon-wrap-abs">
-                        {/* Background dummy div */}
-                            <div className="icon-wrap-gradient">
-                            </div>
-                        {/* Background dummy div */}
-
-                        <div className="icon-wrap-gradient-abs">
-                            <ObjRelatedIcon />
-                        </div>
-                    </div>
-
-                    <div className="side-icon-wrap hide">
-                        <div className="side-icon-wrap-abs"> 
-                            <div 
-                                className="sub-option"
-                                onClick={() => {
-
-                                    var material = new THREE.MeshLambertMaterial( {color: "#eb4034", emissive: "#eb4034", emissiveIntensity: 5,  side: THREE.DoubleSide} );
-
-                                    let sphereG = new THREE.SphereGeometry(1, 10, 10)
-                                    let sphere = new THREE.Mesh(sphereG, material)
-                                    scene.add( sphere );
-
-                                    sphere.position.set(0, 0, 0)
-
-                                    sphere.castShadow = true
-
-                                }} 
-                                >
-                                <AddObjIcon />
+                <div className="loading-screen">
+                    <div className="main-logo flexCol-Centre">
+                        <div className="loading-items flexCol-Centre">
+                            <div className="loading-icon">
+                                <LoadingIcon/>
                             </div>
 
-                            <div 
-                                className="sub-option"
-                                onClick= {() => {
-                                    // console.log(terrain)
-                                }}
-                                >
-                                <RemoveObjIcon />
-
-                                {/* <img src="https://xi-upload.s3.amazonaws.com/3dprinted.jpg" alt=""/> */}
+                            <div className="main-loading-text">
+                                <h2 className="loading-title">
+                                    Docking
+                                </h2>
+                                <h2 className="loading-percentage">
+                                    100%
+                                </h2>
                             </div>
+
+                            <div className="main-loading-text">
+                                <h2 className="loading-title">
+                                    Patching
+                                </h2>
+                                <h2 className="loading-percentage">
+                                    100%
+                                </h2>
+                            </div>
+
+                            <div className="main-loading-text">
+                                <h2 className="loading-title">
+                                    Stabilizing
+                                </h2>
+                                <h2 className="loading-percentage">
+                                    100%
+                                </h2>
+                            </div>
+
                         </div>
                     </div>
                 </div>
