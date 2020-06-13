@@ -5,13 +5,10 @@ import * as THREE from 'three'
 import { Howl, Howler } from 'howler'
 import Stats from "stats.js"
 
-// import { addMass, removeMass } from '../factories/massObjects'
-// import { applyVelocity, displace, applyAcceleration } from '../factories/physics'
 
 import createAxes from '../factories/axes'
 
 
-// import { PhysicsContext } from '../utils/contexts/physicsContexts'
 import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon, LoadingIcon } from '../assets/images'
 // import { colors, skyboxGradients, albumSongs, hoardingTextures } from './resources'
 // import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
@@ -22,13 +19,11 @@ import { loadModelsTexturesAndEnvMaps } from '../factories/loadModels'
 import { getWater } from './env/water'
 import { movements } from '../factories/girlMovement'
 import { sceneAnimations } from '../factories/animations'
-// import { WorldContext } from '../utils/contexts/worldContext'
-import {  getSimpleWobblePlane } from './env/water2'
 import { addFloydElements } from '../factories/floydElements'
-import { createDingles } from '../factories/dingles'
+
 
 import "../assets/scss/world.scss"
-import { attachTextures } from '../factories/textures'
+
 import { materialsToSeaShack } from './assignMaterials'
 import { addLights } from './env/lights'
 import { addFishes } from '../factories/animateFish'
@@ -63,8 +58,6 @@ const WorldBuild = () => {
 
     const canvasWrapper = useRef(null)
 
-    // const { addVelocityStats, dispatch } = useContext(PhysicsContext)
-    // const { keys, dispatch } = useContext(WorldContext)
 
     useEffect(() => {
         init()
@@ -431,6 +424,8 @@ const WorldBuild = () => {
         <div
             className = "parent-class"
             >
+
+                
             <div
                 className = "sub-menu"
                 tabIndex = "0"
@@ -472,6 +467,8 @@ const WorldBuild = () => {
                         </div>
                     </div>
                 </div>
+            
+            
             </div>
 
             <div

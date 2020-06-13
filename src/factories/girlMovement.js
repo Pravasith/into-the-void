@@ -219,10 +219,9 @@ export const movements = {
                 }
             }
 
+
+
             
-
-
-
 
             if(keys[87]){ // W
         
