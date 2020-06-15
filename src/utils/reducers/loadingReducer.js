@@ -1,15 +1,15 @@
-export const velocityReducer = (state, action) => {
+export const loadingReducer = (state, action) => {
     switch (action.type){
-        case "ADD_VELOCITY":
+        case "ON_PROGRESS":
             return {
                 ...state,
-                stats : action.stats
+                percentLoaded : action.percentLoaded
             }
 
-        case "ADD_1":
+        case "LOADING_COMPLETE":
             return {
                 ...state,
-                x : action.x
+                loadingDone : true
             }
 
         default :

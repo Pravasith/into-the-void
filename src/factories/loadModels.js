@@ -1,7 +1,19 @@
 import * as THREE from 'three'
 import { s3URLs, modelLinkURLs, envMapURLs, imageLinkURLs } from "../components/resources"
 
-export const loadModelsTexturesAndEnvMaps = (module) => {
+
+
+
+
+export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
+
+
+    dispatch(
+        {
+            type : "ON_PROGRESS", 
+            percentLoaded : 0
+        }
+    )
 
     // MODEL LOADER
     const gltfLoader = new module.GLTFLoader()
@@ -33,6 +45,15 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
             envTextures : {}
         }
 
+    const dispatchLoadingData = () => {
+
+        dispatch(
+            {
+                type : "ON_PROGRESS",
+                percentLoaded : loadItemCount / totalItemsToLoad * 100
+            }
+        )
+    }
 
 
     return new Promise((resolve, reject) => {
@@ -47,6 +68,7 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
                 (gltf) => {
                     models[key.split(".")[0]] = gltf
                     loadItemCount++
+                    dispatchLoadingData()
 
                     allLoadedItemsData = {
                         ...allLoadedItemsData,
@@ -66,7 +88,7 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
                 },
                 // called while loading is progressing
                 (xhr) => {
-                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
+                    // console.log( 'Models ' + ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
                 },
                 // called when loading has errors
                 (error) => {
@@ -90,6 +112,7 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
                     textures[key.split(".")[0]] = texture
 
                     loadItemCount++
+                    dispatchLoadingData()
 
                     allLoadedItemsData = {
                         ...allLoadedItemsData,
@@ -105,7 +128,7 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
                 },
                 // called while loading is progressing
                 (xhr) => {
-                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
+                    // console.log( 'Textures ' +  ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
                 },
                 // called when loading has errors
                 (error) => {
@@ -130,6 +153,7 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
                     envTextures[key] = envTexture
 
                     loadItemCount++
+                    dispatchLoadingData()
 
                     allLoadedItemsData = {
                         ...allLoadedItemsData,
@@ -145,7 +169,7 @@ export const loadModelsTexturesAndEnvMaps = (module) => {
                 },
                 // called while loading is progressing
                 (xhr) => {
-                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
+                    // console.log( 'Envs ' +  ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
                 },
                 // called when loading has errors
                 (error) => {

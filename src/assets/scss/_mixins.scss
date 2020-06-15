@@ -1,8 +1,7 @@
 // flex-row -centre mixin:
 @import "./vars";
 @import url('https://db.onlinewebfonts.com/c/30a71dcf9a1c39558ca4e97c92a4b2fa?family=Noe+Display+Bold');
-
-
+@import url('https://db.onlinewebfonts.com/c/c936f19b94fa45553ab39066333e00aa?family=Space+Age');
 
 
 // FLEX MIXINS
@@ -243,6 +242,15 @@ h3{
     color: $darkestGrey;
     font-family: "Noe Display Bold", serif;
     font-size: 1.2em;
+    margin: 0;
+    padding: 0;
+}
+
+h5{
+    color: $white;
+    font-family: "Space Age", serif;
+    font-size: 2em;
+    font-weight: 300;
     margin: 0;
     padding: 0;
 }

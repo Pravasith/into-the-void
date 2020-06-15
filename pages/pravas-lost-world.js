@@ -1,8 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import WorldBuild from '../src/components/worldBuild'
-// import { PhysicsContextProvider } from '../src/utils/contexts/physicsContexts'
-import { WorldContextProvider } from '../src/utils/contexts/worldContext'
+import { LoadingContextProvider } from '../src/utils/contexts/loadingContexts'
 
 const PravasWorld = () => {
     return (
@@ -12,9 +11,9 @@ const PravasWorld = () => {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
-                <WorldContextProvider>
-                    <WorldBuild />
-                </WorldContextProvider>
+            <LoadingContextProvider>
+                <WorldBuild />
+            </LoadingContextProvider>
         </div>
     )
 }

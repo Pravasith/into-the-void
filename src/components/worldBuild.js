@@ -2,14 +2,12 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import * as THREE from 'three'
 
 
-import { Howl, Howler } from 'howler'
+
 import Stats from "stats.js"
 
 
 import createAxes from '../factories/axes'
 
-
-import { GridIcon, AddObjIcon, ObjRelatedIcon, RemoveObjIcon, LoadingIcon } from '../assets/images'
 // import { colors, skyboxGradients, albumSongs, hoardingTextures } from './resources'
 // import { totesRandoInt, totesRando } from '../factories/math/usefulFuncs'
 import { addSkyBoxes } from './env/sky'
@@ -28,6 +26,11 @@ import { materialsToSeaShack } from './assignMaterials'
 import { addLights } from './env/lights'
 import { addFishes } from '../factories/animateFish'
 import { moveBalloon } from './env/balloon'
+import { LoadingContext } from '../utils/contexts/loadingContexts'
+
+// Components
+import LoadingScreen from './loadingScreen'
+import SubMenu from './subMenu'
 
 
 
@@ -48,6 +51,7 @@ const WorldBuild = () => {
     const [ gui, setGui ] = useState(null)
     const [ stats, setStats ] = useState(null)
 
+    const { progress, dispatch } = useContext(LoadingContext)
     // const [ slowKey, setSlowKey ] = useState(null)
 
     let keys = {},
@@ -90,6 +94,7 @@ const WorldBuild = () => {
 
             sceneAnimations.init(girl, animations)
 
+            console.log(progress.loadingDone)
             animate()
         }
     }
@@ -154,7 +159,7 @@ const WorldBuild = () => {
             setScene(scene)
 
             // Load models like terrain, character, yada yada
-            await loadModelsTexturesAndEnvMaps(module)
+            await loadModelsTexturesAndEnvMaps(module, dispatch)
             .then((loadedData) => {
                 models = loadedData.models
                 textures = loadedData.textures
@@ -430,42 +435,28 @@ const WorldBuild = () => {
                 className = "sub-menu"
                 tabIndex = "0"
                 >
-                <div className="loading-screen">
-                    <div className="main-logo flexCol-Centre">
-                        <div className="loading-items flexCol-Centre">
-                            <div className="loading-icon">
-                                <LoadingIcon/>
-                            </div>
+                <div 
+                    className={
+                        progress.loadingDone 
+                        ?
+                        "loading-screen hide"
+                        :
+                        "loading-screen"
+                    }
+                    >
+                        <LoadingScreen/>
+                </div>
 
-                            <div className="main-loading-text">
-                                <h2 className="loading-title">
-                                    Docking
-                                </h2>
-                                <h2 className="loading-percentage">
-                                    100%
-                                </h2>
-                            </div>
-
-                            <div className="main-loading-text">
-                                <h2 className="loading-title">
-                                    Patching
-                                </h2>
-                                <h2 className="loading-percentage">
-                                    100%
-                                </h2>
-                            </div>
-
-                            <div className="main-loading-text">
-                                <h2 className="loading-title">
-                                    Stabilizing
-                                </h2>
-                                <h2 className="loading-percentage">
-                                    100%
-                                </h2>
-                            </div>
-
-                        </div>
-                    </div>
+                <div
+                    className={
+                        progress.loadingDone 
+                        ?
+                        "sub-menu-screen"
+                        :
+                        "sub-menu-screen hide"
+                    }
+                    >
+                        <SubMenu/>
                 </div>
             
             
@@ -473,7 +464,13 @@ const WorldBuild = () => {
 
             <div
                 ref = {canvasWrapper}
-                className="display-screen"
+                className={
+                    progress.loadingDone 
+                    ?
+                    "display-screen"
+                    :
+                    "display-screen hide"
+                }
                 onClick = {() => {
                     if(controls && typeOfControls === "pointerLock"){
                         if(!controls.isLocked)

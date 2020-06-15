@@ -106,16 +106,24 @@ export const SideBarButton = (props) => (
 
 
 export const albumSongs = {
-    darkSideOfTheMoon: {
-        speakToMe : songsPath + "speakToMe.mp3",
-        breatheInTheAir : songsPath + "breatheInTheAir.mp3",
-        onTheRun : songsPath + "onTheRun.mp3",
-        time : songsPath + "time.mp3",
-        theGreatGigInTheSky : songsPath + "theGreatGigInTheSky.mp3",
-        money : songsPath + "money.mp3",
-        usAndThem: songsPath + "usAndThem.mp3",
-        anyColorYouLike : songsPath + "anyColorYouLike.mp3",
-        brainDamage : songsPath + "brainDamage.mp3",
-        eclipse : songsPath + "eclipse.mp3",
+    // darkSideOfTheMoon: {
+    //     speakToMe : songsPath + "speakToMe.mp3",
+    //     breatheInTheAir : songsPath + "breatheInTheAir.mp3",
+    //     onTheRun : songsPath + "onTheRun.mp3",
+    //     time : songsPath + "time.mp3",
+    //     theGreatGigInTheSky : songsPath + "theGreatGigInTheSky.mp3",
+    //     money : songsPath + "money.mp3",
+    //     usAndThem: songsPath + "usAndThem.mp3",
+    //     anyColorYouLike : songsPath + "anyColorYouLike.mp3",
+    //     brainDamage : songsPath + "brainDamage.mp3",
+    //     eclipse : songsPath + "eclipse.mp3",
+    // }
+
+    aviators : {
+        flora : songsPath + "floraAviators.mp3",
+        // flora :  songsPath + "eclipse.mp3",
+
+       
+        cascade : songsPath + "cascadeAviators.mp3"
     }
 }
