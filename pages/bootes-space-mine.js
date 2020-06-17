@@ -4,7 +4,7 @@ import WorldBuild from '../src/components/worldBuild'
 import { LoadingContextProvider } from '../src/utils/contexts/loadingContexts'
 
 
-const PravasWorld = () => {
+const BootesMine = () => {
     return (
         <div>
             <Head>
@@ -21,4 +21,4 @@ const PravasWorld = () => {
 }
 
 
-export default PravasWorld
+export default BootesMine

@@ -35,6 +35,7 @@ import SubMenu from './subMenu'
 import Volume from './volume'
 import Twitter from './twitterLink'
 import { albumSongs } from './resources'
+import Controls from './controls'
 
 const sound = new Howl({
     src: [
@@ -88,7 +89,8 @@ const WorldBuild = () => {
                 if(typeOfControls === "pointerLock"){
 
                     let menu = document.getElementById("main-menu"),
-                        volume = document.getElementById("volume")
+                        volume = document.getElementById("volume"),
+                        controlsPanel = document.getElementById("controls")
 
                     controls.addEventListener("lock", () => {
                         pause = false
@@ -102,12 +104,13 @@ const WorldBuild = () => {
                         }
 
                         menu.style.display = "none"
-
+                        controlsPanel.style.display = "block"
                     })
                     
                     controls.addEventListener( 'unlock', function () {
                         pause = true
                         menu.style.display = "block"
+                        controlsPanel.style.display = "none"
                     })
                 }
     
@@ -543,7 +546,12 @@ const WorldBuild = () => {
                 <Twitter/>
             </div>
 
-            
+            <div 
+                className="controls-wrap"
+                id = "controls"
+                >
+                <Controls/>
+            </div>
             
         </div>
     )

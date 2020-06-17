@@ -33,7 +33,7 @@ const SubMenu = (props) => {
                                         </div>
 
                                         <h5 className="click-to-play">
-                                            Click here to play
+                                            Click to start
                                         </h5>
                                     </div>
                                 </div>

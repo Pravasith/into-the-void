@@ -148,14 +148,18 @@ p{
         font-weight: 200;
         font-style: normal;
         font-size: 0.9em;
-        width: 12em;
+
     }
 
     .head-phones{
-        left: 0;
+        right: 0;
         top: 0;
         height: 3em;
         margin: 2em;
+
+        p{
+            width: 12em;
+        }
     }
 
     .volume-wrap{
@@ -163,7 +167,7 @@ p{
     }
 
     .volume{
-        right: 0;
+        left: 0;
         top: 0;
         height: 3em;
         margin: 2em;
@@ -239,6 +243,54 @@ p{
             }
         }
     }
+
+
+    .controls-wrap{
+        display: none;
+    }
+
+
+    .controls{
+
+        top: 23%;
+        padding: 2em;
+        border-top-right-radius: 1.5em;
+        border-bottom-right-radius: 1.5em;
+        // background: rgba(0, 0, 0, 0.75);
+
+       
+
+        .controls-box{
+            @include flexCentreCol;
+            align-items: flex-start;
+
+            .controls-text{
+                margin-bottom: 1em;
+                font-size: 1.5em;
+                // -webkit-text-stroke: 0.05em black;
+            }
+
+            .key-wrap{
+                @include flexCentreRow;
+                max-height: 2em;
+                margin: 0.5em 0;
+                margin-bottom: 0.7em;
+
+                .key-icon{
+                    width: 2em;
+                    margin-right: 0.75em;
+                }
+            }
+
+            .simp-buttons{
+                margin-bottom: 0em;
+            }
+
+
+        }
+    }
+
+
 
 
     .centre-div{

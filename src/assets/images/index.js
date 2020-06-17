@@ -384,3 +384,241 @@ export function PlayButtonIcon() {
     </svg>
   );
 }
+
+export function EscButtonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 48.13 41.63"
+      version="1"
+      viewBox="0 0 48.13 41.63"
+    >
+      <g>
+        <path
+          d="M36.79 39.63H11.34C6.18 39.63 2 35.45 2 30.29V11.34C2 6.18 6.18 2 11.34 2h25.45c5.16 0 9.34 4.18 9.34 9.34v18.95c0 5.16-4.18 9.34-9.34 9.34z"
+          opacity="0.5"
+        ></path>
+        <g fill="#FFF">
+          <path d="M17.01 9.27v1.98h-5.16v2.37h4.68v1.93h-4.68v2.59h5.16v2H9.63V9.27h7.38zM20.31 17.8c.18.57.67.87 1.33.87.67 0 1.12-.27 1.12-.78 0-.35-.25-.53-.8-.67l-1.59-.35c-1.2-.28-2.05-.9-2.05-2.23 0-1.54 1.38-2.57 3.15-2.57 2 0 3.1.96 3.37 2.44h-2.09c-.14-.44-.51-.78-1.24-.78-.53 0-1.04.25-1.04.74 0 .32.21.5.71.62l1.63.37c1.38.34 2.11 1.1 2.11 2.3 0 1.61-1.4 2.57-3.24 2.57-1.93 0-3.29-.92-3.53-2.53h2.16zM29.69 12.06c1.98 0 3.24 1.17 3.47 2.85H31c-.12-.6-.6-.97-1.31-.97-1.01 0-1.63.92-1.63 2.27 0 1.33.62 2.25 1.63 2.25.71 0 1.19-.37 1.31-.97h2.16c-.23 1.7-1.49 2.85-3.47 2.85-2.25 0-3.81-1.68-3.81-4.13 0-2.47 1.56-4.15 3.81-4.15z"></path>
+        </g>
+      </g>
+      <g
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="3"
+      >
+        <path
+          stroke="#29ABE2"
+          d="M46.13 11.34v18.95c0 5.16-4.18 9.34-9.34 9.34H11.34C6.18 39.63 2 35.45 2 30.29"
+        ></path>
+        <path
+          stroke="#FF7BAC"
+          d="M2 30.29V11.34C2 6.18 6.18 2 11.34 2h25.45c5.16 0 9.34 4.18 9.34 9.34"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
+export function DButtonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 41.63 41.63"
+      version="1"
+      viewBox="0 0 41.63 41.63"
+    >
+      <g>
+        <path
+          d="M30.29 39.63H11.34C6.18 39.63 2 35.45 2 30.29V11.34C2 6.18 6.18 2 11.34 2h18.95c5.16 0 9.34 4.18 9.34 9.34v18.95c0 5.16-4.18 9.34-9.34 9.34z"
+          opacity="0.5"
+        ></path>
+        <path
+          fill="#FFF"
+          d="M9.63 9.27h3.84c3.29 0 5.37 2.13 5.37 5.44 0 3.31-2.07 5.44-5.37 5.44H9.63V9.27zm3.75 8.88c2.07 0 3.21-1.33 3.21-3.44 0-2.13-1.13-3.45-3.21-3.45h-1.51v6.89h1.51z"
+        ></path>
+      </g>
+      <g
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="3"
+      >
+        <path
+          stroke="#29ABE2"
+          d="M39.63 11.34v18.95c0 5.16-4.18 9.34-9.34 9.34H11.34C6.18 39.63 2 35.45 2 30.29"
+        ></path>
+        <path
+          stroke="#FF7BAC"
+          d="M2 30.29V11.34C2 6.18 6.18 2 11.34 2h18.95c5.16 0 9.34 4.18 9.34 9.34"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
+export function SButtonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 41.63 41.63"
+      version="1"
+      viewBox="0 0 41.63 41.63"
+    >
+      <g>
+        <path
+          d="M30.29 39.62H11.34C6.18 39.62 2 35.44 2 30.28V11.33c0-5.16 4.18-9.34 9.34-9.34h18.95c5.16 0 9.34 4.18 9.34 9.34v18.95c0 5.16-4.18 9.34-9.34 9.34z"
+          opacity="0.5"
+        ></path>
+        <path
+          fill="#FFF"
+          d="M11.22 17.04c.3.96 1.1 1.4 2.16 1.4 1.1 0 1.82-.5 1.82-1.36 0-.66-.39-1.01-1.33-1.22l-1.95-.44c-1.56-.35-2.76-1.19-2.76-2.98 0-1.97 1.63-3.35 3.92-3.35 2.48 0 3.92 1.31 4.27 3.15H15.1c-.25-.73-.87-1.29-2-1.29-1.03 0-1.72.5-1.72 1.28 0 .62.41.99 1.22 1.19l1.98.46c1.77.41 2.85 1.42 2.85 3.06 0 2.11-1.74 3.38-4.04 3.38-2.43 0-4.15-1.2-4.52-3.28h2.35z"
+        ></path>
+      </g>
+      <g
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="3"
+      >
+        <path
+          stroke="#29ABE2"
+          d="M39.63 11.33v18.95c0 5.16-4.18 9.34-9.34 9.34H11.34C6.18 39.62 2 35.44 2 30.28"
+        ></path>
+        <path
+          stroke="#FF7BAC"
+          d="M2 30.28V11.33c0-5.16 4.18-9.34 9.34-9.34h18.95c5.16 0 9.34 4.18 9.34 9.34"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
+export function AButtonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 41.63 41.63"
+      version="1"
+      viewBox="0 0 41.63 41.63"
+    >
+      <g>
+        <path
+          d="M30.29 39.61H11.34C6.18 39.61 2 35.43 2 30.27V11.32c0-5.16 4.18-9.34 9.34-9.34h18.95c5.16 0 9.34 4.18 9.34 9.34v18.95c0 5.16-4.18 9.34-9.34 9.34z"
+          opacity="0.5"
+        ></path>
+        <path
+          fill="#FFF"
+          d="M15.26 9.25l4.16 10.88h-2.3l-.97-2.62h-4.07l-.96 2.62H8.85l4.16-10.88h2.25zm-2.48 6.35h2.66l-1.33-3.61-1.33 3.61z"
+        ></path>
+      </g>
+      <g
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="3"
+      >
+        <path
+          stroke="#29ABE2"
+          d="M39.63 11.32v18.95c0 5.16-4.18 9.34-9.34 9.34H11.34C6.18 39.61 2 35.43 2 30.27"
+        ></path>
+        <path
+          stroke="#FF7BAC"
+          d="M2 30.27V11.32c0-5.16 4.18-9.34 9.34-9.34h18.95c5.16 0 9.34 4.18 9.34 9.34"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
+export function WButtonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 41.63 41.63"
+      version="1"
+      viewBox="0 0 41.63 41.63"
+    >
+      <g>
+        <path
+          d="M29.92 39.97H10.97c-5.16 0-9.34-4.18-9.34-9.34V11.68c0-5.16 4.18-9.34 9.34-9.34h18.95c5.16 0 9.34 4.18 9.34 9.34v18.95c0 5.16-4.18 9.34-9.34 9.34z"
+          opacity="0.5"
+        ></path>
+        <path
+          fill="#FFF"
+          d="M16.17 9.61l1.88 7.32 1.79-7.32h2.23l-2.83 10.88h-2.07l-1.91-7.17-1.91 7.17h-2.07L8.43 9.61h2.29l1.77 7.32 1.91-7.32h1.77z"
+        ></path>
+      </g>
+      <g
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="3"
+      >
+        <path
+          stroke="#29ABE2"
+          d="M39.26 11.68v18.95c0 5.16-4.18 9.34-9.34 9.34H10.97c-5.16 0-9.34-4.18-9.34-9.34"
+        ></path>
+        <path
+          stroke="#FF7BAC"
+          d="M1.63 30.63V11.68c0-5.16 4.18-9.34 9.34-9.34h18.95c5.16 0 9.34 4.18 9.34 9.34"
+        ></path>
+      </g>
+    </svg>
+  );
+}
+
+export function MouseButtonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 41.63 51.63"
+      version="1"
+      viewBox="0 0 41.63 51.63"
+    >
+      <path
+        d="M18.13 49.34c-9.11 0-16.5-7.39-16.5-16.5v-14c0-9.11 7.39-16.5 16.5-16.5s16.5 7.39 16.5 16.5v14c0 9.11-7.39 16.5-16.5 16.5z"
+        opacity="0.5"
+      ></path>
+      <g>
+        <path
+          fill="none"
+          stroke="#FF7BAC"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
+          d="M1.63 32.84v-14c0-9.11 7.39-16.5 16.5-16.5h0c9.11 0 16.5 7.39 16.5 16.5"
+        ></path>
+        <path
+          fill="none"
+          stroke="#29ABE2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
+          d="M34.63 18.84v14c0 9.11-7.39 16.5-16.5 16.5h0c-9.11 0-16.5-7.39-16.5-16.5"
+        ></path>
+        <path fill="#FFF" d="M17.63 6.34c-6.63 0-12 5.82-12 13h12v-13z"></path>
+      </g>
+    </svg>
+  );
+}
