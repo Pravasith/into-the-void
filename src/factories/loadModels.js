@@ -58,7 +58,6 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
 
     return new Promise((resolve, reject) => {
 
-
         // Loading models
         let models = {}
 
@@ -182,7 +181,6 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
             )
         })
 
-        
     })
  
 }

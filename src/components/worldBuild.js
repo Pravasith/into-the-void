@@ -30,8 +30,19 @@ import { LoadingContext } from '../utils/contexts/loadingContexts'
 
 // Components
 import LoadingScreen from './loadingScreen'
+import { MainLogoIcon } from '../assets/images'
 import SubMenu from './subMenu'
+import Volume from './volume'
+import Twitter from './twitterLink'
+import { albumSongs } from './resources'
 
+const sound = new Howl({
+    src: [
+        albumSongs.aviators.flora
+    ],
+    loop: true,
+    volume: 0.5
+})
 
 
 const WorldBuild = () => {
@@ -52,7 +63,8 @@ const WorldBuild = () => {
     const [ stats, setStats ] = useState(null)
 
     const { progress, dispatch } = useContext(LoadingContext)
-    // const [ slowKey, setSlowKey ] = useState(null)
+
+    
 
     let keys = {},
         prevCurrKey = [],
@@ -68,34 +80,48 @@ const WorldBuild = () => {
     },[])
 
     useEffect(() => {
+
         // If init() is finished executing
-        if(animationPresets){
+        if(initComplete){
+            if(animationPresets){
 
-            if(typeOfControls === "pointerLock"){
-                controls.addEventListener("lock", () => {
-                    pause = false
-                    if(firstMouseLock){
-                        animate()
-                    }
-                    else firstMouseLock = true
+                if(typeOfControls === "pointerLock"){
+
+                    let menu = document.getElementById("main-menu"),
+                        volume = document.getElementById("volume")
+
+                    controls.addEventListener("lock", () => {
+                        pause = false
+                        if(firstMouseLock){
+                            animate()
+                        }
+                        else {
+                            sound.play()
+                            firstMouseLock = true
+                            volume.style.display = "block"
+                        }
+
+                        menu.style.display = "none"
+
+                    })
                     
-                })
-                
-                controls.addEventListener( 'unlock', function () {
-                    pause = true
-                })
+                    controls.addEventListener( 'unlock', function () {
+                        pause = true
+                        menu.style.display = "block"
+                    })
+                }
+    
+                // movements initiation -  see girlMovement.js file
+                movements.init(animationPresets)
+    
+                let girl = animationPresets.models["currentCharacter"],
+                    animations = animationPresets.models["currentCharacter"].animations
+    
+                sceneAnimations.init(girl, animations)
+    
+                animate()
+                // pause = true
             }
-
-            // movements initiation -  see girlMovement.js file
-            movements.init(animationPresets)
-
-            let girl = animationPresets.models["currentCharacter"],
-                animations = animationPresets.models["currentCharacter"].animations
-
-            sceneAnimations.init(girl, animations)
-
-            console.log(progress.loadingDone)
-            animate()
         }
     }
     ,[initComplete]
@@ -430,47 +456,9 @@ const WorldBuild = () => {
             className = "parent-class"
             >
 
-                
-            <div
-                className = "sub-menu"
-                tabIndex = "0"
-                >
-                <div 
-                    className={
-                        progress.loadingDone 
-                        ?
-                        "loading-screen hide"
-                        :
-                        "loading-screen"
-                    }
-                    >
-                        <LoadingScreen/>
-                </div>
-
-                <div
-                    className={
-                        progress.loadingDone 
-                        ?
-                        "sub-menu-screen"
-                        :
-                        "sub-menu-screen hide"
-                    }
-                    >
-                        <SubMenu/>
-                </div>
-            
-            
-            </div>
-
             <div
                 ref = {canvasWrapper}
-                className={
-                    progress.loadingDone 
-                    ?
-                    "display-screen"
-                    :
-                    "display-screen hide"
-                }
+                className="display-screen"
                 onClick = {() => {
                     if(controls && typeOfControls === "pointerLock"){
                         if(!controls.isLocked)
@@ -519,13 +507,44 @@ const WorldBuild = () => {
     
                     // let keyPress = keys
                     // delete keyPress[e.keyCode]
-    
+
                     // setKeys(keyPress)
-    
+
                     delete keys[e.keyCode]
                 }}
                 >
+
+                <LoadingScreen
+                    loadingCompleted = {() => {
+                        // do something
+                        let menu = document.getElementById("main-menu")
+                        menu.style.display = "block"
+                    }}
+                />
+
+                <div
+                    className = "bootes-image-wrap"
+                    id = "main-menu"
+                    >
+                    <SubMenu/>
+                </div>
             </div>
+
+            <div 
+                className="volume-wrap"
+                id = "volume"
+                >
+                <Volume
+                    sound = {sound}
+                />
+            </div>
+
+            <div className="twitter-wrap">
+                <Twitter/>
+            </div>
+
+            
+            
         </div>
     )
 }

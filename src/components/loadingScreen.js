@@ -8,7 +8,7 @@ const LoadingScreen = (props) => {
 
 
     const { progress, dispatch } = useContext(LoadingContext)
-    // const [ loadingDone, setLoadingDone ] = useState(false)
+    const [ loadingDone, setLoadingDone ] = useState(false)
 
 
     useEffect(() => {
@@ -26,7 +26,11 @@ const LoadingScreen = (props) => {
         if(percentLoaded === 100){
 
             let tl = gsap.timeline({
-                onComplete : done
+                onComplete : () => {
+
+                    setLoadingDone(true)
+                    props.loadingCompleted()
+                }
             })
             let duration = 0.8
 
@@ -67,51 +71,42 @@ const LoadingScreen = (props) => {
         
     }, [progress])
     
-    // useEffect(() => {
-    //     if(loadingDone === true){
-
-    //         dispatch({
-    //             type : "LOADING_COMPLETE", 
-    //             loadingDone : true
-    //         })
-    //     }
-    // }, [loadingDone])
-
-  
- 
-    const done = () => {
-        let c = 0
-
-        if(progress.percentLoaded === 100){
-            dispatch({
-                type : "LOADING_COMPLETE", 
-                loadingDone : true
-            })
-        }
-    }
 
     return (
-        <div className="main-logo flexCol-Centre">
-            <div className="loading-items flexCol-Centre">
-                <div className="loading-icon">
-                    <LoadingIcon/>
+
+        <div
+            className = {
+                !loadingDone
+                ?
+                "loading-screen"
+                :
+                "loading-screen hide"
+            }
+            >
+            <div className="main-loading-wrap flexCol-Centre" >
+                <div className="loading-items flexCol-Centre">
+                    <div className="loading-icon">
+                        <LoadingIcon/>
+                    </div>
+
+                    
+
+                    <div className="main-loading-text">
+                        <h2 className="loading-title">
+                            Tunnelling
+                        </h2>
+                        <h2 className="loading-percentage">
+                            {
+                                Math.floor(progress.percentLoaded) + "%"
+                            }
+                        </h2>
+                    </div>
+
                 </div>
-
-                
-
-                <div className="main-loading-text">
-                    <h2 className="loading-title">
-                        Tunneling
-                    </h2>
-                    <h2 className="loading-percentage">
-                        {
-                            Math.floor(progress.percentLoaded) + "%"
-                        }
-                    </h2>
-                </div>
-
             </div>
         </div>
+
+        
     )
 }
 

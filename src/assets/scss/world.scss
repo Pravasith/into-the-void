@@ -25,22 +25,83 @@ p{
 }
 
 
+
 .parent-class{
     position: relative;
     // @include flexCentreRow;
     // align-items: flex-start;
     // background: $darkestGrey;
     background: $black;
+    width: 100%;
+    height: 100vh;
+    
+
+    .display-screen{
+        display: block;
+        width: 100%;
+        height: 100%;
+        // background-image: url("https://xi-upload.s3.amazonaws.com/app-pics/space-background-stars-galaxy-illustration-by-pravasith.png");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
 
     .hide{
         display: none;
     }
 
-    .key-bind-capturer{
-        position: absolute;
+   
+    .loading-screen{
         width: 100%;
-        height: 100vh;
+        height: 100%;
+        // position: absolute;
+        position: absolute;
+        left: 0;
+        right: 0;
+
+        .main-loading-wrap{
+            width: 100%;
+            height: 100%;
+
+            .loading-items{
+                width: 100%;
+                height: 100%;
+
+                .loading-icon{
+                    width: 8em;
+                    height: 8em;
+                }
+                
+                .main-loading-text{
+                    @include flexCentreRow;
+                    justify-content: space-between;
+                    width: 10em;
+                    height: 2em;
+
+                    h2{
+                        color: $white;
+                        font-weight: 200;
+                        font-size: 1.25em;
+                    }
+
+                    .loading-percentage{
+                        
+                    }
+                }
+            }
+        }
     }
+
+
+    .bootes-image-wrap{
+        position: absolute;
+        left: 0;
+        right: 0;
+        display: none;
+    }
+
 
     .sub-menu{
         position: absolute;
@@ -48,218 +109,12 @@ p{
         height: 100vh;
         background: rgba(0, 0, 0, 0.75);
 
-        .loading-screen{
-            width: 100%;
-            height: 100vh;
-
-            .main-logo{
-                width: 100%;
-                height: 100%;
-    
-                .loading-items{
-                    width: 100%;
-                    height: 100%;
-
-                    .loading-icon{
-                        width: 8em;
-                        height: 8em;
-                    }
-                    
-                    .main-loading-text{
-                        @include flexCentreRow;
-                        justify-content: space-between;
-                        width: 10em;
-                        height: 2em;
-
-                        h2{
-                            color: $white;
-                            font-weight: 200;
-                            font-size: 1.25em;
-                        }
-
-                        .loading-percentage{
-                            
-                        }
-                    }
-                }
-            }
-        }
-
+      
         .sub-menu-screen{
             position: relative;
             width: 100%;
             height: 100vh;
 
-            .dummy-abs{
-                position: absolute;
-            }
-
-            .main-box{
-            }
-
-            .sub-box{
-                width: 100%;
-                height: 100%;
-
-                @include flexCentreRow;
-                justify-content: space-between;
-                
-            }
-
-            .box-icon{
-                width: 3.2em;
-                margin-right: 1em;
-            }
-
-            p{
-                color: #ffffff;
-                font-family: "Calibre", sans-serif;
-                font-weight: 200;
-                font-style: normal;
-                font-size: 0.9em;
-                width: 12em;
-            }
-
-            .head-phones{
-                left: 0;
-                top: 0;
-                height: 3em;
-                margin: 2em;
-            }
-
-            .volume{
-                right: 0;
-                top: 0;
-                height: 3em;
-                margin: 2em;
-                cursor: pointer;
-
-                &:hover{
-                    p{
-                        text-decoration: underline;
-                        color: #29abe2;
-                    }
-                }
-            }
-
-            .planet-info{
-                left: 0;
-                bottom: 0;
-                height: 3em;
-                margin: 2em;
-
-                .planet-info-icon{
-                    width: 2em;
-                }
-
-                .planet-info-text{
-                    font-weight: 400;
-                    font-size: 1.1em;
-                    transition: 0.1s;
-                }
-
-                &:hover{
-                    cursor: pointer;
-
-                    .planet-info-text{
-                        color: #29abe2;
-                    }
-                }
-            }
-
-            .twitter{
-                right: 0;
-                bottom: 0;
-                height: 2.5em;
-                margin: 2em;
-                padding: 0em 1em;
-                border-radius: 2em;
-                border: 0.2em solid $mildRed;
-
-                a{
-                    text-emphasis: none;
-                    text-decoration: none;
-                }
-
-                .twitter-icon{
-                    width: 1.8em;
-                    margin-left: 0.6em;
-                }
-
-                .twitter-text{
-                    font-weight: 400;
-                    font-size: 1.1em;
-                    transition: 0.1s;
-                    width: 4.5em;
-                    margin: 0;
-                    padding-top: 0.2em;
-                }
-
-                &:hover{
-                    cursor: pointer;
-
-                    .twitter-text{
-                        color: #29abe2;
-                        text-decoration: underline;
-                    }
-                }
-            }
-
-
-            .centre-div{
-                width: 100%;
-                height: 100%;
-
-                .centre-div-box{
-                    width: 100%;
-                    height: 100%;
-
-                    .centre-div-inner{
-                        width: 40%;
-                        height: 100%;
-                        // background: blueviolet;
-
-                        .main-title{
-                            width: 100%;
-                            height: 10em;
-                        }
-
-                        .sub-title{
-                            font-size: 1.1em;
-                            width: 100%;
-                            text-align: center;
-
-                            a{
-                                font-weight: 500;
-                                text-decoration: underline;
-                                color : $mildRed;
-                            }
-                        }
-                        
-                        .play-action{
-                            @include flexCentreCol;
-                            margin-top: 3em;
-                            width: 100%;
-                            cursor: pointer;
-
-                            &:hover{
-
-                            }
-                        }
-
-                        .play-button{
-                            width: 10%;
-                            height: 7em;
-                        }
-
-                        .click-to-play{
-                            width: 9em;
-                            font-weight: 100;
-                            text-align: center;
-                        }
-                    }
-                }
-            }
         }
 
 
@@ -267,126 +122,186 @@ p{
         
     }
 
-    // .tools-holster{
-    //     // @include flexCentreCol;
-    //     position: absolute;
 
-    //     padding-top: 1.5em;
-    //     // justify-content: start;
-    //     // width: 5%;
-    //     min-width: 3em;
-    //     // height: 96.5vh;
-    //     background-color: $darkestGrey;
-    //     z-index: 1;
-
-    //     .icon-wrap{
-    //         @include flexCentreCol;
-    //         min-width: 4em;
-    //         min-height: 3.5em;
-    //         margin: 0.25em 0em;
-    //         cursor: pointer;
-    //         transition: 0.3s;
-
-    //         &:hover{
-    //             .side-icon-wrap{
-    //                 display: block;
-    //             }
-                
-    //             .icon-wrap-abs{
-    //                 .icon-wrap-gradient{
-    //                     transform: scale(1);
-    //                     opacity: 1;
-    //                 }
-    //             }
-                
-    //         }
-
-    //         .icon-wrap-abs{
-    //             position: relative;
-    //             min-width: 4em;
-    //             min-height: 3.5em;
-
-    //             .icon-wrap-gradient{
-    //                 position: absolute;
-    //                 border-radius: 0.25em;
-    //                 @include gradient_bg($primaryViolet, $highLightRed);
-                    
-    //                 transform: scale(0);
-    //                 opacity: 0;
-    //                 transition: 0.1s ease-out;
-
-    //                 min-width: 2.5em;
-    //                 min-height: 2.5em;
-
-    //                 left: -webkit-calc(50% - 1.25em);
-    //                 left:    -moz-calc(50% - 1.25em);
-    //                 left:         calc(50% - 1.25em);
-
-    //                 top: -webkit-calc(50% - 1.25em);
-    //                 top:    -moz-calc(50% - 1.25em);
-    //                 top:         calc(50% - 1.25em);
-
-    //             }
-
-    //             .icon-wrap-gradient-abs{
-    //                 position: absolute;
-    //                 left: -webkit-calc(50% - 1em);
-    //                 left:    -moz-calc(50% - 1em);
-    //                 left:         calc(50% - 1em);
-
-    //                 top: -webkit-calc(50% - 1em);
-    //                 top:    -moz-calc(50% - 1em);
-    //                 top:         calc(50% - 1em);
-
-    //             }
-    //         }
-
-
-            
-
-    //         .side-icon-wrap{
-    //             position: relative;
-
-    //             @include translate_right;
-    //             animation: Translate_Right 0.2s ease-in-out;
-
-    //             .side-icon-wrap-abs{
-    //                 position: absolute;
-    //                 background: $darkestGrey;
-    //                 top: -3.45em;
-    //                 left: 2em;
-    //                 padding: 0.4em;
-
-    //                 .sub-option{
-    //                     padding: 0.3em;
-    //                     padding-bottom: 0;
-    //                     margin-bottom: 0.25em;
-    //                     // background: purple;
-    //                     background: none;
-    //                     border-radius: 0.25em;
-    //                     transition: 0.2s ease-out;
-
-    //                     &:hover{
-    //                         background: purple;
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         &:hover{               
-
-                
-    //         }
-    //     }
-    // }
-
-    .display-screen{
-        display: block;
-        width: 100%;
-        height: 100vh;
-        // background-image: url("https://xi-upload.s3.amazonaws.com/app-pics/space-background-stars-galaxy-illustration-by-pravasith.png");
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-
+    
+    .dummy-abs{
+        position: absolute;
     }
+
+    .main-box{
+    }
+
+    .sub-box{
+        width: 100%;
+        height: 100%;
+
+        @include flexCentreRow;
+        justify-content: space-between;
+        
+    }
+
+    .box-icon{
+        width: 3.2em;
+        margin-right: 1em;
+    }
+
+    p{
+        color: #ffffff;
+        font-family: "Calibre", sans-serif;
+        font-weight: 200;
+        font-style: normal;
+        font-size: 0.9em;
+        width: 12em;
+    }
+
+    .head-phones{
+        left: 0;
+        top: 0;
+        height: 3em;
+        margin: 2em;
+    }
+
+    .volume-wrap{
+        display: none;
+    }
+
+    .volume{
+        right: 0;
+        top: 0;
+        height: 3em;
+        margin: 2em;
+        cursor: pointer;
+
+        &:hover{
+            p{
+                text-decoration: underline;
+                color: #29abe2;
+            }
+        }
+    }
+
+    .planet-info{
+        left: 0;
+        bottom: 0;
+        height: 3em;
+        margin: 2em;
+
+        .planet-info-icon{
+            width: 2em;
+        }
+
+        .planet-info-text{
+            font-weight: 400;
+            font-size: 1.1em;
+            transition: 0.1s;
+        }
+
+        &:hover{
+            cursor: pointer;
+
+            .planet-info-text{
+                color: #29abe2;
+            }
+        }
+    }
+
+    .twitter{
+        right: 0;
+        bottom: 0;
+        height: 2.5em;
+        margin: 2em;
+        padding: 0em 1em;
+        border-radius: 2em;
+        border: 0.2em solid $mildRed;
+
+        a{
+            text-emphasis: none;
+            text-decoration: none;
+        }
+
+        .twitter-icon{
+            width: 1.8em;
+            margin-left: 0.6em;
+        }
+
+        .twitter-text{
+            font-weight: 400;
+            font-size: 1.1em;
+            transition: 0.1s;
+            width: 4.5em;
+            margin: 0;
+            padding-top: 0.2em;
+        }
+
+        &:hover{
+            cursor: pointer;
+
+            .twitter-text{
+                color: #29abe2;
+                text-decoration: underline;
+            }
+        }
+    }
+
+
+    .centre-div{
+        width: 100%;
+        height: 100%;
+
+        .centre-div-box{
+            width: 100%;
+            height: 100%;
+
+            .centre-div-inner{
+                width: 40%;
+                height: 100%;
+                // background: blueviolet;
+
+                .main-title{
+                    width: 100%;
+                    height: 10em;
+                }
+
+                .sub-title{
+                    font-size: 1.1em;
+                    width: 100%;
+                    text-align: center;
+
+                    a{
+                        font-weight: 500;
+                        text-decoration: underline;
+                        color : $mildRed;
+                    }
+                }
+                
+                .play-action{
+                    @include flexCentreCol;
+                    margin-top: 3em;
+                    width: 100%;
+                    cursor: pointer;
+
+                    &:hover{
+
+                    }
+                }
+
+                .play-button{
+                    width: 10%;
+                    height: 7em;
+                }
+
+                .click-to-play{
+                    width: 9em;
+                    font-weight: 100;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+
+    
+
+   
+    
 }
