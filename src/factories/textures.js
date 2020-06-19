@@ -2,7 +2,7 @@ import * as THREE from 'three'
 
 export const attachTextures = (model, gui, texture, panOptions) => {
 
-    const { showGui, u, v, zoom, flipY, textureRotation, animateU, animateV } = panOptions
+    const { showGui, u, v, zoomX, zoomY, flipY, textureRotation, animateU, animateV } = panOptions
     let mesh = model
 
     let newMaterial = mesh.material.clone()
@@ -13,17 +13,19 @@ export const attachTextures = (model, gui, texture, panOptions) => {
     var controls = new function() {
         this.u = u
         this.v = v
-        this.repeat = zoom
+        this.repeatX = zoomX
+        this.repeatY = zoomY
     }
 
     if(showGui){
         gui.add(controls, 'u', 0, 1)
         gui.add(controls, 'v', 0, 1)
-        gui.add(controls, 'repeat', 0, 10)
+        gui.add(controls, 'repeatX', 0, 10)
+        gui.add(controls, 'repeatY', 0, 10)
     }
 
     texture.offset.set(u, v)
-    texture.repeat.set(zoom, zoom)
+    texture.repeat.set(zoomX, zoomY)
     texture.flipY = flipY
     texture.rotation = textureRotation
 
@@ -36,16 +38,16 @@ export const attachTextures = (model, gui, texture, panOptions) => {
     function animate(time) {
         let matUV = mesh.material.map
         matUV.offset.set(controls.u, controls.v)
-        matUV.repeat.set(controls.repeat, controls.repeat)
+        matUV.repeat.set(controls.repeatX, controls.repeatY)
 
         if(animateU || animateV || showGui){
             if(animateU){
-                uCount -= 0.001
+                uCount += 0.0005
                 matUV.offset.set(uCount, controls.v)
             }
 
             if(animateV){
-                vCount -= 0.001
+                vCount += 0.0005
                 matUV.offset.set(controls.u, vCount)
             }
 

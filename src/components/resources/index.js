@@ -32,7 +32,7 @@ const modelsPath = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
 
 export const modelLinkURLs = {
     // terrain : "pravasPlanetX.gltf",
-    terrain : "neo51X.gltf",
+    terrain : "neo51-clean.gltf",
 
     // waterPlane : "waterPlaneGeo.gltf",
     // currentCharacter : "mainCharacter.gltf",
@@ -53,6 +53,15 @@ export const imageLinkURLs = {
     psyTexture: "psyTexture.png",
     psyCloth: "psyCloth.png",
     woodTexture: "psyWood.png",
+
+    tv1: "bootesVoid.png",
+    tv2: "neonLife.png",
+    tv3: "neo51Sky.png",
+    tv4: "planetHistory.png",
+
+    gravityHarnessTV: "AGPG.png",
+
+
     darkSideCDTex: "darkSideTex.png",
     songList: "darkSideOfTheMoonSongList.png",
 }

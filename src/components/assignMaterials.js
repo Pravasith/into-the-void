@@ -64,11 +64,31 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
         showGui : false, 
         u : 1, 
         v : 1, 
-        zoom : 3, 
+        zoomX : 3, 
+        zoomY : 3, 
         flipY : false, 
         textureRotation : 0,
         // animateV : true,
         // animateU : true
+    }
+
+
+    const attachTVmats = (mesh, mat) => {
+        mesh.material = basic.clone()
+
+        const panOptions4 = { 
+            showGui : false, 
+            u : 1,
+            v : 1, 
+            zoomX : 1.1, 
+            zoomY : 0.3, 
+            flipY : false,
+            textureRotation : -Math.PI / 2,
+            animateV : true,
+            animateU : false
+        }
+
+        attachTextures(mesh, gui, mat, panOptions4)
     }
 
 
@@ -78,94 +98,7 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
         const { name } = mesh
 
         switch (mesh.name) {
-            case "blueRocks":
-                mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#30ffbd")
-                // subdivide(
-                //     mesh,
-                //     0.2
-                // )
-                break
-            
-            case "greenRocks":
-                mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#00ffee")
-                // subdivide(
-                //     mesh,
-                //     0.2
-                // )
-                break
 
-            case "orangeRocks":
-                mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#009dff")
-                // subdivide(
-                //     mesh,
-                //     0.2
-                // )
-                break
-            
-            case "pinkRocks":
-                mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#ea00ff")
-                // subdivide(
-                //     mesh,
-                //     0.2
-                // )
-                break
-
-            case "redRocks":
-                mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#ff00a2")
-                // subdivide(
-                //     mesh,
-                //     0.2
-                // )
-                break
-            
-            case "yellowRocks":
-                mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#ff3700")
-                // subdivide(
-                //     mesh,
-                //     0.2
-                // )
-                break
-
-            // case "plainRocks":
-            //     mesh.material = glowingRocksMat
-            //     // subdivide(
-            //     //     mesh,
-            //     //     0.2
-            //     // )
-            //     break
-
-            // case "waterFront":
-            //     mesh.material = basic
-            //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-            //     // subdivide(
-            //     //     mesh,
-            //     //     0.2
-            //     // )
-            //     break
-
-            // case "verticalSupport":
-            //     mesh.material = basic
-            //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-            //     // subdivide(
-            //     //     mesh,
-            //     //     0.2
-            //     // )
-            //     break
-
-            // case "supportFrame":
-            //     mesh.material = basic
-            //     attachTextures(mesh, gui, textures.woodTexture, panOptions1)
-            //     // subdivide(
-            //     //     mesh,
-            //     //     0.2
-            //     // )
-            //     break
 
             case "cloth":
                 mesh.material = basic
@@ -173,20 +106,6 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 attachTextures(mesh, gui, textures.psyCloth, panOptions1)
                 break
 
-            case "balloon":
-
-                let crystal = mesh.children[0]
-
-                
-
-                // crystalLight2.position.set(
-                //     crystal.position.x,
-                //     crystal.position.y,
-                //     crystal.position.z
-                // )
-
-                // scene.add(crystalLight)
-                break
 
             case "mushroomPinkSpots":
                 mesh.material = basic.clone()
@@ -194,9 +113,6 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material.emissiveIntensity = (0.6)
                 break
 
-                case "vinylPos":
-                    console.log(mesh.position)
-                    break
 
             case "mushroomRedParts":
                 mesh.material = basic.clone()
@@ -234,14 +150,10 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#29abe2")
                 mesh.material.emissiveIntensity = (0.5)
-
-                // mesh.material = blackMetal.clone()
-
                 break
 
             case "railingLH":
                 mesh.material = basic.clone()
-                // mesh.material.emissiveIntensity = (0.5)
                 break
             
 
@@ -249,8 +161,6 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#29abe2")
                 mesh.material.emissiveIntensity = (0.5)
-
-                // mesh.material = blackMetal.clone()
                 break
 
             case "spaceship":
@@ -258,17 +168,11 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 break
 
             case "elevator":
-                // mesh.material = basic.clone()
-                
                 mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#000000") 
                 break    
                 
             case "elevatorShaft":
-                // mesh.material = basic.clone()
-                
                 mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#000000") 
                 break  
 
             case "pinkGlow1":
@@ -289,13 +193,14 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
 
              
             case "hoardingPicture":
-                mesh.material = basic
+                mesh.material = basic.clone()
 
                 const panOptions3 = { 
                     showGui : false, 
                     u : 0.9, 
                     v : 0.9, 
-                    zoom : 0.8, 
+                    zoomX : 0.8,
+                    zoomY : 0.8, 
                     flipY : true, 
                     textureRotation : Math.PI,
                     animateV : false,
@@ -303,6 +208,40 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 }
 
                 attachTextures(mesh, gui, textures.mainHoarding, panOptions3)
+                break
+
+            case "tv1":
+                attachTVmats(mesh, textures.tv1)
+                break
+
+            case "tv3":
+            attachTVmats(mesh, textures.tv3)
+            break
+
+            case "tv4":
+            attachTVmats(mesh, textures.tv4)
+            break
+
+            case "gravityHarnessTV":
+            attachTVmats(mesh, textures.gravityHarnessTV)
+            break
+
+            case "tv2":
+                mesh.material = basic.clone()
+
+                const panOptions5 = { 
+                    showGui : false, 
+                    u : 1,
+                    v : 0.9, 
+                    zoomX : 1.1, 
+                    zoomY : 0.2, 
+                    flipY : false,
+                    textureRotation : -Math.PI / 2,
+                    animateV : true,
+                    animateU : false
+                }
+
+                attachTextures(mesh, gui, textures.tv2, panOptions5)
                 break
 
             default:

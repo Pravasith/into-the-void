@@ -327,7 +327,8 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                             showGui : false, 
                             u : 1, 
                             v : 1, 
-                            zoom : 3, 
+                            zoomX : 3, 
+                            zoomY : 3, 
                             flipY : false, 
                             textureRotation : 0,
                             // animateV : true,
@@ -336,22 +337,7 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
 
                         attachTextures(item, gui, textures.woodTexture, panOptions)
                         break
-                    
-                    // case "midCube":
-                    //     item.material = prismFrontMaterial
-                    //     // const panOptions1 = { 
-                    //     //     showGui : false, 
-                    //     //     u : 1, 
-                    //     //     v : 1, 
-                    //     //     zoom : 3, 
-                    //     //     flipY : false, 
-                    //     //     textureRotation : 0,
-                    //     //     // animateV : true,
-                    //     //     // animateU : true
-                    //     // }
 
-                    //     // attachTextures(item, gui, textures.woodTexture, panOptions1)
-                    //     break
 
                     case "frame":
                         item.material = basic
@@ -360,7 +346,8 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                             showGui : false, 
                             u : 1, 
                             v : 1, 
-                            zoom : 3, 
+                            zoomX : 3, 
+                            zoomY : 3, 
                             flipY : false, 
                             textureRotation : 0,
                             animateV : true,
@@ -388,7 +375,9 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                             showGui : false, 
                             u : 1, 
                             v : 1, 
-                            zoom : 1, 
+                            zoomX : 1, 
+                            zoomY : 1, 
+
                             flipY : false, 
                             textureRotation : 0,
                             animateV : false,
