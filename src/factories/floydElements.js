@@ -48,14 +48,16 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
             transparent: true
         })
 
-        let prismFrontMaterial = new THREE.MeshPhongMaterial( { 
-            color: 0xccddff, 
-            envMap: envTextures.skyBoxEnv, 
-            refractionRatio: 0.9, 
-            reflectivity: 1,
-            transparent : true,
-            opacity : 0.92,
-            side: THREE.FrontSide
+        let prismFrontMaterial = new THREE.MeshStandardMaterial({ 
+            color: "#fff", 
+            envMap: envTextures.sceneEnv, 
+            // combine: THREE.MixOperation, 
+            // reflectivity: 0.3
+            metalness : 0.8,
+            shininess : 0.5,
+            roughness : 0.2,
+            // reflectivity: 0.8
+    
         })
 
         let prismBackMaterial = new THREE.MeshPhysicalMaterial({
@@ -78,6 +80,18 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
             yellow : "yellow",
             green : "green",
             orange : "#ff4a03"
+        }
+
+        const moveUpAndDown = (item) => {
+            let p=0, initialPos = item.position.y
+            function animate2() {
+                p+=0.01
+                let yPos = Math.abs(Math.cos(p)) * 0.5
+
+                item.position.y = initialPos +  yPos
+                requestAnimationFrame(animate2)
+            }
+            animate2()
         }
 
 
@@ -203,27 +217,61 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
 
                 switch (item.name) {
                    
-
-                    case "railing":
-                        item.material = basic
-                        const panOptions = { 
-                            showGui : true, 
-                            u : 1,
-                            v : 1, 
-                            zoom : 10, 
-                            flipY : false, 
-                            textureRotation : 0,
-                            animateV : true,
-                            animateU : true
+                    case "Sphere":
+                        const createPointlight = (color, intensity) => {
+                            let light = new THREE.PointLight( color, intensity, 50 )
+                            return light
                         }
+                    
+                    
+                        let crystalLight1 = createPointlight(rainbowColors.blue, 2),
+                            crystalLight2 = createPointlight(rainbowColors.orange, 3),
+                            crystalLight3 = createPointlight(rainbowColors.red, 5),
+                            crystalLight4 = createPointlight(rainbowColors.orange, 2),
+                            crystalLight5 = createPointlight(rainbowColors.yellow, 3),
+                            crystalLight6 = createPointlight(rainbowColors.blue, 5)
 
-                        attachTextures(item, gui, textures.psyTexture, panOptions)
+                        crystalLight1.position.set(1, 1, 1)
+                        crystalLight2.position.set(-1, 1, -1)
+                        crystalLight3.position.set(0, 1, 0)
+                        crystalLight4.position.set(1, -1, 1)
+                        crystalLight5.position.set(-1, -1, -1)
+                        crystalLight6.position.set(0, -1, 0)
+
+                        item.add(
+                            crystalLight1, 
+                            crystalLight2, 
+                            crystalLight3,
+                            // crystalLight4, 
+                            // crystalLight5, 
+                            crystalLight6
+                        )
+
+                        let c=0
+                        function animate() {
+                            c+=0.01
+                            let s = 1 +  2 * Math.abs(Math.sin(c))
+
+                            item.scale.set(s, s, s)
+                            item.rotation.y += 0.02 
+                            requestAnimationFrame(animate)
+                        }
+                        animate()
+
+                        moveUpAndDown(item)
                         break
 
-                    // default:
-                    //     item.material = cubeMaterial1
-                    //     break
-                }
+                    case "elevatorShaft":
+                        moveUpAndDown(item)
+                        break
+
+                    case "pinkGlow2":
+                        moveUpAndDown(item)
+                        break
+
+                    default:
+                        break
+            }
             })
         }
 
@@ -325,15 +373,9 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                     case "disc":
                         item.material = prismFrontMaterial
                         item.children[0].material = prismFrontMaterial
-
-                        function animate() {
-                            
-                            item.rotation.y += 0.02 
-                
-                            requestAnimationFrame(animate)
-                        }
-                        animate()
                         break
+
+                       
 
                     case "rotor":
                         item.children.filter(item => item.name === "pinkPipe")[0].material = item.material = cubeMaterial3

@@ -126,7 +126,7 @@ export const movements = {
             let 
                 // timestep = 0.12, // Time step between animations
                 timestep = 0.2,
-                positionStep = 0.15,
+                positionStep = 0.1,
                 axis = new THREE.Vector3(0, 1, 0),
                 directionVector,
                 intersectingMesh,
@@ -176,7 +176,7 @@ export const movements = {
 
                 if(boundaryIntersection.length > 0){
                     
-                    if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.15
+                    if(boundaryIntersection[0].distance >= 0.4) positionStep = 0.1
                     else positionStep = 0
                 } // UNCOMMENT - DONOT DELETE
             }

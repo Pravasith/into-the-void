@@ -4,12 +4,51 @@ import { getSimpleWobblePlane } from './env/water2'
 
 export const materialsToSeaShack = (models, scene, gui, textures, envTextures) => {
     //materials
-    let glowingRocksMat = new THREE.MeshLambertMaterial({ 
-        color: "#000000", 
+    let starsReflection = new THREE.MeshLambertMaterial({ 
+        color: "#fff", 
         envMap: envTextures.skyBoxEnv, 
         combine: THREE.MixOperation, 
         // reflectivity: 0.3
-        reflectivity: 0.8
+        // metalness : 0.8,
+        // shininess : 0.5,
+        reflectivity: 0.75
+
+    })
+
+    let blackMetal = new THREE.MeshStandardMaterial({ 
+        color: "#29abe2", 
+        // emissive
+        // reflectivity: 0.3
+        // metalness : 0.8,
+        // shininess : 0.5,
+        roughness : 0.2,
+        metalness : 0.8,
+
+
+
+    })
+
+    // let glowingRocksMat = new THREE.MeshStandardMaterial({ 
+    //     color: "#fff", 
+    //     envMap: envTextures.sceneEnv, 
+    //     // combine: THREE.MixOperation, 
+    //     // reflectivity: 0.3
+    //     metalness : 0.8,
+    //     shininess : 0.5,
+    //     roughness : 0.2,
+    //     // reflectivity: 0.8
+
+    // })
+
+    let glowingRocksMat = new THREE.MeshStandardMaterial({ 
+        color: "#000000", 
+        envMap: envTextures.sceneEnv, 
+        combine: THREE.MixOperation, 
+        // reflectivity: 0.3
+        metalness : 0.8,
+        roughness : 0.2,
+        // shininess : 0.5,
+        reflectivity: 0.5
 
     })
 
@@ -33,11 +72,6 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
     }
 
 
-    const createPointlight = (color, intensity) => {
-        let light = new THREE.PointLight( color, intensity, 50 )
-        return light
-
-    }
     
     
     models["terrain"].scene.children.map(mesh => {
@@ -143,21 +177,7 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
 
                 let crystal = mesh.children[0]
 
-                // crystal.material.emissive.set("#29abe2")
-                // crystal.material.emissiveIntensity = (0.6)
-                let crystalLight1 = createPointlight("#29abe2", 2),
-                crystalLight2 = createPointlight("#fc036f", 2)
-
-                crystal.add(crystalLight1)
-                crystalLight1.add(crystalLight2)
-
-                crystalLight1.position.set(
-                    -7, 7, -7
-                )
-
-                crystalLight2.position.set(
-                    7, 7, 7
-                )
+                
 
                 // crystalLight2.position.set(
                 //     crystal.position.x,
@@ -206,17 +226,35 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material.visible = false
                 break
 
+            case "supportFrameLH":
+                mesh.material = glowingRocksMat.clone()
+                break
+            
+            case "glowLH":
+                mesh.material = basic.clone()
+                mesh.material.emissive.set("#29abe2")
+                mesh.material.emissiveIntensity = (0.5)
+
+                // mesh.material = blackMetal.clone()
+
+                break
+
+            case "railingLH":
+                mesh.material = basic.clone()
+                // mesh.material.emissiveIntensity = (0.5)
+                break
+            
+
             case "glowSpaceShip":
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#29abe2")
-                mesh.material.emissiveIntensity = (0.8)
+                mesh.material.emissiveIntensity = (0.5)
+
+                // mesh.material = blackMetal.clone()
                 break
 
             case "spaceship":
-                // mesh.material = basic.clone()
-               
                 mesh.material = glowingRocksMat.clone()
-                // mesh.material.color.set("#000000") 
                 break
 
             case "elevator":
@@ -243,6 +281,10 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
                 mesh.material = basic.clone()
                 mesh.material.emissive.set("#29abe2")
                 mesh.material.emissiveIntensity = (0.8)
+                break
+
+            case "Sphere":
+                mesh.material = starsReflection.clone()
                 break
 
              

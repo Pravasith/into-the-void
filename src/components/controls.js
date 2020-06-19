@@ -1,4 +1,4 @@
-const { WButtonIcon, MouseButtonIcon, AButtonIcon, SButtonIcon, DButtonIcon, EscButtonIcon } = require("../assets/images")
+const { WButtonIcon, MouseButtonIcon, AButtonIcon, SButtonIcon, DButtonIcon, EscButtonIcon, MouseMoveIcon } = require("../assets/images")
 
 
 const Controls = () => {
@@ -11,7 +11,14 @@ const Controls = () => {
                     <div className="key-icon">
                         <MouseButtonIcon/>
                     </div>
-                    <p className="key-text">Enter the void</p>
+                    <p className="key-text">Left click: Enter the void</p>
+                </div>
+
+                <div className="key-wrap">
+                    <div className="key-icon">
+                        <MouseMoveIcon/>
+                    </div>
+                    <p className="key-text">Move mouse: Move left/right</p>
                 </div>
 
                 <div className="key-wrap simp-buttons">

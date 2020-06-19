@@ -2,21 +2,10 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 
 export const addLights = (scene) => {
-    function createPointlight(color, size, intensity) {
-        const sphereX = new THREE.SphereBufferGeometry(
-            size, 10, 8
-        )
+    function createPointlight(color, intensity) {
         let light = new THREE.PointLight(
             color, intensity, 50
         )
-        light.add(
-            new THREE.Mesh(
-            sphereX, new THREE.MeshBasicMaterial(
-            { visible : false, color : color }
-            )
-        )
-        )
-
         return light
     }
 
@@ -63,26 +52,13 @@ export const addLights = (scene) => {
     // scene.add( dirLightHeper )
 
 
-    let light1 = createPointlight("#ff4242", 0.2, 10)
-    let light2 = createPointlight("#ff1ca4", 0.6, 10)
-    let light3 = createPointlight("#ff1ca4", 0.6, 10)
+    let light1 = createPointlight("green", 2)
 
-    light2.position.set(
-        6.08,
-        6,
-        12.84
-    )
-
-    light3.position.set(
-        3.6,
-        5,
-        12.2
-    )
     
     scene.add(
-        // light1, 
-        light2, 
-        light3
+        light1, 
+        // light2, 
+        // light3
     )
 
     let sinCount = 0

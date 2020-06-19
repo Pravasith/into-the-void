@@ -5,34 +5,62 @@ export const moveBalloon = (models) => {
     let balloon = models["terrain"].scene.children.filter(mesh => mesh.name === "balloon")[0],
         crystal =  balloon.children.filter(mesh => mesh.name === "crystal")[0]
 
+    crystal.material.emissive.set("#29abe2")
+    crystal.material.emissiveIntensity = (0.4)
+
+    let balloon2 = models["terrain"].scene.children.filter(mesh => mesh.name === "balloon2")[0],
+        crystal2 =  balloon2.children.filter(mesh => mesh.name === "crystal2")[0]
+
+    crystal2.material.emissive.set("#ff0352")
+    crystal2.material.emissiveIntensity = (0.6)
+
+
     const createPointlight = (color, intensity) => {
         let light = new THREE.PointLight( color, intensity, 50 )
         return light
     }
 
-    crystal.material.emissive = "#29abe2"
-    crystal.material.emissiveIntensity = 0.7
 
-    let crystalLight = createPointlight("#29abe2", 5)
-    crystal.add(crystalLight)
+    let crystalLight1 = createPointlight("#29abe2", 3),
+        crystalLight2 = createPointlight("#fc036f", 2),
+        crystalLight3 = createPointlight("#ff0352", 3),
+        crystalLight4 = createPointlight("#fc036f", 2)
+
+
+    crystal.add(crystalLight1)
+    crystalLight1.add(crystalLight2)
+
+    crystal2.add(crystalLight3)
+    crystalLight3.add(crystalLight4)
+
+    crystalLight1.position.set(-7, 5, -7)
+    crystalLight2.position.set(7, 5, 7)
+
+    crystalLight3.position.set(-7, 5, -7)
+    crystalLight4.position.set(7, 5, 7)
 
 
     //========== the curve points we copied from Blender
     let points = [
-        [-15.864727020263672, 20.019498825073242, 1.1991803646087646] ,
-        [-10.206042289733887, 20.019498825073242, 1.1991803646087646] ,
-        [14.122605323791504, 11.68978500366211, 1.6080012321472168] ,
-        [15.293538093566895, 1.4762248992919922, 2.677096128463745] ,
-        [-2.2389841079711914, 2.173431396484375, 1.3749806880950928] ,
-        [15.88077449798584, -4.203508377075195, 4.208217620849609] ,
-        [6.553418159484863, -11.728780746459961, 5.346242904663086] ,
-        [-10.45313835144043, -18.094257354736328, 1.665771245956421] ,
-        [-15.22360610961914, -7.912998199462891, 3.298128128051758] ,
-        [-14.953625679016113, -2.7865638732910156, 7.15889835357666] ,
+        [-16.177091598510742, 0.0, 5.1343302726745605] ,
+        [-16.17402458190918, 22.198022842407227, 3.2173538208007812] ,
+        [-3.9761812686920166, 19.22789764404297, 0.39249324798583984] ,
+        [5.84772253036499, -0.6302300095558167, 4.012020587921143] ,
+        [-6.22534704208374, 6.000491619110107, 0.6463940143585205] ,
+        [15.184127807617188, 12.502253532409668, 0.76607346534729] ,
+        [11.292696952819824, 4.27727746963501, 4.3358154296875] ,
+        [16.177091598510742, -3.1908559799194336, 4.443613529205322] ,
+        [14.567795753479004, -12.365984916687012, 2.504903793334961] ,
+        [2.0003585815429688, -14.892972946166992, 4.213133811950684] ,
+        [0.0, -28.888261795043945, 3.2173538208007812] ,
+        [-11.258038520812988, -16.82697868347168, 0.9233222007751465] ,
+        [-13.971348762512207, -8.181129455566406, 3.901677131652832] ,
     ]
     //========== scale the curve to make it as large as you want
     let scale = 1
     //========== Convert the array of points into vertices (in Blender the z axis is UP so we swap the z and y)
+
+
 
     for (let i = 0; i < points.length; i++) {
         let x = points[i][0] * scale
@@ -44,10 +72,9 @@ export const moveBalloon = (models) => {
 
     //========== Create a path from the points
     let curvePath =  new THREE.CatmullRomCurve3(points)
-    let percentage = 0,
-        bufferPercent = 0
+    let percentage = 0
 
-    function positBalloon() {
+    function positBalloon(obj, bufferPercent) {
         // percentage += 0.00015
         percentage += 0.00015
 
@@ -55,9 +82,9 @@ export const moveBalloon = (models) => {
         let p1 = curvePath.getPointAt((percentage + bufferPercent) % 1)
 
       
-        balloon.position.x = p1.x
-        balloon.position.y = p1.y + 0.2
-        balloon.position.z = p1.z
+        obj.position.x = p1.x
+        obj.position.y = p1.y + 2
+        obj.position.z = p1.z
 
         // balloon.lookAt(
         //     new THREE.Vector3(
@@ -66,9 +93,25 @@ export const moveBalloon = (models) => {
         // )
     }
 
+
+    let c = 0
+
+    const rotateBalloon = (obj, moveUpAndDown) => {
+        obj.rotation.y += 0.01
+
+        if(moveUpAndDown) {
+            c += 0.01
+            obj.position.y =  1 + (Math.sin(c) * 0.5)
+        }
+    }
+
+
     function animate( time ) {
 
-        positBalloon()
+        positBalloon(balloon, 0)
+
+        rotateBalloon(balloon, false)
+        rotateBalloon(balloon2, true)
 
         requestAnimationFrame( animate )
         

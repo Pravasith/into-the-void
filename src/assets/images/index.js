@@ -584,6 +584,57 @@ export function WButtonIcon() {
   );
 }
 
+export function MouseMoveIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      x="0"
+      y="0"
+      enableBackground="new 0 0 46 50"
+      version="1"
+      viewBox="0 0 46 50"
+    >
+      <g>
+        <path
+          d="M28 48.5c-9.11 0-16.5-7.39-16.5-16.5V18c0-9.11 7.39-16.5 16.5-16.5S44.5 8.89 44.5 18v14c0 9.11-7.39 16.5-16.5 16.5z"
+          opacity="0.5"
+        ></path>
+        <g
+          fill="none"
+          stroke="#FFF"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="3"
+        >
+          <path d="M18 48.5h0c-1.02 0-2.02-.09-2.99-.27"></path>
+          <path
+            strokeDasharray="5.4384,5.4384"
+            d="M9.92 46.39C4.89 43.56 1.5 38.18 1.5 32V18c0-7.15 4.54-13.23 10.9-15.52"
+          ></path>
+          <path d="M15.01 1.77c.97-.18 1.97-.27 2.99-.27"></path>
+        </g>
+      </g>
+      <g>
+        <path
+          fill="none"
+          stroke="#FF7BAC"
+          strokeMiterlimit="10"
+          strokeWidth="3"
+          d="M11.5 32V18c0-9.11 7.39-16.5 16.5-16.5h0c9.11 0 16.5 7.39 16.5 16.5"
+        ></path>
+        <path
+          fill="none"
+          stroke="#29ABE2"
+          strokeMiterlimit="10"
+          strokeWidth="3"
+          d="M44.5 18v14c0 9.11-7.39 16.5-16.5 16.5h0c-9.11 0-16.5-7.39-16.5-16.5"
+        ></path>
+        <path fill="#FFF" d="M27.5 5.5c-6.63 0-12 5.82-12 13h12v-13z"></path>
+      </g>
+    </svg>
+  );
+}
+
 export function MouseButtonIcon() {
   return (
     <svg

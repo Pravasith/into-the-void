@@ -31,7 +31,9 @@ const modelsPath = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
 
 
 export const modelLinkURLs = {
-    terrain : "pravasPlanetX.gltf",
+    // terrain : "pravasPlanetX.gltf",
+    terrain : "neo51X.gltf",
+
     // waterPlane : "waterPlaneGeo.gltf",
     // currentCharacter : "mainCharacter.gltf",
     currentCharacter : "girlX.gltf",
