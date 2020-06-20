@@ -62,8 +62,8 @@ export const imageLinkURLs = {
     gravityHarnessTV: "AGPG.png",
 
 
-    darkSideCDTex: "darkSideTex.png",
-    songList: "darkSideOfTheMoonSongList.png",
+    // darkSideCDTex: "darkSideTex.png",
+    songList: "aviators-flora.jpg",
 }
 
 export const envMapURLs = {

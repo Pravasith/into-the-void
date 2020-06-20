@@ -83,8 +83,10 @@ export const movements = {
             scene.add(dummyAnchorToGirl)
 
             // Initital position and rotation of anchor
-            anchor.position.set(-16, 1.65, -23.15)
-            anchor.rotation.y = -2.48
+            anchor.position.set(-8.8, 1.75, -19.69)
+            anchor.rotation.y = 
+            -2.48
+            // 1.963185307179509
 
             girl.scale.set(0.125, 0.125, 0.125)
 
@@ -236,7 +238,7 @@ export const movements = {
                     0
                 ))
 
-                // console.log(anchor.rotation.y)
+                console.log(anchor.rotation.y)
                 // Girl movements
                 TweenMax.to(girl.rotation, timestep, {
                     // y : anchor.rotation.y
@@ -245,7 +247,7 @@ export const movements = {
                 })
                 // Run main character animations (girl)
 
-                // console.log(anchor.position)
+                console.log(anchor.position)
                 
             }
 

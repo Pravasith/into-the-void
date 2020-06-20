@@ -78,7 +78,7 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
 
         const panOptions4 = { 
             showGui : false, 
-            u : 1,
+            u : 0.1,
             v : 1, 
             zoomX : 1.1, 
             zoomY : 0.3, 
@@ -231,8 +231,8 @@ export const materialsToSeaShack = (models, scene, gui, textures, envTextures) =
 
                 const panOptions5 = { 
                     showGui : false, 
-                    u : 1,
-                    v : 0.9, 
+                    u : 0.04,
+                    v : 1, 
                     zoomX : 1.1, 
                     zoomY : 0.2, 
                     flipY : false,

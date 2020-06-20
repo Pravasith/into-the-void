@@ -25,14 +25,16 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
         // }, [])
 
 
-
-        let cubeMaterial1 = new THREE.MeshStandardMaterial( {
-            color: "#8f8f8f", 
-            metalness: 0.85, 
-            roughness: 0.2, 
-            name: 'metallic',
-            transparent: true,
-            opacity: 0.8
+        let cubeMaterial1 = new THREE.MeshStandardMaterial({ 
+            color: "#000000", 
+            envMap: envTextures.sceneEnv, 
+            combine: THREE.MixOperation, 
+            // reflectivity: 0.3
+            metalness : 0.8,
+            roughness : 0.2,
+            // shininess : 0.5,
+            reflectivity: 0.5
+    
         })
 
         let cubeMaterial2 = new THREE.MeshStandardMaterial( {
@@ -388,7 +390,7 @@ export const addFloydElements = (models, scene, gui, textures, envTextures) => {
                         break
 
                     case "blackDunt":
-                        item.material = prismFrontMaterial
+                        item.material = cubeMaterial1
                         break
                    
                 
