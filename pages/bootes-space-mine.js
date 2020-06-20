@@ -8,7 +8,7 @@ const BootesMine = () => {
     return (
         <div>
             <Head>
-                <title>Watch gravity in action</title>
+                <title>Neo51 by Pravas</title>
                 <link rel='icon' href='/favicon.ico' />
                 <link href="//db.onlinewebfonts.com/c/c936f19b94fa45553ab39066333e00aa?family=Space+Age" rel="stylesheet" type="text/css"/>
             </Head>
