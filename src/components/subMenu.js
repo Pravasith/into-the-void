@@ -27,6 +27,8 @@ const SubMenu = (props) => {
                                         Weekend project still in development. I released it as a part of my portfolio projects.
                                     </p>
 
+                                    <div>Font made from <a href="http://www.onlinewebfonts.com">oNline Web Fonts</a>is licensed by CC BY 3.0</div>
+
                                     <div className="play-action">
                                         <div className="play-button flexCol-Centre">
                                             <PlayButtonIcon/>
