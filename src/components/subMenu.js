@@ -24,7 +24,7 @@ const SubMenu = (props) => {
                                     </div>
 
                                     <p className="sub-title">
-                                        Weekend project still in development. I released it as a part of my portfolio projects. If you like my work and want to say Hi, feel free to email me at <span>pravasith@gmail.com</span>
+                                        Weekend project still in development. I released it as a part of my portfolio projects.
                                     </p>
 
                                     <div className="play-action">

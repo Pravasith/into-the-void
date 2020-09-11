@@ -60,9 +60,9 @@ const Volume = (props) => {
                     {
                         isMuted
                         ?
-                        "Playing sound. Click to mute."
+                        "Click here to mute."
                         :
-                        "Muted. Click to unmute."
+                        "Muted. Click here to unmute."
                     }
                 </p>
             </div>
