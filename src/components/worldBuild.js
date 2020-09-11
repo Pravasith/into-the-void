@@ -20,7 +20,6 @@ import { sceneAnimations } from '../factories/animations'
 import { addFloydElements } from '../factories/floydElements'
 
 
-import "../assets/scss/world.scss"
 
 import { materialsToSeaShack } from './assignMaterials'
 import { addLights } from './env/lights'
