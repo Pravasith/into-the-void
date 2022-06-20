@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 export const colors = [
     "#ff6c52",
@@ -14,35 +14,33 @@ export const colors = [
     "#c552ff",
 
     "#ff3dfc",
-    "#ff3d5a"
+    "#ff3d5a",
 ]
 
-const baseS3URL = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/'
+const baseS3URL = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/"
 
 export const s3URLs = {
-    songs : baseS3URL + "songs/",
-    mapsAndImages : baseS3URL + "maps/",
-    models : baseS3URL + "models/",
+    songs: baseS3URL + "songs/",
+    mapsAndImages: baseS3URL + "maps/",
+    models: baseS3URL + "models/",
 }
 
 const mapsPath = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/maps/"
 const songsPath = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/songs/"
-const modelsPath = 'https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/'
-
+const modelsPath = "https://xi-upload.s3.amazonaws.com/app-pics/threejs/models/"
 
 export const modelLinkURLs = {
     // terrain : "pravasPlanetX.gltf",
-    terrain : "neo51-clean.gltf",
+    terrain: "neo51-clean.gltf",
 
     // waterPlane : "waterPlaneGeo.gltf",
     // currentCharacter : "mainCharacter.gltf",
-    currentCharacter : "girlX.gltf",
+    currentCharacter: "girlX.gltf",
 
-
-    darkSidePrism : "darkSideAlbumArt.gltf",
-    vinylPlayr : "vinylX.gltf",
-    fish : "pinkFISH.gltf",
-    fish2 : "redFISH.gltf",
+    darkSidePrism: "darkSideAlbumArt.gltf",
+    vinylPlayr: "vinylX.gltf",
+    fish: "pinkFISH.gltf",
+    fish2: "redFISH.gltf",
     // dingleBo : "dingleBo.gltf"
 }
 
@@ -61,14 +59,13 @@ export const imageLinkURLs = {
 
     gravityHarnessTV: "AGPG.png",
 
-
     // darkSideCDTex: "darkSideTex.png",
     songList: "aviators-flora.jpg",
 }
 
 export const envMapURLs = {
     // Env maps || cube maps
-    sceneEnv : [
+    sceneEnv: [
         s3URLs.mapsAndImages + "whitePosX.png",
         s3URLs.mapsAndImages + "whiteNegX.png",
 
@@ -79,11 +76,10 @@ export const envMapURLs = {
         s3URLs.mapsAndImages + "whiteNegZ.png",
     ],
 
-    skyBoxEnv : new Array(6).fill(s3URLs.mapsAndImages + "space-background-pravasith-2U.png")
+    skyBoxEnv: new Array(6).fill(
+        s3URLs.mapsAndImages + "space-background-pravasith-2U.png"
+    ),
 }
-
-
-
 
 // export const skyboxGradients = [
 //     {
@@ -104,7 +100,7 @@ export const envMapURLs = {
 //     }
 // ]
 
-export const SideBarButton = (props) => (
+export const SideBarButton = props => (
     <a href="#" className="cta">
         <span>{props.children}</span>
         <svg width="13px" height="10px" viewBox="0 0 13 10">
@@ -113,8 +109,6 @@ export const SideBarButton = (props) => (
         </svg>
     </a>
 )
-
-
 
 export const albumSongs = {
     // darkSideOfTheMoon: {
@@ -130,11 +124,10 @@ export const albumSongs = {
     //     eclipse : songsPath + "eclipse.mp3",
     // }
 
-    aviators : {
-        flora : songsPath + "floraAviators.mp3",
+    aviators: {
+        flora: songsPath + "floraAviators.mp3",
         // flora :  songsPath + "eclipse.mp3",
 
-       
-        cascade : songsPath + "cascadeAviators.mp3"
-    }
+        cascade: songsPath + "cascadeAviators.mp3",
+    },
 }

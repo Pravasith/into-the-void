@@ -1,5 +1,12 @@
-const { WButtonIcon, MouseButtonIcon, AButtonIcon, SButtonIcon, DButtonIcon, EscButtonIcon, MouseMoveIcon } = require("../assets/images")
-
+const {
+    WButtonIcon,
+    MouseButtonIcon,
+    AButtonIcon,
+    SButtonIcon,
+    DButtonIcon,
+    EscButtonIcon,
+    MouseMoveIcon,
+} = require("../assets/images")
 
 const Controls = () => {
     return (
@@ -9,49 +16,49 @@ const Controls = () => {
 
                 <div className="key-wrap">
                     <div className="key-icon">
-                        <MouseButtonIcon/>
+                        <MouseButtonIcon />
                     </div>
                     <p className="key-text">Left click: Enter the void</p>
                 </div>
 
                 <div className="key-wrap">
                     <div className="key-icon">
-                        <MouseMoveIcon/>
+                        <MouseMoveIcon />
                     </div>
                     <p className="key-text">Move mouse: Move left/right</p>
                 </div>
 
                 <div className="key-wrap simp-buttons">
                     <div className="key-icon">
-                        <WButtonIcon/>
+                        <WButtonIcon />
                     </div>
                     <p className="key-text">Move forward</p>
                 </div>
 
                 <div className="key-wrap simp-buttons">
                     <div className="key-icon">
-                        <AButtonIcon/>
+                        <AButtonIcon />
                     </div>
                     <p className="key-text">Move left</p>
                 </div>
 
                 <div className="key-wrap simp-buttons">
                     <div className="key-icon">
-                        <SButtonIcon/>
+                        <SButtonIcon />
                     </div>
                     <p className="key-text">Move forward</p>
                 </div>
 
                 <div className="key-wrap">
                     <div className="key-icon">
-                        <DButtonIcon/>
+                        <DButtonIcon />
                     </div>
                     <p className="key-text">Move right</p>
                 </div>
 
                 <div className="key-wrap">
                     <div className="key-icon ">
-                        <EscButtonIcon/>
+                        <EscButtonIcon />
                     </div>
                     <p className="key-text">Escape the void</p>
                 </div>

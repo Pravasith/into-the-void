@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from 'react'
-import Head from 'next/head'
-import { HContext } from '../utils/contexts/hContext'
+import React, { useEffect, useContext } from "react"
+import Head from "next/head"
+import { HContext } from "../utils/contexts/hContext"
 
 const H = () => {
     const { dispatch } = useContext(HContext)
@@ -8,21 +8,20 @@ const H = () => {
     return (
         <div>
             <div
-                onClick = {() => {
+                onClick={() => {
                     // Do something
-                    dispatch({type : "INC_1", num : 10})
+                    dispatch({ type: "INC_1", num: 10 })
                 }}
-                >
+            >
                 Click to inc.
-                
             </div>
-            <div 
+            <div
                 className="inc-2x"
-                onClick = {() => {
+                onClick={() => {
                     // Do something
-                    dispatch({type : "INC_2X"})
+                    dispatch({ type: "INC_2X" })
                 }}
-                >
+            >
                 Click to inc 2 x
             </div>
         </div>

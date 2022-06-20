@@ -1,25 +1,24 @@
-import * as THREE from 'three'
-import { s3URLs, modelLinkURLs, envMapURLs, imageLinkURLs } from "../components/resources"
-
-
-
-
+import * as THREE from "three"
+import {
+    s3URLs,
+    modelLinkURLs,
+    envMapURLs,
+    imageLinkURLs,
+} from "../components/resources"
 
 export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
-
-
-    dispatch(
-        {
-            type : "ON_PROGRESS", 
-            percentLoaded : 0
-        }
-    )
+    dispatch({
+        type: "ON_PROGRESS",
+        percentLoaded: 0,
+    })
 
     // MODEL LOADER
     const gltfLoader = new module.GLTFLoader()
     // Optional: Provide a DRACOLoader instance to decode compressed mesh data
     let dracoLoader = new module.DRACOLoader()
-    dracoLoader.setDecoderPath('https://xi-upload.s3.amazonaws.com/app-pics/threejs/draco/')
+    dracoLoader.setDecoderPath(
+        "https://xi-upload.s3.amazonaws.com/app-pics/threejs/draco/"
+    )
     gltfLoader.setDRACOLoader(dracoLoader)
 
     // TEXTURE LOADER
@@ -28,56 +27,51 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
     // ENV TEXTURE LOADER
     let envTextureLoader = new THREE.CubeTextureLoader()
 
-
     const modelURLs = { ...modelLinkURLs },
         textureURLs = { ...imageLinkURLs },
         envURLs = { ...envMapURLs }
 
     // Compute total loading items
-    const totalItemsToLoad = Object.keys(modelURLs).length +
+    const totalItemsToLoad =
+        Object.keys(modelURLs).length +
         Object.keys(textureURLs).length +
         Object.keys(envURLs).length
 
     let loadItemCount = 0,
         allLoadedItemsData = {
-            models : {},
-            textures : {},
-            envTextures : {}
+            models: {},
+            textures: {},
+            envTextures: {},
         }
 
     const dispatchLoadingData = () => {
-
-        dispatch(
-            {
-                type : "ON_PROGRESS",
-                percentLoaded : loadItemCount / totalItemsToLoad * 100
-            }
-        )
+        dispatch({
+            type: "ON_PROGRESS",
+            percentLoaded: (loadItemCount / totalItemsToLoad) * 100,
+        })
     }
 
-
     return new Promise((resolve, reject) => {
-
         // Loading models
         let models = {}
 
         Object.keys(modelURLs).map(key => {
             gltfLoader.load(
-                s3URLs.models + modelURLs[key], 
-                (gltf) => {
+                s3URLs.models + modelURLs[key],
+                gltf => {
                     models[key.split(".")[0]] = gltf
                     loadItemCount++
                     dispatchLoadingData()
 
                     allLoadedItemsData = {
                         ...allLoadedItemsData,
-                        models : {
+                        models: {
                             ...allLoadedItemsData.models,
-                            ...models
-                        }
+                            ...models,
+                        },
                     }
 
-                    if(loadItemCount === totalItemsToLoad){
+                    if (loadItemCount === totalItemsToLoad) {
                         resolve(allLoadedItemsData)
                     }
 
@@ -86,20 +80,19 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
                     // }
                 },
                 // called while loading is progressing
-                (xhr) => {
+                xhr => {
                     // console.log( 'Models ' + ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
                 },
                 // called when loading has errors
-                (error) => {
+                error => {
                     reject({
-                        jist : 'An error occured while loading ' + key,
-                        error
+                        jist: "An error occured while loading " + key,
+                        error,
                     })
-                    console.error( 'An error happened' )
+                    console.error("An error happened")
                 }
             )
         })
-
 
         // Loading textures
         let textures = {}
@@ -107,7 +100,7 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
         Object.keys(textureURLs).map(key => {
             textureLoader.load(
                 s3URLs.mapsAndImages + textureURLs[key],
-                (texture) => {
+                texture => {
                     textures[key.split(".")[0]] = texture
 
                     loadItemCount++
@@ -115,31 +108,30 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
 
                     allLoadedItemsData = {
                         ...allLoadedItemsData,
-                        textures : {
+                        textures: {
                             ...allLoadedItemsData.textures,
-                            ...textures
-                        }
+                            ...textures,
+                        },
                     }
 
-                    if(loadItemCount === totalItemsToLoad){
+                    if (loadItemCount === totalItemsToLoad) {
                         resolve(allLoadedItemsData)
                     }
                 },
                 // called while loading is progressing
-                (xhr) => {
+                xhr => {
                     // console.log( 'Textures ' +  ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
                 },
                 // called when loading has errors
-                (error) => {
+                error => {
                     reject({
-                        jist : 'An error occured while loading ' + key,
-                        error
+                        jist: "An error occured while loading " + key,
+                        error,
                     })
-                    console.error( 'An error happened' )
+                    console.error("An error happened")
                 }
             )
         })
-
 
         // Loading env maps
         let envTextures = {}
@@ -147,7 +139,7 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
         Object.keys(envURLs).map(key => {
             envTextureLoader.load(
                 envURLs[key],
-                (envTexture) => {
+                envTexture => {
                     envTexture.mapping = THREE.CubeRefractionMapping
                     envTextures[key] = envTexture
 
@@ -156,31 +148,29 @@ export const loadModelsTexturesAndEnvMaps = (module, dispatch) => {
 
                     allLoadedItemsData = {
                         ...allLoadedItemsData,
-                        envTextures : {
+                        envTextures: {
                             ...allLoadedItemsData.envTextures,
-                            ...envTextures
-                        }
+                            ...envTextures,
+                        },
                     }
 
-                    if(loadItemCount === totalItemsToLoad){
+                    if (loadItemCount === totalItemsToLoad) {
                         resolve(allLoadedItemsData)
                     }
                 },
                 // called while loading is progressing
-                (xhr) => {
+                xhr => {
                     // console.log( 'Envs ' +  ( xhr.loaded / xhr.total * 100 ) + '% loaded' )
                 },
                 // called when loading has errors
-                (error) => {
+                error => {
                     reject({
-                        jist : 'An error occured while loading ' + key,
-                        error
+                        jist: "An error occured while loading " + key,
+                        error,
                     })
-                    console.error( 'An error happened' )
+                    console.error("An error happened")
                 }
             )
         })
-
     })
- 
 }
