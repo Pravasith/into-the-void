@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "express": "^4.17.1",
-        "gsap": "^3.0.2",
+        "gsap": "^3.6.0",
         "howler": "^2.2.0",
         "next": "9.3.5",
         "react": "16.13.1",
