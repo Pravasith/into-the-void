@@ -8,7 +8,7 @@
         "start": "next start"
     },
     "dependencies": {
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "gsap": "^3.0.2",
         "howler": "^2.2.0",
         "next": "9.3.5",
